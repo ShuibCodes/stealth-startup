@@ -1,64 +1,76 @@
-import React, { useState, useEffect } from "react";
-import Editor from "./Editor";
-import TopNavigation from './TopNavigation'
-import Footer from './Footer'
-
+import React, { useState } from 'react';
+import Editor from './Editor';
+import AIChatSidebar from './components/AIChatSidebar';
+import './App.css';
 
 function App() {
-  const [html, setHtml] = useState("");
-  const [css, setcss] = useState("");
-  const [js, setjs] = useState("");
+  const [html, setHtml] = useState('');
+  const [css, setCss] = useState('');
+  const [js, setJs] = useState('');
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
+  // Create srcDoc for the preview iframe
   const srcDoc = `
-       <html>
-          <body>${html}</body>
-          <style>${css}</style>
-          <script>${js}</script>
-        </html>
-        `;
+    <!doctype html>
+    <html>
+      <head>
+        <style>${css}</style>
+      </head>
+      <body>
+        ${html}
+        <script>${js}</script>
+      </body>
+    </html>
+  `;
 
   return (
-  <div className="container">
-    <TopNavigation />
-    <div className="main">
-      <div className="pane top-pane">
-        <Editor
-          language="xml"
-          displayName="HTML"
-          value={html}
-          className="html"
-          onChange={setHtml}
-        />
-        <Editor
-          language="css"
-          displayName="CSS"
-          value={css}
-          onChange={setcss}
-        />
-
-        <Editor
-          language="javascript"
-          displayName="JavaScript"
-          value={js}
-          onChange={setjs}
-        />
+    <div className="App">
+      <div className="pane editor-pane">
+        <div className="editor-container">
+          <Editor 
+            language="xml"
+            displayName="HTML"
+            value={html}
+            onChange={setHtml}
+            currentStepIndex={currentStepIndex}
+          />
+          <Editor 
+            language="css"
+            displayName="CSS"
+            value={css}
+            onChange={setCss}
+            currentStepIndex={currentStepIndex}
+          />
+          <Editor 
+            language="javascript"
+            displayName="JavaScript"
+            value={js}
+            onChange={setJs}
+            currentStepIndex={currentStepIndex}
+          />
+        </div>
       </div>
-
-      <div className="output">
+      <div className="pane preview-pane">
+        <div className="preview-title">Preview</div>
         <iframe
           srcDoc={srcDoc}
-          title="output"
+          title="preview"
           sandbox="allow-scripts"
           frameBorder="0"
           width="100%"
           height="100%"
         />
-        </div>
-
       </div>
-      <Footer />
+      <div className="pane chat-pane">
+        <AIChatSidebar 
+          html={html}
+          css={css}
+          js={js}
+          currentStepIndex={currentStepIndex}
+          setCurrentStepIndex={setCurrentStepIndex}
+        />
+      </div>
     </div>
-    
   );
 }
 

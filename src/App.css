@@ -1,0 +1,141 @@
+.App {
+  display: flex;
+  height: 100vh;
+}
+
+.pane {
+  height: 100%;
+  display: flex;
+}
+
+.editor-pane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #1e1e1e;
+}
+
+.editor-pane > .editor-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.editor-pane > .editor-container > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #444;
+  min-height: 33%;
+}
+
+.editor-pane > .editor-container > div:last-child {
+  border-bottom: none;
+}
+
+.chat-pane {
+  flex: 0.8;
+  background-color: #252526;
+  border-left: 1px solid #444;
+}
+
+.editor-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.code-mirror-wrapper {
+  flex-grow: 1;
+  height: auto !important;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+}
+
+.code-mirror-wrapper .CodeMirror {
+  height: 100% !important;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.editor-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2d2d2d;
+  padding: 8px;
+  color: white;
+  font-size: 14px;
+  border-bottom: 1px solid #444;
+}
+
+.editor-subtitle {
+  font-size: 12px;
+  color: #888;
+  margin-left: 10px;
+}
+
+.check-code-btn {
+  margin: 10px;
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.check-code-btn:hover {
+  background-color: #45a049;
+}
+
+.validation-messages {
+  background-color: #2d2d2d;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 4px;
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+.validation-message {
+  color: white;
+  margin: 5px 0;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.validation-message:not(:last-child) {
+  border-bottom: 1px solid #444;
+}
+
+.preview-pane {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-left: 1px solid #444;
+  border-right: 1px solid #444;
+}
+
+.preview-title {
+  background-color: #2d2d2d;
+  padding: 8px;
+  color: white;
+  font-size: 14px;
+  border-bottom: 1px solid #444;
+}
+
+.preview-pane iframe {
+  flex-grow: 1;
+  background-color: white;
+}
