@@ -68,8 +68,139 @@ const AIChatSidebar = ({ html, css, js, currentStepIndex, setCurrentStepIndex })
     }
   };
 
+  const validateCurrentStep = () => {
+    const currentStep = todoAppRequirements.steps[currentStepIndex];
+    
+    // For HTML validation
+    if (currentStep.requiredElements) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      
+      const missingElements = currentStep.requiredElements.filter(selector => {
+        return !doc.querySelector(selector);
+      });
+
+      if (missingElements.length === 0) {
+        handleStepCompletion();
+      } else {
+        setMessages(prev => [...prev, {
+          type: 'ai',
+          content: `Almost there! Still missing: ${missingElements.join(', ')}`
+        }]);
+      }
+    }
+    
+    // For JavaScript validation
+    if (currentStep.requiredFeatures) {
+      // Convert code to lowercase for case-insensitive matching
+      const jsLower = js.toLowerCase();
+      
+      // First check if all required features exist
+      const missingFeatures = currentStep.requiredFeatures.filter(feature => {
+        const featureLower = feature.toLowerCase();
+        // Special case for createElement with quotes
+        if (featureLower.includes('createelement')) {
+          const withoutQuotes = featureLower.replace(/['"]/g, ''); // Remove quotes for comparison
+          const jsWithoutQuotes = jsLower.replace(/['"]/g, '');
+          return !jsWithoutQuotes.includes(withoutQuotes);
+        }
+        return !jsLower.includes(featureLower);
+      });
+
+      // Additional validation for specific steps
+      if (currentStep.functionName === 'addTodo') {
+        // Check for proper todo creation logic
+        const todoContentCheck = 
+          jsLower.includes('const todoContent'.toLowerCase()) || 
+          jsLower.includes('let todoContent'.toLowerCase()) || 
+          jsLower.includes('var todoContent'.toLowerCase());
+
+        console.log('Current JS code:', jsLower);
+
+        console.log('========= DEBUG =========');
+        console.log('Raw JS code:', js);
+        console.log('Lowercase JS code:', jsLower);
+        console.log('Looking for:', 'document.createelement(\'span\')');
+        console.log('Includes check:', jsLower.includes('document.createelement(\'span\')'));
+        console.log('Alternative check:', jsLower.includes('document.createelement("span")'));
+        console.log('======================');
+
+        const spanCheck = 
+          jsLower.includes('document.createelement(\'span\')') ||
+          jsLower.includes('document.createelement("span")') ||
+          jsLower.includes('createelement(\'span\')') ||
+          jsLower.includes('createelement("span")');
+
+        console.log('Current JS code:', jsLower);
+        console.log('Span check result:', spanCheck);
+
+        const textContentCheck = 
+          (jsLower.includes('textcontent') || jsLower.includes('.textcontent =')) && 
+          (jsLower.includes('todoinput.value') || jsLower.includes('input.value')) &&
+          jsLower.includes('todocontent');
+
+        console.log('Todo content check:', todoContentCheck);
+        console.log('Text content check:', textContentCheck);
+
+        console.log('========= TEXT CONTENT DEBUG =========');
+        console.log('Raw code snippet:', js);
+        console.log('Looking for:', 'todocontent.textcontent');
+        console.log('Found:', jsLower.includes('todocontent.textcontent'));
+        console.log('Looking for:', 'todoinput.value');
+        console.log('Found:', jsLower.includes('todoinput.value'));
+        console.log('====================================');
+
+        if (!todoContentCheck || !spanCheck || !textContentCheck) {
+          setMessages(prev => [...prev, {
+            type: 'ai',
+            content: `Almost there! Make sure you have:
+${!todoContentCheck ? '❌' : '✅'} Created a todoContent variable
+${!spanCheck ? '❌' : '✅'} Created a span element
+${!textContentCheck ? '❌' : '✅'} Set the textContent to todoInput.value`
+          }]);
+          return;
+        }
+      }
+
+      if (missingFeatures.length === 0) {
+        handleStepCompletion();
+      } else {
+        setMessages(prev => [...prev, {
+          type: 'ai',
+          content: `Almost there! Your code is missing: ${missingFeatures.join(', ')}`
+        }]);
+      }
+    }
+  };
+
+  // Add this helper function
+  const handleStepCompletion = () => {
+    const congratsMessage = `🎉 Great job! You've completed step ${currentStepIndex + 1}!\n\n`;
+    const nextStep = todoAppRequirements.steps[currentStepIndex + 1];
+    const nextStepMessage = nextStep 
+      ? `Next step: ${nextStep.description}`
+      : "Congratulations! You've completed all steps!";
+    
+    setMessages(prev => [...prev, 
+      { type: 'ai', content: congratsMessage + nextStepMessage }
+    ]);
+    
+    if (nextStep) {
+      setCurrentStepIndex(currentStepIndex + 1);
+    }
+  };
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
+    if (!inputMessage.trim() && !e.target.hasAttribute('data-check-code')) return;
+    
+    if (e.target.hasAttribute('data-check-code') || 
+        inputMessage.toLowerCase().includes('check my code')) {
+      validateCurrentStep();
+      setInputMessage('');
+      return;
+    }
+
     if (!inputMessage.trim() || isLoading) return;
 
     // Add user message
@@ -180,7 +311,12 @@ function deleteTodo(e) {
 
     setMessages(prev => [...prev, 
       { type: 'user', content: 'Can I get a hint for this step?' },
-      { type: 'ai', content: `Here's a hint for ${step.name}:\n\n\`\`\`${step.hint}\`\`\`` }
+      { 
+        type: 'ai', 
+        content: `Here's a hint for ${step.name}:`,
+        isCode: true,
+        code: step.hint
+      }
     ]);
   };
 
@@ -202,7 +338,10 @@ function deleteTodo(e) {
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      height: '100%'
+      height: '100%',
+      width: '100%',
+      color: 'white',
+      backgroundColor: '#1e1e1e'
     }}>
       <div style={{
         flex: 1,
@@ -224,7 +363,23 @@ function deleteTodo(e) {
             }}
           >
             <strong>{message.type === 'ai' ? 'AI Assistant:' : 'You:'}</strong>
-            <p style={{ margin: '5px 0' }}>{message.content}</p>
+            {message.isCode ? (
+              <>
+                <p style={{ margin: '5px 0' }}>{message.content}</p>
+                <div className="code-hint-container">
+                  <div className="code-hint-header">
+                    <span className="code-hint-dot"></span>
+                    <span className="code-hint-dot"></span>
+                    <span className="code-hint-dot"></span>
+                  </div>
+                  <pre className="code-hint">
+                    <code>{message.code}</code>
+                  </pre>
+                </div>
+              </>
+            ) : (
+              <p style={{ margin: '5px 0' }}>{message.content}</p>
+            )}
           </div>
         ))}
         {isLoading && (
@@ -249,12 +404,13 @@ function deleteTodo(e) {
       }}>
         <div style={{ marginBottom: '10px' }}>
           <strong>Current Step: </strong>
-          {getNextStep() || 'All steps completed!'}
+          {todoAppRequirements.steps[currentStepIndex]?.description || 'All steps completed!'}
         </div>
         
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
-            onClick={() => handleSendMessage({ preventDefault: () => {} }, "Check my code")}
+            data-check-code
+            onClick={handleSendMessage}
             style={{
               padding: '10px',
               backgroundColor: '#4CAF50',
@@ -264,9 +420,8 @@ function deleteTodo(e) {
               cursor: 'pointer',
               flex: 1
             }}
-            disabled={isLoading}
           >
-            {isLoading ? 'Checking...' : 'Check My Code'}
+            Check My Code
           </button>
 
           <button
@@ -280,7 +435,6 @@ function deleteTodo(e) {
               cursor: 'pointer',
               flex: 1
             }}
-            disabled={isLoading}
           >
             Give Me a Hint
           </button>
@@ -300,7 +454,6 @@ function deleteTodo(e) {
               borderRadius: '4px',
               color: 'white'
             }}
-            disabled={isLoading}
           />
         </form>
       </div>

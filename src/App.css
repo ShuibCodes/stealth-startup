@@ -1,130 +1,97 @@
 .App {
-  display: flex;
+  display: grid;
+  grid-template-areas: 
+    "chat preview"
+    "chat editor";
+  grid-template-columns: 300px 1fr;
+  grid-template-rows: 1fr 300px;
   height: 100vh;
-}
-
-.pane {
-  height: 100%;
-  display: flex;
-}
-
-.editor-pane {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background-color: #1e1e1e;
-}
-
-.editor-pane > .editor-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.editor-pane > .editor-container > div {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  border-bottom: 1px solid #444;
-  min-height: 33%;
-}
-
-.editor-pane > .editor-container > div:last-child {
-  border-bottom: none;
+  overflow: hidden;
 }
 
 .chat-pane {
-  flex: 0.8;
+  grid-area: chat;
   background-color: #252526;
-  border-left: 1px solid #444;
-}
-
-.editor-container {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  position: relative;
-}
-
-.code-mirror-wrapper {
-  flex-grow: 1;
-  height: auto !important;
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  overflow: auto;
-}
-
-.code-mirror-wrapper .CodeMirror {
-  height: 100% !important;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
-.editor-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #2d2d2d;
-  padding: 8px;
-  color: white;
-  font-size: 14px;
-  border-bottom: 1px solid #444;
-}
-
-.editor-subtitle {
-  font-size: 12px;
-  color: #888;
-  margin-left: 10px;
-}
-
-.check-code-btn {
-  margin: 10px;
-  padding: 8px 16px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.check-code-btn:hover {
-  background-color: #45a049;
-}
-
-.validation-messages {
-  background-color: #2d2d2d;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 4px;
-  max-height: 100px;
+  border-right: 1px solid #444;
   overflow-y: auto;
 }
 
-.validation-message {
-  color: white;
-  margin: 5px 0;
-  padding: 5px;
-  border-radius: 3px;
-}
-
-.validation-message:not(:last-child) {
-  border-bottom: 1px solid #444;
-}
-
 .preview-pane {
-  flex: 2;
+  grid-area: preview;
   display: flex;
   flex-direction: column;
   background-color: white;
-  border-left: 1px solid #444;
+}
+
+.editor-section {
+  grid-area: editor;
+  display: flex;
+  flex-direction: column;
+  background-color: #1e1e1e;
+  border-top: 1px solid #444;
+  min-height: 0;
+}
+
+.tab-buttons {
+  display: flex;
+  background-color: #2d2d2d;
+  border-bottom: 1px solid #444;
+}
+
+.tab-button {
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
   border-right: 1px solid #444;
+}
+
+.tab-button.active {
+  background-color: #1e1e1e;
+  color: white;
+  border-bottom: 2px solid #0078d4;
+}
+
+.editor-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.editor-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.code-mirror-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+}
+
+.code-mirror-wrapper .CodeMirror {
+  height: 100%;
+}
+
+.editor-title {
+  padding: 8px;
+  background-color: #2d2d2d;
+  color: white;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.editor-subtitle {
+  color: #888;
+  font-size: 12px;
 }
 
 .preview-title {
@@ -136,6 +103,51 @@
 }
 
 .preview-pane iframe {
-  flex-grow: 1;
-  background-color: white;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: white;
+}
+
+.code-hint-container {
+  background-color: #1e1e1e;
+  border-radius: 4px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.code-hint-header {
+  background-color: #2d2d2d;
+  padding: 6px 12px;
+  border-bottom: 1px solid #444;
+  display: flex;
+  gap: 6px;
+}
+
+.code-hint-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #444;
+}
+
+.code-hint-dot:nth-child(1) { background-color: #ff5f56; }
+.code-hint-dot:nth-child(2) { background-color: #ffbd2e; }
+.code-hint-dot:nth-child(3) { background-color: #27c93f; }
+
+.code-hint {
+  margin: 0;
+  padding: 12px;
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.code-hint code {
+  display: block;
 }

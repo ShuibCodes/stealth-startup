@@ -8,6 +8,7 @@ function App() {
   const [css, setCss] = useState('');
   const [js, setJs] = useState('');
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState('html');
 
   // Create srcDoc for the preview iframe
   const srcDoc = `
@@ -23,10 +24,10 @@ function App() {
     </html>
   `;
 
-  return (
-    <div className="App">
-      <div className="pane editor-pane">
-        <div className="editor-container">
+  const renderEditor = () => {
+    switch(activeTab) {
+      case 'html':
+        return (
           <Editor 
             language="xml"
             displayName="HTML"
@@ -34,6 +35,9 @@ function App() {
             onChange={setHtml}
             currentStepIndex={currentStepIndex}
           />
+        );
+      case 'css':
+        return (
           <Editor 
             language="css"
             displayName="CSS"
@@ -41,6 +45,9 @@ function App() {
             onChange={setCss}
             currentStepIndex={currentStepIndex}
           />
+        );
+      case 'javascript':
+        return (
           <Editor 
             language="javascript"
             displayName="JavaScript"
@@ -48,9 +55,24 @@ function App() {
             onChange={setJs}
             currentStepIndex={currentStepIndex}
           />
-        </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="App">
+      <div className="chat-pane">
+        <AIChatSidebar 
+          html={html}
+          css={css}
+          js={js}
+          currentStepIndex={currentStepIndex}
+          setCurrentStepIndex={setCurrentStepIndex}
+        />
       </div>
-      <div className="pane preview-pane">
+      <div className="preview-pane">
         <div className="preview-title">Preview</div>
         <iframe
           srcDoc={srcDoc}
@@ -61,14 +83,30 @@ function App() {
           height="100%"
         />
       </div>
-      <div className="pane chat-pane">
-        <AIChatSidebar 
-          html={html}
-          css={css}
-          js={js}
-          currentStepIndex={currentStepIndex}
-          setCurrentStepIndex={setCurrentStepIndex}
-        />
+      <div className="editor-section">
+        <div className="tab-buttons">
+          <button 
+            className={`tab-button ${activeTab === 'html' ? 'active' : ''}`}
+            onClick={() => setActiveTab('html')}
+          >
+            HTML
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'css' ? 'active' : ''}`}
+            onClick={() => setActiveTab('css')}
+          >
+            CSS
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'javascript' ? 'active' : ''}`}
+            onClick={() => setActiveTab('javascript')}
+          >
+            JavaScript
+          </button>
+        </div>
+        <div className="editor-container">
+          {renderEditor()}
+        </div>
       </div>
     </div>
   );
