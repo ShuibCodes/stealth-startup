@@ -91,86 +91,38 @@ const AIChatSidebar = ({ html, css, js, currentStepIndex, setCurrentStepIndex })
     }
     
     // For JavaScript validation
-    if (currentStep.requiredFeatures) {
-      // Convert code to lowercase for case-insensitive matching
-      const jsLower = js.toLowerCase();
-      
-      // First check if all required features exist
-      const missingFeatures = currentStep.requiredFeatures.filter(feature => {
-        const featureLower = feature.toLowerCase();
-        // Special case for createElement with quotes
-        if (featureLower.includes('createelement')) {
-          const withoutQuotes = featureLower.replace(/['"]/g, ''); // Remove quotes for comparison
-          const jsWithoutQuotes = jsLower.replace(/['"]/g, '');
-          return !jsWithoutQuotes.includes(withoutQuotes);
-        }
-        return !jsLower.includes(featureLower);
-      });
-
-      // Additional validation for specific steps
-      if (currentStep.functionName === 'addTodo') {
-        // Check for proper todo creation logic
-        const todoContentCheck = 
-          jsLower.includes('const todoContent'.toLowerCase()) || 
-          jsLower.includes('let todoContent'.toLowerCase()) || 
-          jsLower.includes('var todoContent'.toLowerCase());
-
-        console.log('Current JS code:', jsLower);
-
-        console.log('========= DEBUG =========');
-        console.log('Raw JS code:', js);
-        console.log('Lowercase JS code:', jsLower);
-        console.log('Looking for:', 'document.createelement(\'span\')');
-        console.log('Includes check:', jsLower.includes('document.createelement(\'span\')'));
-        console.log('Alternative check:', jsLower.includes('document.createelement("span")'));
-        console.log('======================');
-
-        const spanCheck = 
-          jsLower.includes('document.createelement(\'span\')') ||
-          jsLower.includes('document.createelement("span")') ||
-          jsLower.includes('createelement(\'span\')') ||
-          jsLower.includes('createelement("span")');
-
-        console.log('Current JS code:', jsLower);
-        console.log('Span check result:', spanCheck);
-
-        const textContentCheck = 
-          (jsLower.includes('textcontent') || jsLower.includes('.textcontent =')) && 
-          (jsLower.includes('todoinput.value') || jsLower.includes('input.value')) &&
-          jsLower.includes('todocontent');
-
-        console.log('Todo content check:', todoContentCheck);
-        console.log('Text content check:', textContentCheck);
-
-        console.log('========= TEXT CONTENT DEBUG =========');
-        console.log('Raw code snippet:', js);
-        console.log('Looking for:', 'todocontent.textcontent');
-        console.log('Found:', jsLower.includes('todocontent.textcontent'));
-        console.log('Looking for:', 'todoinput.value');
-        console.log('Found:', jsLower.includes('todoinput.value'));
-        console.log('====================================');
-
-        if (!todoContentCheck || !spanCheck || !textContentCheck) {
-          setMessages(prev => [...prev, {
-            type: 'ai',
-            content: `Almost there! Make sure you have:
-${!todoContentCheck ? '❌' : '✅'} Created a todoContent variable
-${!spanCheck ? '❌' : '✅'} Created a span element
-${!textContentCheck ? '❌' : '✅'} Set the textContent to todoInput.value`
-          }]);
-          return;
-        }
-      }
-
-      if (missingFeatures.length === 0) {
-        handleStepCompletion();
-      } else {
-        setMessages(prev => [...prev, {
-          type: 'ai',
-          content: `Almost there! Your code is missing: ${missingFeatures.join(', ')}`
-        }]);
-      }
+    // For JavaScript validation
+if (currentStep.requiredFeatures) {
+  const jsLower = js.toLowerCase();
+  
+  // First check if all required features exist
+  const missingFeatures = currentStep.requiredFeatures.filter(feature => {
+    const featureLower = feature.toLowerCase();
+    
+    // Add special check for getElementById with variable assignment
+    if (featureLower.includes('getelementbyid')) {
+      return !(
+        // Check for direct getElementById call
+        jsLower.includes(featureLower) ||
+        // Check for variable assignment pattern
+        (jsLower.includes('const todoinput') && 
+         jsLower.includes('getelementbyid') && 
+         jsLower.includes('todo-input'))
+      );
     }
+    
+    return !jsLower.includes(featureLower);
+  });
+
+  if (missingFeatures.length === 0) {
+    handleStepCompletion();
+  } else {
+    setMessages(prev => [...prev, {
+      type: 'ai',
+      content: `Almost there! Your code is missing: ${missingFeatures.join(', ')}`
+    }]);
+  }
+}
   };
 
   // Add this helper function
@@ -255,7 +207,7 @@ I can help you write the code and check if it meets these requirements.`,
       
       javascript: `
 function addTodo(e) {
-  e.preventDefault();
+  e.preventDefault();if (currentStep.requiredFeatures) 
   // Create new todo
 }
 
