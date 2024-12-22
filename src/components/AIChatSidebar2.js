@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import todoAppRequirements from '../utils/todoAppRequirements';
+import newProjectRequirements from '../utils/newProjectRequirements';
 
-const AIChatSidebar = ({ html, css, js, currentStepIndex, setCurrentStepIndex }) => {
-  console.log('API Key:', process.env.REACT_APP_OPENAI_API_KEY);
+const API_KEY = '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';
+
+const AIChatSidebar2 = ({ html, css, js, currentStepIndex, setCurrentStepIndex }) => {
+  console.log('API Key:', API_KEY);
   const [messages, setMessages] = useState([
     {
       type: 'ai',
@@ -27,7 +29,7 @@ const AIChatSidebar = ({ html, css, js, currentStepIndex, setCurrentStepIndex })
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
+          'Authorization': `Bearer ${API_KEY}`
         },
         body: JSON.stringify({
           model: "gpt-3.5-turbo",
@@ -69,7 +71,7 @@ const AIChatSidebar = ({ html, css, js, currentStepIndex, setCurrentStepIndex })
   };
 
   const validateCurrentStep = () => {
-    const currentStep = todoAppRequirements.steps[currentStepIndex];
+    const currentStep = newProjectRequirements.steps[currentStepIndex];
     
     console.log('Validation started');
     console.log('HTML type:', typeof html);
@@ -83,64 +85,94 @@ const AIChatSidebar = ({ html, css, js, currentStepIndex, setCurrentStepIndex })
       }]);
       return;
     }
-    
+
+    if (!html) {
+      console.error('HTML content is undefined or empty');
+      setMessages(prev => [...prev, {
+        type: 'ai',
+        content: "Error: No HTML content found to validate. Please make sure you have entered some HTML code."
+      }]);
+      return;
+    }
+
     let validationPassed = false;
 
     // For HTML validation
     if (currentStep.requiredElements) {
-      const parser = new DOMParser();
-      console.log('About to parse HTML:', html);
-      const doc = parser.parseFromString(html, 'text/html');
-      console.log('Parsed document:', doc.documentElement.innerHTML);
-      
-      const missingElements = currentStep.requiredElements.filter(selector => {
-        const element = doc.querySelector(selector);
-        console.log(`Checking selector "${selector}"`, {
-          found: !!element,
-          elementDetails: element ? element.outerHTML : 'not found'
+      try {
+        const parser = new DOMParser();
+        const htmlString = html.toString();
+        console.log('Attempting to parse HTML:', htmlString);
+        
+        const doc = parser.parseFromString(htmlString, 'text/html');
+        
+        const missingElements = currentStep.requiredElements.filter(selector => {
+          try {
+            const element = doc.querySelector(selector);
+            console.log(`Checking for "${selector}":`, element ? 'found' : 'not found');
+            return !element;
+          } catch (error) {
+            console.error('Error checking for element:', error);
+            return true;
+          }
         });
-        return !element;
-      });
 
-      if (missingElements.length === 0) {
-        validationPassed = true;
-      } else {
-        console.log('Missing elements:', missingElements);
+        if (missingElements.length === 0) {
+          handleStepCompletion();
+        } else {
+          setMessages(prev => [...prev, {
+            type: 'ai',
+            content: `Almost there! Still missing: ${missingElements.join(', ')}`
+          }]);
+        }
+      } catch (error) {
+        console.error('Error parsing HTML:', error);
         setMessages(prev => [...prev, {
           type: 'ai',
-          content: `Almost there! Still missing: ${missingElements.join(', ')}`
+          content: 'Error parsing HTML. Please check your code and try again.'
         }]);
       }
     }
     
     // For JavaScript validation
-    if (currentStep.requiredFeatures) {
-      const jsLower = js.toLowerCase();
-      
-      const missingFeatures = currentStep.requiredFeatures.filter(feature => {
-        const featureLower = feature.toLowerCase();
-        return !jsLower.includes(featureLower);
-      });
-
-      if (missingFeatures.length === 0) {
-        validationPassed = true;
-      } else {
-        setMessages(prev => [...prev, {
-          type: 'ai',
-          content: `Almost there! Your code is missing: ${missingFeatures.join(', ')}`
-        }]);
-      }
+    // For JavaScript validation
+if (currentStep.requiredFeatures) {
+  const jsLower = js.toLowerCase();
+  
+  // First check if all required features exist
+  const missingFeatures = currentStep.requiredFeatures.filter(feature => {
+    const featureLower = feature.toLowerCase();
+    
+    // Add special check for getElementById with variable assignment
+    if (featureLower.includes('getelementbyid')) {
+      return !(
+        // Check for direct getElementById call
+        jsLower.includes(featureLower) ||
+        // Check for variable assignment pattern
+        (jsLower.includes('const todoinput') && 
+         jsLower.includes('getelementbyid') && 
+         jsLower.includes('todo-input'))
+      );
     }
+    
+    return !jsLower.includes(featureLower);
+  });
 
-    if (validationPassed) {
-      handleStepCompletion();
-    }
+  if (missingFeatures.length === 0) {
+    handleStepCompletion();
+  } else {
+    setMessages(prev => [...prev, {
+      type: 'ai',
+      content: `Almost there! Your code is missing: ${missingFeatures.join(', ')}`
+    }]);
+  }
+}
   };
 
   // Add this helper function
   const handleStepCompletion = () => {
     const congratsMessage = `🎉 Great job! You've completed step ${currentStepIndex + 1}!\n\n`;
-    const nextStep = todoAppRequirements.steps[currentStepIndex + 1];
+    const nextStep = newProjectRequirements.steps[currentStepIndex + 1];
     const nextStepMessage = nextStep 
       ? `Next step: ${nextStep.description}`
       : "Congratulations! You've completed all steps!";
@@ -239,10 +271,10 @@ function deleteTodo(e) {
       css,
       js
     },
-    currentStep: todoAppRequirements.steps[currentStepIndex],
+    currentStep: newProjectRequirements.steps[currentStepIndex],
     progress: {
       currentStepIndex,
-      totalSteps: todoAppRequirements.steps.length
+      totalSteps: newProjectRequirements.steps.length
     }
   };
 
@@ -265,12 +297,12 @@ function deleteTodo(e) {
   };
 
   const getNextStep = () => {
-    const step = todoAppRequirements.steps[currentStepIndex];
+    const step = newProjectRequirements.steps[currentStepIndex];
     return step ? step.description : null;
   };
 
   const handleHint = async () => {
-    const step = todoAppRequirements.steps[currentStepIndex];
+    const step = newProjectRequirements.steps[currentStepIndex];
     if (!step) return;
 
     setMessages(prev => [...prev, 
@@ -285,7 +317,7 @@ function deleteTodo(e) {
   };
 
   const moveToNextStep = () => {
-    if (currentStepIndex < todoAppRequirements.steps.length - 1) {
+    if (currentStepIndex < newProjectRequirements.steps.length - 1) {
       setCurrentStepIndex(currentStepIndex + 1);
     }
   };
@@ -294,7 +326,7 @@ function deleteTodo(e) {
   useEffect(() => {
     setMessages([{
       type: 'ai',
-      content: `Welcome! Let's build a Todo App together. We'll go through it step by step.\n\nFirst step: ${todoAppRequirements.steps[0].description}\n\nNeed a hint? Click the "Give Me a Hint" button!`
+      content: `Welcome! Let's build a Todo App together. We'll go through it step by step.\n\nFirst step: ${newProjectRequirements.steps[0].description}\n\nNeed a hint? Click the "Give Me a Hint" button!`
     }]);
   }, []);
 
@@ -368,7 +400,7 @@ function deleteTodo(e) {
       }}>
         <div style={{ marginBottom: '10px' }}>
           <strong>Current Step: </strong>
-          {todoAppRequirements.steps[currentStepIndex]?.description || 'All steps completed!'}
+          {newProjectRequirements.steps[currentStepIndex]?.description || 'All steps completed!'}
         </div>
         
         <div style={{ display: 'flex', gap: '10px' }}>
@@ -425,4 +457,4 @@ function deleteTodo(e) {
   );
 };
 
-export default AIChatSidebar;
+export default AIChatSidebar2;

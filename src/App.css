@@ -151,3 +151,36 @@
 .code-hint code {
   display: block;
 }
+
+.new-project-app {
+  display: grid;
+  grid-template-areas: 
+    "chat preview"
+    "chat editor";
+  grid-template-columns: 300px 1fr;
+  grid-template-rows: 1fr 300px;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.workspace {
+  grid-area: editor;
+  display: flex;
+}
+
+.chat-pane button, .chat-pane a {
+  display: block;
+  margin: 10px;
+  padding: 8px 16px;
+  background-color: #0078d4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+}
+
+.chat-pane button:hover, .chat-pane a:hover {
+  background-color: #006cbd;
+}
