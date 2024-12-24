@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import CodeEditor from '../Editor';
 import AIChatSidebar2 from './AIChatSidebar2';
+import Modal from './Modal';
 
 const NewProjectApp = () => {
   const [code, setCode] = useState('');
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+
+  const handleCodeSelect = (newCode) => {
+    setCode(prev => prev + newCode);
+  };
 
   const srcDoc = `
     <!doctype html>
@@ -17,39 +22,42 @@ const NewProjectApp = () => {
   `;
 
   return (
-    <div className="App">
-      <div className="chat-pane">
-        <AIChatSidebar2 
-          html={code}
-          js={code}
-          css=""
-          currentStepIndex={currentStepIndex}
-          setCurrentStepIndex={setCurrentStepIndex}
-        />
-      </div>
-      <div className="preview-pane">
-        <div className="preview-title">Preview</div>
-        <iframe
-          srcDoc={srcDoc}
-          title="preview"
-          sandbox="allow-scripts"
-          frameBorder="0"
-          width="100%"
-          height="100%"
-        />
-      </div>
-      <div className="editor-section">
-        <div className="editor-container">
-          <CodeEditor 
-            language="javascript"
-            displayName="JavaScript"
-            value={code}
-            onChange={setCode}
+    <>
+      <div className="App">
+        <div className="chat-pane">
+          <AIChatSidebar2 
+            html={code}
+            js={code}
+            css=""
             currentStepIndex={currentStepIndex}
+            setCurrentStepIndex={setCurrentStepIndex}
           />
         </div>
+        <div className="preview-pane">
+          <div className="preview-title">Preview</div>
+          <iframe
+            srcDoc={srcDoc}
+            title="preview"
+            sandbox="allow-scripts"
+            frameBorder="0"
+            width="100%"
+            height="100%"
+          />
+        </div>
+        <div className="editor-section">
+          <div className="editor-container">
+            <CodeEditor 
+              language="javascript"
+              displayName="JavaScript"
+              value={code}
+              onChange={setCode}
+              currentStepIndex={currentStepIndex}
+            />
+          </div>
+        </div>
       </div>
-    </div>
+      <Modal />
+    </>
   );
 };
 
