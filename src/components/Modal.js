@@ -5,6 +5,7 @@ import { Dialog } from '@headlessui/react'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 
 const Modal = ({ onCodeSelect }) => {
+  console.log("Modal component rendering");
   const [isOpen, setIsOpen] = useState(true)
   const [currentQuestion, setCurrentQuestion] = useState(0)
 
@@ -25,6 +26,7 @@ const Modal = ({ onCodeSelect }) => {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1)
     } else {
+      onCodeSelect?.(option)
       setIsOpen(false)
     }
   }
@@ -40,7 +42,7 @@ const Modal = ({ onCodeSelect }) => {
 
       {/* Full-screen container to center the panel */}
       <div className="fixed inset-0 flex items-center justify-center p-4">
-        <Dialog.Panel className="w-[1200px] h-[400px] max-w-md transform overflow-hidden rounded-2xl bg-gray-800">
+        <Dialog.Panel className="w-[1200px] h-[400px] max-w-md transform overflow-hidden rounded-2xl bg-white">
           <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
             <div className="sm:flex sm:items-center h-[300px]">
               <div className="mx-auto flex size-12 shrink-0 items-center justify-center  sm:mx-0 sm:size-10">

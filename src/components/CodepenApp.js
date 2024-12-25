@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Editor from '../Editor';
 import AIChatSidebar from './AIChatSidebar';
+import '../App.css';
 
 function CodepenApp() {
   const [html, setHtml] = useState('');
@@ -9,6 +10,7 @@ function CodepenApp() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [activeTab, setActiveTab] = useState('html');
 
+  // Create srcDoc for the preview iframe
   const srcDoc = `
     <!doctype html>
     <html>
@@ -31,7 +33,6 @@ function CodepenApp() {
             displayName="HTML"
             value={html}
             onChange={setHtml}
-            currentStepIndex={currentStepIndex}
           />
         );
       case 'css':
@@ -41,7 +42,6 @@ function CodepenApp() {
             displayName="CSS"
             value={css}
             onChange={setCss}
-            currentStepIndex={currentStepIndex}
           />
         );
       case 'javascript':
@@ -51,7 +51,6 @@ function CodepenApp() {
             displayName="JavaScript"
             value={js}
             onChange={setJs}
-            currentStepIndex={currentStepIndex}
           />
         );
       default:

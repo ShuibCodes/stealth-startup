@@ -184,3 +184,28 @@
 .chat-pane button:hover, .chat-pane a:hover {
   background-color: #006cbd;
 }
+
+
+.editor-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-wrapper .CodeMirror {
+  height: 100% !important;
+  flex: 1;
+}
+
+/* Hide any duplicate line numbers */
+.CodeMirror-lines {
+  padding: 0;
+}
+
+.CodeMirror-gutter-wrapper {
+  left: -29px !important;
+}
+
+.CodeMirror-linenumber {
+  padding-right: 8px;
+}

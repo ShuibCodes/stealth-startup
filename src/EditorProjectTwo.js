@@ -47,7 +47,7 @@ export default function Editor({ language, displayName, value, onChange }) {
   }, [value]);
 
   return (
-    <div style={{ height: "100%", display: "flex", flexDirection: "column", backgroundColor: "black"}}>
+    <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <div style={{ padding: "8px", backgroundColor: "#1f1f1f", color: "white" }}>
         {displayName}
       </div>
