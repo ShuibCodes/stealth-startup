@@ -5,8 +5,86 @@ import '../App.css';
 import Modal from './Modal';
 
 const NewProjectApp = () => {
-  const [html, setHtml] = useState('');
-  const [css, setCss] = useState('');
+  const [html, setHtml] = useState(`
+    
+    <h2 class="title">TicTacToe</h2>
+    <div class="game">
+  <div class="board">
+    <div class="cell "></div>
+    <div class="cell "></div>
+    <div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell "></div>
+    <div class="cell"></div>
+    <div class="cell "></div>
+    <div class="cell"></div>
+    <div class="cell "></div>
+  </div>
+</div>`);
+  
+  const [css, setCss] = useState(`* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.title{
+text-align: center;
+padding: 4px;
+}
+.game {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 2px;
+  background-color: #000;
+}
+
+.cell {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+  cursor: pointer;
+  position: relative;
+}
+
+/* X styling */
+.cell.x::before,
+.cell.x::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 80px;
+  background-color: #000;
+}
+
+.cell.x::before {
+  transform: rotate(45deg);
+}
+
+.cell.x::after {
+  transform: rotate(-45deg);
+}
+
+/* O styling */
+.cell.o::before {
+  content: '';
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 10px solid #000;
+}`);
+  
   const [js, setJs] = useState('');
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [activeTab, setActiveTab] = useState('html');
@@ -74,12 +152,20 @@ const NewProjectApp = () => {
     }
   };
 
+  const handleCodeSelect = (option) => {
+    setJs(prevJs => {
+      const newCode = option.replace('A = ', '');
+      return prevJs ? `${prevJs}\n${newCode}` : newCode;
+    });
+    setActiveTab('javascript');
+  };
+
   return (
     <div className="App">
-         <Modal onCodeSelect={(option) => {
-        // handle the selected option
-        console.log(option)
-      }} />
+         <Modal 
+           onCodeSelect={handleCodeSelect}
+           currentStepIndex={currentStepIndex}
+         />
       <div className="chat-pane">
         <AIChatSidebar2 
           html={html}
