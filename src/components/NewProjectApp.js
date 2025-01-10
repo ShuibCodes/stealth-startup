@@ -6,21 +6,27 @@ import Modal from './Modal';
 
 const NewProjectApp = () => {
   const [html, setHtml] = useState(`
-    
-    <h2 class="title">TicTacToe</h2>
-    <div class="game">
-  <div class="board">
-    <div class="cell "></div>
-    <div class="cell "></div>
-    <div class="cell"></div>
-    <div class="cell"></div>
-    <div class="cell "></div>
-    <div class="cell"></div>
-    <div class="cell "></div>
-    <div class="cell"></div>
-    <div class="cell "></div>
+ <body>
+
+  <h1>Rock-Paper-Scissors</h1>
+  <p>Click one of the buttons below to play!</p>
+  
+  <div id="buttons-container">
+    <!-- Each button stores its choice in a data-attribute -->
+    <button class="choice-btn" data-choice="Rock">Rock</button>
+    <button class="choice-btn" data-choice="Paper">Paper</button>
+    <button class="choice-btn" data-choice="Scissors">Scissors</button>
   </div>
-</div>`);
+
+  <!-- Area where the result will be shown -->
+  <div id="result"></div>
+
+  <!-- Link to our JavaScript file -->
+  <script src="script.js"></script>
+</body>
+  `);
+
+
   
   const [css, setCss] = useState(`* {
   box-sizing: border-box;
@@ -30,6 +36,12 @@ const NewProjectApp = () => {
 .title{
 text-align: center;
 padding: 4px;
+}
+
+.editor-container {
+  height: 100%;
+  overflow: auto;
+  max-height: 500px;
 }
 .game {
   width: 100vw;
@@ -153,9 +165,32 @@ padding: 4px;
   };
 
   const handleCodeSelect = (option) => {
+    if (!option) return; 
+    
     setJs(prevJs => {
-      const newCode = option.replace('A = ', '');
-      return prevJs ? `${prevJs}\n${newCode}` : newCode;
+      // If it's the computer choice code (checking for the array of choices)
+      if (option.includes('["Rock", "Paper", "Scissors"]')) {
+        if (prevJs && prevJs.includes('function playGame(userChoice)')) {
+          // Replace the function logic comment with the new code, maintaining indentation
+          return prevJs.replace('  // function logic', '  ' + option.split('\n').join('\n  ')) + '\n\n\n';
+        } else {
+          // Create new function with the code
+          const newCode = `function playGame(userChoice) {\n  ${option}\n}\n\n\n`;
+          return prevJs ? `${prevJs}\n\n${newCode}` : newCode;
+        }
+      }
+      
+      // Otherwise, add code as normal
+      const newJs = prevJs ? `${prevJs}\n\n${option}\n\n` : `${option}\n\n`;
+      
+      setTimeout(() => {
+        const editorContainer = document.querySelector('.editor-container');
+        if (editorContainer) {
+          editorContainer.scrollTop = 99999;
+        }
+      }, 50);
+
+      return newJs;
     });
     setActiveTab('javascript');
   };
@@ -207,7 +242,11 @@ padding: 4px;
             JavaScript
           </button>
         </div>
-        <div className="editor-container">
+        <div className="editor-container" style={{ 
+          height: '70vh',
+          overflow: 'auto',
+          maxHeight: '800px'
+        }}>
           {renderEditor()}
         </div>
       </div>

@@ -11,32 +11,121 @@ const Modal = ({ onCodeSelect }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [showBlankModal, setShowBlankModal] = useState(false)
   const [selectedOption, setSelectedOption] = useState(null)
+  const [handleButtonColor, setHandleButtonColor] = useState(false)
+  const [selectedButtonIndex, setSelectedButtonIndex] = useState(null)
+  const [showError, setShowError] = useState(false);
+
+  const buttonColor = () => {
+    setHandleButtonColor(!handleButtonColor)
+  }
 
   const questions = [
     {
-      title: "Setting up variables",
-      text: "We need a variable to store the computer's choice and a variable for the user's choice.",
+      title: "Step 1: Find the Rock, Paper, Scissors buttons and the result display",
+      text: <div>
+        We want to find:
+        <ul className="list-disc pl-6 mt-2">
+          <li>All the <strong>Rock, Paper, Scissors</strong> buttons (they have a class <code>.choice-btn</code>).</li>
+          <li>The <code>&lt;div&gt;</code> where we'll display the game result.</li>
+        </ul>
+      </div>,
       options: [],
       correctAnswer: []
     },
     {
-      title: "Which line of code best creates a variable for computerChoice?",
-      options: ["A = console.log('working')", "B = console.log('computerChoice')", "C = function computerChoice() {}"],
-      correctAnswer: ["console.log('working')"]
+      title: "Which lines of code correctly select these elements?",
+      codeSnippets: [
+        'var buttons = document.querySelectorAll(".choice-btn");\nvar resultDiv = document.getElementById("result");',
+        'var buttons = "some buttons";\nvar resultDiv = "some result place";',
+        'var button = document.createElement("button");\nvar resultDiv = document.createElement("div");'
+      ],
+      options: ["A", "B", "C"],
+      correctLetter:"A"
     },
-    // {
-    //   title: "Second explanation",
-    //   text: "explanation",
-    //   options: [],
-    // },
-    
-    // {
-    //   title: "Question 2",
-    //   text: "How many years of experience do you have?",
-    //   options: ["A", "B", "C"]
-    // },
+    {
+      title: "Step 2: Adding Click Events ",
+      text: "We have an array of buttons called buttons and want each button to respond when clicked.",
+      options: [],
+      correctAnswer: []
+    },
+    {
+      title: "Which code snippet correctly adds a click event to each button?",
+      codeSnippets: [
+        'IF user clicks one button:\n    check only "Rock"\nELSE:\n    do nothing',
+        'FOR each button in buttons:\n    WHEN button is clicked:\n        do something',
+        'buttons = "I\'m just a string now!"'
+      ],
+      actualCode: [
+        null,
+        `for (var i = 0; i < buttons.length; i++) {
+  buttons[i].addEventListener("click", function() {
+    var userChoice = this.getAttribute("data-choice");
+    playGame(userChoice);
+  });
+}`,
+        null
+      ],
+      options: ["A", "B", "C"],
+      correctLetter: "B"
+    },
+    {
+      title: "Step 3: Defining the playGame function. Its getting serious now!",
+      text: "We need a function that accepts the user’s selection (e.g., Rock, Paper, or Scissors) and determines the outcome.",
+      options: [],
+      correctAnswer: []
+    },
+    {
+      title: "Which snippet sets up the function signature?",
+      codeSnippets: [
+        'var userChoice = "playGame";',
+        'playGame = userChoice {\n  // function logic\n}',
+        'function playGame(userChoice) {\n  // function logic\n}'
+      ],
+      options: ["A", "B", "C"],
+      correctLetter: "C"
+    },
 
-    
+    {
+      title: "Step 4: Inside playGame: Determining the Computer's Move",
+      text: <div>
+        <p>Inside the <code>playGame</code> function, we want:</p>
+        <ol className="list-decimal pl-6 mt-2">
+          <li>Make a short list of the three moves: Rock, Paper, and Scissors.</li>
+          <li>Pick a random number that can be 0, 1, or 2.</li>
+          <li>Use that random number to choose one move from the list—this becomes the computer's choice.</li>
+        </ol>
+        
+      </div>,
+      options: [],
+      correctAnswer: []
+    },
+
+    {
+      title: "Which snippet correctly determines the computer's move?",
+      codeSnippets: [
+        'var choices = ["Rock", "Paper", "Scissors"];\nvar randomIndex = Math.floor(Math.random() * 3);\nvar computerChoice = choices[randomIndex];',
+        'var computerChoice = "RockPaperScissors";\nvar randomIndex = 3;',
+        'alert("Computers always pick Rock!");'
+      ],
+      options: ["A", "B", "C"],
+      correctLetter: "A"
+    },
+    {
+      title: "Step 5: Compare and Determine the Winner ",
+      text:"We want to check for a tie, or a user victory, or a computer victory.",
+      options: [],
+      correctAnswer: []
+    },
+    {
+      title: "Which of these code snippets correctly compares the user's choice and the computer's choice?",
+      codeSnippets: [
+        'var buttons = document.querySelectorAll(".choice-btn");\nvar resultDiv = document.getElementById("result");',
+        'var buttons = "some buttons";\nvar resultDiv = "some result place";',
+        'var button = document.createElement("button");\nvar resultDiv = document.createElement("div");'
+      ],
+      options: ["A", "B", "C"],
+      correctLetter:"A"
+    },
   ]
 
   // Add useEffect for keyboard listener
@@ -52,27 +141,16 @@ const Modal = ({ onCodeSelect }) => {
     return () => window.removeEventListener('keypress', handleKeyPress);
   }, [selectedOption, onCodeSelect]);
 
-  const handleOptionClick = (option) => {
+  const handleOptionClick = (option, index) => {
     const currentQ = questions[currentQuestion];
-    // Add safety check
-    if (!currentQ || !currentQ.correctAnswer) {
-      console.log("No correct answer defined for this question");
-      return;
-    }
-
-    if (currentQ.correctAnswer.includes(option.replace('A = ', ''))) {
-      setSelectedOption(option);
-      onCodeSelect?.(option);
-      setIsOpen(false);
-    }
+    const selectedCode = currentQ.actualCode?.[index] || currentQ.codeSnippets[index];
     
-    // Add console.log for debugging
-    console.log({
-      option,
-      currentQ,
-      isCorrect: currentQ.correctAnswer?.includes(option.replace('A = ', '')),
-      selectedOption
-    });
+    if (option === currentQ.correctLetter) {
+      setSelectedOption(selectedCode);
+    } else {
+      setShowError(true);
+      setSelectedButtonIndex(null);
+    }
   }
 
   const handleNext = () => {
@@ -80,8 +158,7 @@ const Modal = ({ onCodeSelect }) => {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1)
     } else {
-      onCodeSelect?.(selectedOption)
-      setIsOpen(false)
+
     }
   }
 
@@ -100,7 +177,7 @@ const Modal = ({ onCodeSelect }) => {
 
         {/* Full-screen container to center the panel */}
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel className="w-[screen] h-[screen] max-w-md transform overflow-hidden rounded-2xl bg-white">
+          <Dialog.Panel className="w-[screen] h-[screen] max-w-2xl transform overflow-hidden rounded-2xl bg-white">
             <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
               <div className="sm:flex sm:items-center h-[300px]">
                 <div className="mx-auto flex size-12 shrink-0 items-center justify-center  sm:mx-0 sm:size-10">
@@ -111,24 +188,36 @@ const Modal = ({ onCodeSelect }) => {
                     {questions[currentQuestion].title}
                   </Dialog.Title>
                   <div className="mt-2">
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-500 mb-4">
                       {questions[currentQuestion].text}
                     </p>
+                    {/* Display code snippets */}
+                    {questions[currentQuestion].codeSnippets?.map((snippet, index) => (
+                      <pre key={index} className="bg-gray-100 p-2 mb-2 rounded">
+                        <code>{snippet}</code>
+                      </pre>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
             <div className="bg-gray-50 px-4 py-3 sm:flex sm:px-6">
+ 
               {questions[currentQuestion].options.map((option, index) => (
                 <button
                   key={index}
                   type="button"
-                  onClick={() => handleOptionClick(option)}
-                  className="inline-flex w-full justify-center rounded-md bg-orange-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                  onClick={() => {
+                    handleOptionClick(option, index);
+                    setSelectedButtonIndex(index);
+                  }}
+                  className={`inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto
+                    ${selectedButtonIndex === index ? 'bg-green-500' : 'bg-[#2096F3]'}`}
                 >
                   {option}
                 </button>
               ))}
+     
               <div className="ml-[160px]" >
                 {questions[currentQuestion].options.length > 0 && (
                   <button
@@ -136,6 +225,16 @@ const Modal = ({ onCodeSelect }) => {
                     onClick={() => {
                       onCodeSelect?.(selectedOption);
                       setIsOpen(false);
+                      
+                      // Show next question after 3 seconds
+                      if (currentQuestion < questions.length - 1) {
+                        setTimeout(() => {
+                          setCurrentQuestion(currentQuestion + 1);
+                          setIsOpen(true);
+                          setSelectedButtonIndex(null); // Reset selected button
+                          setShowError(false); // Reset error state
+                        }, 2200);
+                      }
                     }}
                     className="inline-flex w-full justify-center rounded-md bg-green-400 px-5 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                   >
@@ -163,6 +262,12 @@ const Modal = ({ onCodeSelect }) => {
   onNext={handleNext}
   
       />
+
+      {showError && (
+        <div className="absolute bottom-20 left-0 right-0 mx-auto w-fit bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded">
+          Wrong answer! Think again.
+        </div>
+      )}
     </>
   ) 
 }

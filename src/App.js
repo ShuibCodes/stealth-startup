@@ -6,7 +6,7 @@ import './App.css';
 
 const NavBar = () => (
   <nav className="nav-bar">
-    <Link to="/">Codepen</Link>
+    <Link to="/">Home</Link>
     <Link to="/new-project">New Project</Link>
   </nav>
 );
