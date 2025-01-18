@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Dialog } from '@headlessui/react'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import ContextModal from './ContextModal'
+import { useSearchParams, useLocation } from 'react-router-dom'
 
 const Modal = ({ onCodeSelect }) => {
   console.log("Modal component rendering");
@@ -14,6 +15,9 @@ const Modal = ({ onCodeSelect }) => {
   const [handleButtonColor, setHandleButtonColor] = useState(false)
   const [selectedButtonIndex, setSelectedButtonIndex] = useState(null)
   const [showError, setShowError] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  const stepParam = searchParams.get('step');
 
   const buttonColor = () => {
     setHandleButtonColor(!handleButtonColor)
@@ -103,7 +107,7 @@ const Modal = ({ onCodeSelect }) => {
     {
       title: "Which snippet correctly determines the computer's move?",
       codeSnippets: [
-        'var choices = ["Rock", "Paper", "Scissors"];\nvar randomIndex = Math.floor(Math.random() * 3);\nvar computerChoice = choices[randomIndex];',
+        'var choices = ["Rock", "Paper", "Scissors"];\nvar randomIndex = Math.floor(Math.random() * 3);\nvar computerChoice = choices[randomIndex];\n// next step here',
         'var computerChoice = "RockPaperScissors";\nvar randomIndex = 3;',
         'alert("Computers always pick Rock!");'
       ],
@@ -117,15 +121,49 @@ const Modal = ({ onCodeSelect }) => {
       correctAnswer: []
     },
     {
-      title: "Which of these code snippets correctly compares the user's choice and the computer's choice?",
+      title: "Which code determines the winner?",
       codeSnippets: [
-        'var buttons = document.querySelectorAll(".choice-btn");\nvar resultDiv = document.getElementById("result");',
-        'var buttons = "some buttons";\nvar resultDiv = "some result place";',
-        'var button = document.createElement("button");\nvar resultDiv = document.createElement("div");'
+        'IF userChoice == computerChoice:\n    say "Tie!"\nELSE IF userChoice beats computerChoice:\n    say "You win!"\nELSE:\n    say "Computer wins!"',
+        'FOR each round:\n    show "Computer always wins!"',
+        'resultMessage = "Game Over."'
+      ],
+      actualCode: [
+        `  var resultMessage = "";
+
+  if (userChoice === computerChoice) {
+    resultMessage = "It's a tie!";
+  } else if (
+    (userChoice === "Rock" && computerChoice === "Scissors") ||
+    (userChoice === "Scissors" && computerChoice === "Paper") ||
+    (userChoice === "Paper" && computerChoice === "Rock")
+  ) {
+    resultMessage = "You win!";
+  } else {
+    resultMessage = "Computer wins!";
+  }`,
+        null,
+        null
       ],
       options: ["A", "B", "C"],
-      correctLetter:"A"
+      correctLetter: "A"
     },
+    {
+      title: "Step 6: Finally, its time to display the result",
+      text: "We want to display the result in the <code>resultDiv</code>.",
+      options: [],
+      correctAnswer: []
+    },
+    {
+      title: "Which snippet inserts <code>resultMessage</code> into <code>&lt;div id=\"result\"&gt;&lt;/div&gt;</code>?",
+      text: "We want to display the result in the <code>resultDiv</code>.",
+      codeSnippets: [
+        'prompt(resultMessage);',
+        'resultDiv.textContent = resultMessage;',
+        'alert("Done!");'
+      ],
+      options: ["A", "B", "C"],
+      correctLetter: "B"
+    }
   ]
 
   // Add useEffect for keyboard listener
@@ -140,6 +178,16 @@ const Modal = ({ onCodeSelect }) => {
     window.addEventListener('keypress', handleKeyPress);
     return () => window.removeEventListener('keypress', handleKeyPress);
   }, [selectedOption, onCodeSelect]);
+
+  useEffect(() => {
+    // Only handle step parameter if we're on the new-project path
+    if (location.pathname === '/new-project' && stepParam) {
+      const stepNumber = parseInt(stepParam);
+      if (stepNumber >= 1 && stepNumber <= questions.length) {
+        setCurrentQuestion(stepNumber - 1);
+      }
+    }
+  }, [stepParam, location.pathname]);
 
   const handleOptionClick = (option, index) => {
     const currentQ = questions[currentQuestion];
@@ -161,6 +209,21 @@ const Modal = ({ onCodeSelect }) => {
 
     }
   }
+
+  // Add step to URL while maintaining the /new-project path
+  const handleNextQuestion = () => {
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+      setSearchParams({ step: currentQuestion + 2 });
+    }
+  };
+
+  const handlePrevQuestion = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion(currentQuestion - 1);
+      setSearchParams({ step: currentQuestion });
+    }
+  };
 
   // Let's also verify the questions array
   console.log("Current question:", questions[currentQuestion]);
