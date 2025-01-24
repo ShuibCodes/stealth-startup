@@ -6,6 +6,166 @@ import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import ContextModal from './ContextModal'
 import { useSearchParams, useLocation } from 'react-router-dom'
 
+const baseQuestions = [
+  {
+    title: "Step 1: Find the Rock, Paper, Scissors buttons and the result display",
+    text: <div>
+      We want to find:
+      <ul className="list-disc pl-6 mt-2">
+        <li>All the <strong>Rock, Paper, Scissors</strong> buttons (they have a class <code>.choice-btn</code>).</li>
+        <li>The <code>&lt;div&gt;</code> where we'll display the game result.</li>
+      </ul>
+    </div>,
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which lines of code correctly select these elements?",
+    codeSnippets: [
+      'var buttons = document.querySelectorAll(".choice-btn");\nvar resultDiv = document.getElementById("result");',
+      'var buttons = "some buttons";\nvar resultDiv = "some result place";',
+      'var button = document.createElement("button");\nvar resultDiv = document.createElement("div");'
+    ],
+    options: ["A", "B", "C"],
+    correctLetter:"A"
+  },
+  {
+    title: "Step 2: Adding Click Events ",
+    text: "We have an array of buttons called buttons and want each button to respond when clicked.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which code snippet correctly adds a click event to each button?",
+    codeSnippets: [
+      'IF user clicks one button:\n    check only "Rock"\nELSE:\n    do nothing',
+      'FOR each button in buttons:\n    WHEN button is clicked:\n        do something',
+      'buttons = "I\'m just a string now!"'
+    ],
+    actualCode: [
+      null,
+      `for (var i = 0; i < buttons.length; i++) {
+  buttons[i].addEventListener("click", function() {
+    var userChoice = this.getAttribute("data-choice");
+    playGame(userChoice);
+  });
+}`,
+      null
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "B"
+  },
+  {
+    title: "Step 3: Defining the playGame function. Its getting serious now!",
+    text: "We need a function that accepts the user's selection (e.g., Rock, Paper, or Scissors) and determines the outcome.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which snippet sets up the function signature?",
+    codeSnippets: [
+      'var userChoice = "playGame";',
+      'playGame = userChoice {\n  // function logic\n}',
+      'function playGame(userChoice) {\n  // function logic\n}'
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "C"
+  },
+
+  {
+    title: "Step 4: Inside playGame: Determining the Computer's Move",
+    text: <div>
+      <p>Inside the <code>playGame</code> function, we want:</p>
+      <ol className="list-decimal pl-6 mt-2">
+        <li>Make a short list of the three moves: Rock, Paper, and Scissors.</li>
+        <li>Pick a random number that can be 0, 1, or 2.</li>
+        <li>Use that random number to choose one move from the list—this becomes the computer's choice.</li>
+      </ol>
+      
+    </div>,
+    options: [],
+    correctAnswer: []
+  },
+
+  {
+    title: "Which snippet correctly determines the computer's move?",
+    codeSnippets: [
+      'var choices = ["Rock", "Paper", "Scissors"];\nvar randomIndex = Math.floor(Math.random() * 3);\nvar computerChoice = choices[randomIndex];\n// next step here',
+      'var computerChoice = "RockPaperScissors";\nvar randomIndex = 3;',
+      'alert("Computers always pick Rock!");'
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "A"
+  },
+  {
+    title: "Step 5: Compare and Determine the Winner ",
+    text:"We want to check for a tie, or a user victory, or a computer victory.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which code determines the winner?",
+    codeSnippets: [
+      'IF userChoice == computerChoice:\n    say "Tie!"\nELSE IF userChoice beats computerChoice:\n    say "You win!"\nELSE:\n    say "Computer wins!"',
+      'FOR each round:\n    show "Computer always wins!"',
+      'resultMessage = "Game Over."'
+    ],
+    actualCode: [
+      `  var resultMessage = "";
+
+  if (userChoice === computerChoice) {
+    resultMessage = "It's a tie!";
+  } else if (
+    (userChoice === "Rock" && computerChoice === "Scissors") ||
+    (userChoice === "Scissors" && computerChoice === "Paper") ||
+    (userChoice === "Paper" && computerChoice === "Rock")
+  ) {
+    resultMessage = "You win!";
+  } else {
+    resultMessage = "Computer wins!";
+  }`,
+      null,
+      null
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "A"
+  },
+  {
+    title: "Step 6: Finally, its time to display the result",
+    text: "We want to display the result in the <code>resultDiv</code>.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which snippet inserts <code>resultMessage</code> into <code>&lt;div id=\"result\"&gt;&lt;/div&gt;</code>?",
+    text: "We want to display the result in the <code>resultDiv</code>.",
+    codeSnippets: [
+      'prompt(resultMessage);',
+      'resultDiv.textContent = resultMessage;',
+      'alert("Done!");'
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "B"
+  }
+]
+
+// Create new array with empty steps after every 2nd question
+const questions = baseQuestions.reduce((acc, question, index) => {
+  acc.push(question);
+  if ((index + 1) % 2 === 0 && index < baseQuestions.length - 1) {
+    acc.push({
+      isEmptyStep: true,
+      title: "",
+      text: null,
+      options: ["Continue"],
+      codeSnippets: null,
+      actualCode: null,
+      correctLetter: null
+    });
+  }
+  return acc;
+}, []);
+
 const Modal = ({ onCodeSelect }) => {
   console.log("Modal component rendering");
   const [isOpen, setIsOpen] = useState(true)
@@ -22,149 +182,6 @@ const Modal = ({ onCodeSelect }) => {
   const buttonColor = () => {
     setHandleButtonColor(!handleButtonColor)
   }
-
-  const questions = [
-    {
-      title: "Step 1: Find the Rock, Paper, Scissors buttons and the result display",
-      text: <div>
-        We want to find:
-        <ul className="list-disc pl-6 mt-2">
-          <li>All the <strong>Rock, Paper, Scissors</strong> buttons (they have a class <code>.choice-btn</code>).</li>
-          <li>The <code>&lt;div&gt;</code> where we'll display the game result.</li>
-        </ul>
-      </div>,
-      options: [],
-      correctAnswer: []
-    },
-    {
-      title: "Which lines of code correctly select these elements?",
-      codeSnippets: [
-        'var buttons = document.querySelectorAll(".choice-btn");\nvar resultDiv = document.getElementById("result");',
-        'var buttons = "some buttons";\nvar resultDiv = "some result place";',
-        'var button = document.createElement("button");\nvar resultDiv = document.createElement("div");'
-      ],
-      options: ["A", "B", "C"],
-      correctLetter:"A"
-    },
-    {
-      title: "Step 2: Adding Click Events ",
-      text: "We have an array of buttons called buttons and want each button to respond when clicked.",
-      options: [],
-      correctAnswer: []
-    },
-    {
-      title: "Which code snippet correctly adds a click event to each button?",
-      codeSnippets: [
-        'IF user clicks one button:\n    check only "Rock"\nELSE:\n    do nothing',
-        'FOR each button in buttons:\n    WHEN button is clicked:\n        do something',
-        'buttons = "I\'m just a string now!"'
-      ],
-      actualCode: [
-        null,
-        `for (var i = 0; i < buttons.length; i++) {
-  buttons[i].addEventListener("click", function() {
-    var userChoice = this.getAttribute("data-choice");
-    playGame(userChoice);
-  });
-}`,
-        null
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "B"
-    },
-    {
-      title: "Step 3: Defining the playGame function. Its getting serious now!",
-      text: "We need a function that accepts the user’s selection (e.g., Rock, Paper, or Scissors) and determines the outcome.",
-      options: [],
-      correctAnswer: []
-    },
-    {
-      title: "Which snippet sets up the function signature?",
-      codeSnippets: [
-        'var userChoice = "playGame";',
-        'playGame = userChoice {\n  // function logic\n}',
-        'function playGame(userChoice) {\n  // function logic\n}'
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "C"
-    },
-
-    {
-      title: "Step 4: Inside playGame: Determining the Computer's Move",
-      text: <div>
-        <p>Inside the <code>playGame</code> function, we want:</p>
-        <ol className="list-decimal pl-6 mt-2">
-          <li>Make a short list of the three moves: Rock, Paper, and Scissors.</li>
-          <li>Pick a random number that can be 0, 1, or 2.</li>
-          <li>Use that random number to choose one move from the list—this becomes the computer's choice.</li>
-        </ol>
-        
-      </div>,
-      options: [],
-      correctAnswer: []
-    },
-
-    {
-      title: "Which snippet correctly determines the computer's move?",
-      codeSnippets: [
-        'var choices = ["Rock", "Paper", "Scissors"];\nvar randomIndex = Math.floor(Math.random() * 3);\nvar computerChoice = choices[randomIndex];\n// next step here',
-        'var computerChoice = "RockPaperScissors";\nvar randomIndex = 3;',
-        'alert("Computers always pick Rock!");'
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "A"
-    },
-    {
-      title: "Step 5: Compare and Determine the Winner ",
-      text:"We want to check for a tie, or a user victory, or a computer victory.",
-      options: [],
-      correctAnswer: []
-    },
-    {
-      title: "Which code determines the winner?",
-      codeSnippets: [
-        'IF userChoice == computerChoice:\n    say "Tie!"\nELSE IF userChoice beats computerChoice:\n    say "You win!"\nELSE:\n    say "Computer wins!"',
-        'FOR each round:\n    show "Computer always wins!"',
-        'resultMessage = "Game Over."'
-      ],
-      actualCode: [
-        `  var resultMessage = "";
-
-  if (userChoice === computerChoice) {
-    resultMessage = "It's a tie!";
-  } else if (
-    (userChoice === "Rock" && computerChoice === "Scissors") ||
-    (userChoice === "Scissors" && computerChoice === "Paper") ||
-    (userChoice === "Paper" && computerChoice === "Rock")
-  ) {
-    resultMessage = "You win!";
-  } else {
-    resultMessage = "Computer wins!";
-  }`,
-        null,
-        null
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "A"
-    },
-    {
-      title: "Step 6: Finally, its time to display the result",
-      text: "We want to display the result in the <code>resultDiv</code>.",
-      options: [],
-      correctAnswer: []
-    },
-    {
-      title: "Which snippet inserts <code>resultMessage</code> into <code>&lt;div id=\"result\"&gt;&lt;/div&gt;</code>?",
-      text: "We want to display the result in the <code>resultDiv</code>.",
-      codeSnippets: [
-        'prompt(resultMessage);',
-        'resultDiv.textContent = resultMessage;',
-        'alert("Done!");'
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "B"
-    }
-  ]
 
   // Add useEffect for keyboard listener
   useEffect(() => {
