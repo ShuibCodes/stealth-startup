@@ -149,18 +149,40 @@ const baseQuestions = [
   }
 ]
 
+// Define the content for empty modals
+const emptyModalContent = [
+  {
+    title: "Great job on the first steps!",
+    description: "You've set up the basic structure. Let's continue building our game.",
+    image: null // optional image URL if needed
+  },
+  {
+    title: "Now we're getting somewhere!",
+    description: "The game is starting to take shape. Ready for the next challenge?",
+    image: null
+  },
+  {
+    title: "Almost there!",
+    description: "Just a few more steps to complete your Rock, Paper, Scissors game.",
+    image: null
+  }
+];
+
 // Create new array with empty steps after every 2nd question
 const questions = baseQuestions.reduce((acc, question, index) => {
+  // Add the regular question
   acc.push(question);
+  
+  // Add empty step after every 2nd question (but not after the last question)
   if ((index + 1) % 2 === 0 && index < baseQuestions.length - 1) {
     acc.push({
       isEmptyStep: true,
-      title: "",
-      text: null,
-      options: ["Continue"],
-      codeSnippets: null,
-      actualCode: null,
-      correctLetter: null
+      continueToStep: acc.length + 2,
+      content: emptyModalContent[Math.floor(index / 2)] || {
+        title: "Keep going!",
+        description: "You're making great progress.",
+        image: null
+      }
     });
   }
   return acc;
@@ -244,6 +266,33 @@ const Modal = ({ onCodeSelect }) => {
 
   // Let's also verify the questions array
   console.log("Current question:", questions[currentQuestion]);
+
+  // Render empty step modal
+  if (questions[currentQuestion]?.isEmptyStep) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-lg p-12 max-w-6xl w-full h-[600px] relative">
+          <div className="max-w-3xl">
+            <h2 className="text-3xl font-bold mb-4">{questions[currentQuestion].content.title}</h2>
+            <p className="text-xl text-gray-600">{questions[currentQuestion].content.description}</p>
+          </div>
+          {questions[currentQuestion].content.image && (
+            <img 
+              src={questions[currentQuestion].content.image} 
+              alt="Step visualization" 
+              className="mt-8"
+            />
+          )}
+          <button
+            onClick={handleNext}
+            className="bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition-colors absolute bottom-8 right-8"
+          >
+            Continue
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
