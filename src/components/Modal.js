@@ -5,6 +5,13 @@ import { Dialog } from '@headlessui/react'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import ContextModal from './ContextModal'
 import { useSearchParams, useLocation } from 'react-router-dom'
+import step1 from '../images/step-1.png'
+import step2 from '../images/step-2.png'
+import step3 from '../images/step-3.png'
+import step4 from '../images/step-4.png'
+import step5 from '../images/step-5.png'
+import step6 from '../images/step-6.png'
+import wizard from '../images/wizard.png'
 
 const baseQuestions = [
   {
@@ -154,17 +161,32 @@ const emptyModalContent = [
   {
     title: "Great job on the first steps!",
     description: "You've set up the basic structure. Let's continue building our game.",
-    image: null // optional image URL if needed
+    image: step1
   },
   {
     title: "Now we're getting somewhere!",
     description: "The game is starting to take shape. Ready for the next challenge?",
-    image: null
+    image: step2
   },
   {
     title: "Almost there!",
     description: "Just a few more steps to complete your Rock, Paper, Scissors game.",
-    image: null
+    image: step3
+  },
+  {
+    title: "Looking good!",
+    description: "Your game is coming together nicely. Let's add more functionality.",
+    image: step4
+  },
+  {
+    title: "Getting close to the finish line!",
+    description: "Just a few more touches to make your game perfect.",
+    image: step5
+  },
+  {
+    title: "Final steps!",
+    description: "You're about to complete your Rock, Paper, Scissors game!",
+    image: step6
   }
 ];
 
@@ -270,19 +292,60 @@ const Modal = ({ onCodeSelect }) => {
   // Render empty step modal
   if (questions[currentQuestion]?.isEmptyStep) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[9999]">
         <div className="bg-white rounded-lg p-12 max-w-6xl w-full h-[600px] relative">
-          <div className="max-w-3xl">
-            <h2 className="text-3xl font-bold mb-4">{questions[currentQuestion].content.title}</h2>
-            <p className="text-xl text-gray-600">{questions[currentQuestion].content.description}</p>
+          {/* Wizard image */}
+          <img 
+            src={wizard}
+            alt="Wizard avatar"
+            className="absolute top-4 left-16 w-32 h-32 object-contain"
+          />
+          
+          {/* Close button */}
+          <button
+            onClick={() => {
+              setCurrentQuestion(0);
+              setShowBlankModal(false);
+              onCodeSelect?.(null);
+            }}
+            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
+            aria-label="Close modal"
+          >
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="h-6 w-6" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M6 18L18 6M6 6l12 12" 
+              />
+            </svg>
+          </button>
+          
+          <div className="flex h-full items-center justify-between gap-8">
+            {/* Left side - Content */}
+            <div className="flex-1 flex flex-col justify-center">
+              <h2 className="text-3xl font-bold mb-4">{questions[currentQuestion].content.title}</h2>
+              <h4 className="text-xl text-gray-600 leading-relaxed">
+                {questions[currentQuestion].content.description}
+              </h4>
+            </div>
+            
+            {/* Right side - Image */}
+            <div className="flex-1">
+              <img 
+                src={questions[currentQuestion].content.image} 
+                alt="Step visualization" 
+                className="w-full h-full object-contain"
+              />
+            </div>
           </div>
-          {questions[currentQuestion].content.image && (
-            <img 
-              src={questions[currentQuestion].content.image} 
-              alt="Step visualization" 
-              className="mt-8"
-            />
-          )}
+
           <button
             onClick={handleNext}
             className="bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition-colors absolute bottom-8 right-8"
