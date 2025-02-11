@@ -15,6 +15,21 @@ import wizard from '../images/wizard.png'
 
 const baseQuestions = [
   {
+    title: "Step 1: Set up score tracking",
+    text: "Let's start by setting up our score variables and getting references to the score display elements.",
+    codeSnippets: [
+      'SET playerScoreDisplay TO the element with id "playerScore"\nSET computerScoreDisplay TO the element with id "computerScore"\nSET playerScore TO 0\nSET computerScore TO 0',
+      'var pScore = 0;\nvar cScore = 0;',
+      'let scores = { player: 0, computer: 0 };'
+    ],
+    actualCode: [
+      'var playerScoreDisplay = document.getElementById("playerScore");\nvar computerScoreDisplay = document.getElementById("computerScore");\nvar playerScore = 0;\nvar computerScore = 0;'
+    ],
+    correctLetter: "A",
+    options: ["A", "B", "C"]
+  },
+ 
+  {
     title: "Step 1: Find the Rock, Paper, Scissors buttons and the result display",
     text: <div>
       We want to find:
@@ -29,7 +44,7 @@ const baseQuestions = [
   {
     title: "Which lines of code correctly select these elements?",
     codeSnippets: [
-      'var buttons = document.querySelectorAll(".choice-btn");\nvar resultDiv = document.getElementById("result");',
+      ';\nvar buttons = document.querySelectorAll(".choice-btn");\nvar resultDiv = document.getElementById("result");',
       'var buttons = "some buttons";\nvar resultDiv = "some result place";',
       'var button = document.createElement("button");\nvar resultDiv = document.createElement("div");'
     ],
@@ -105,13 +120,8 @@ const baseQuestions = [
     correctLetter: "A"
   },
   {
-    title: "Step 5: Compare and Determine the Winner ",
-    text:"We want to check for a tie, or a user victory, or a computer victory.",
-    options: [],
-    correctAnswer: []
-  },
-  {
-    title: "Which code determines the winner?",
+    title: "Step 5: Determine the winner",
+    text: "Let's add the logic to determine the winner and update the scores.",
     codeSnippets: [
       'IF userChoice == computerChoice:\n    say "Tie!"\nELSE IF userChoice beats computerChoice:\n    say "You win!"\nELSE:\n    say "Computer wins!"',
       'FOR each round:\n    show "Computer always wins!"',
@@ -121,15 +131,19 @@ const baseQuestions = [
       `  var resultMessage = "";
 
   if (userChoice === computerChoice) {
-    resultMessage = "It's a tie!";
+    resultMessage = "👑 It's a tie! 👑";
   } else if (
     (userChoice === "Rock" && computerChoice === "Scissors") ||
     (userChoice === "Scissors" && computerChoice === "Paper") ||
     (userChoice === "Paper" && computerChoice === "Rock")
   ) {
-    resultMessage = "You win!";
+    playerScore++;
+    playerScoreDisplay.textContent = playerScore;
+    resultMessage = "👑 You win! 👑";
   } else {
-    resultMessage = "Computer wins!";
+    computerScore++;
+    computerScoreDisplay.textContent = computerScore;
+    resultMessage = "👑 Computer wins! 👑";
   }`,
       null,
       null
@@ -258,6 +272,8 @@ const Modal = ({ onCodeSelect }) => {
       setSelectedOption(selectedCode);
     } else {
       setShowError(true);
+      alert("WRONG ANSWER") // fix the handling of this && make it a data-point
+      console.log("WRONG ANSWER")
       setSelectedButtonIndex(null);
     }
   }

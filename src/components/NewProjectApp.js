@@ -339,6 +339,7 @@ padding: 4px;
     (userChoice === "Scissors" && computerChoice === "Paper") ||
     (userChoice === "Paper" && computerChoice === "Rock")
   ) {
+          
            resultMessage = "👑 You win! 👑";
   } else {
        resultMessage = "👑 Computer wins! 👑";
@@ -397,7 +398,7 @@ function playGame(userChoice) {
       
       // Step 2: Get DOM elements
       if (option.includes('document.querySelectorAll')) {
-        const domCode = `var buttons = document.querySelectorAll(".choice-btn");
+        const domCode = `\n\nvar buttons = document.querySelectorAll(".choice-btn");
 var resultDiv = document.getElementById("result");\n`;  // Just one newline after the DOM elements
         return prevJs.trimEnd() + domCode;
       }
@@ -452,7 +453,7 @@ ${option}
       buttonText: "Add animation",
       action: () => {
         const animationCode = `// STEP 1: Get references to HTML elements
-var buttons = document.querySelectorAll(".choice-btn");
+\n\nvar buttons = document.querySelectorAll(".choice-btn");
 var resultDiv = document.getElementById("result");
 var overlay = document.getElementById("gameOverlay");
 var overlayContent = overlay.querySelector(".overlay-content");
