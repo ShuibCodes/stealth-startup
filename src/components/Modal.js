@@ -174,8 +174,7 @@ const baseQuestions = [
     correctAnswer: [],
   },
   {
-    title:
-      'Which snippet inserts <code>resultMessage</code> into <code>&lt;div id="result"&gt;&lt;/div&gt;</code>?',
+    title: "Which snippet inserts resultMessage into resultDiv?",
     text: "We want to display the result in the <code>resultDiv</code>.",
     codeSnippets: [
       "prompt(resultMessage);",
@@ -183,6 +182,34 @@ const baseQuestions = [
       'alert("Done!");',
     ],
     options: ["A", "B", "C"],
+    correctLetter: "B",
+  },
+  {
+    title: "Step 7: Show the user's and computer's choices",
+    text: "We want to display what the user and the computer picked. This helps players see what happened in the round.",
+    options: [],
+    correctAnswer: [],
+  },
+  {
+    title: "Which snippet inserts the choices into its elemnts?",
+    text: "We want to display what the user and the computer picked.",
+    codeSnippets: [
+      'SET playerChoiceDisplay TO the element with id "playerChoice"\nSET computerChoiceDisplay TO the element with id "computerChoice"',
+      'document.getElementById("userChoice").textContent = playerChoice;\ndocument.getElementById("computerChoice").textContent = computerChoice;',
+      "playerChoiceDisplay.innerText = playerChoice;\ncomputerChoiceDisplay.innerText = computerChoice;",
+    ],
+    options: ["A", "B", "C"],
+    actualCode: [
+      "",
+      `// Get the elements where we will show the choices
+var playerChoiceDisplay = document.getElementById("playerChoice");
+var computerChoiceDisplay = document.getElementById("computerChoice");
+
+// Update the choice displays
+playerChoiceDisplay.textContent = userChoice;
+computerChoiceDisplay.textContent = computerChoice;`,
+      "",
+    ],
     correctLetter: "B",
   },
 ];
@@ -268,12 +295,18 @@ const Modal = ({ onCodeSelect }) => {
       if (event.key === "Enter" && selectedOption) {
         onCodeSelect?.(selectedOption);
         setIsOpen(false);
+        setTimeout(() => {
+          setCurrentQuestion(currentQuestion + 1);
+          setIsOpen(true);
+          setSelectedButtonIndex(null); // Reset selected button
+          setShowError(false); // Reset error state
+        }, 2000);
       }
     };
 
     window.addEventListener("keypress", handleKeyPress);
     return () => window.removeEventListener("keypress", handleKeyPress);
-  }, [selectedOption, onCodeSelect]);
+  }, [selectedOption, onCodeSelect, currentQuestion]);
 
   useEffect(() => {
     // Only handle step parameter if we're on the new-project path
@@ -295,7 +328,7 @@ const Modal = ({ onCodeSelect }) => {
     } else {
       setShowError(true);
       alert("WRONG ANSWER"); // fix the handling of this && make it a data-point
-      //  // console.log("WRONG ANSWER");
+
       setSelectedButtonIndex(null);
     }
   };
@@ -411,7 +444,7 @@ const Modal = ({ onCodeSelect }) => {
 
         {/* Full-screen container to center the panel */}
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel className="w-[screen] h-[screen] max-w-2xl transform overflow-hidden rounded-2xl bg-white">
+          <Dialog.Panel className="w-[screen] h-[screen] max-w-3xl transform overflow-hidden rounded-2xl bg-white">
             <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
               <div className="sm:flex sm:items-center h-[300px]">
                 <div className="mx-auto flex size-12 shrink-0 items-center justify-center  sm:mx-0 sm:size-10">
@@ -449,8 +482,8 @@ const Modal = ({ onCodeSelect }) => {
                   key={index}
                   type="button"
                   onClick={() => {
-                    handleOptionClick(option, index);
                     setSelectedButtonIndex(index);
+                    handleOptionClick(option, index);
                   }}
                   className={`inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto
                     ${
@@ -467,7 +500,9 @@ const Modal = ({ onCodeSelect }) => {
                 {questions[currentQuestion].options.length > 0 && (
                   <button
                     type="button"
+                    disabled={selectedButtonIndex === null}
                     onClick={() => {
+                      // console.log("selctedoption:", questions);
                       onCodeSelect?.(selectedOption);
                       setIsOpen(false);
 
@@ -478,10 +513,10 @@ const Modal = ({ onCodeSelect }) => {
                           setIsOpen(true);
                           setSelectedButtonIndex(null); // Reset selected button
                           setShowError(false); // Reset error state
-                        }, 2200);
+                        }, 2000);
                       }
                     }}
-                    className="inline-flex w-full justify-center rounded-md bg-green-400 px-5 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                    className=" disabled:opacity-75 disabled:bg-gray-400 inline-flex w-full justify-center rounded-md bg-green-400 px-5 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                   >
                     Run
                   </button>

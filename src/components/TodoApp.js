@@ -3,7 +3,7 @@ import CodeEditor from "./CodeEditor";
 import AIChatSidebar from "./AIChatSidebar";
 
 const TodoApp = () => {
-  // console.log('TodoApp rendering');
+  // // console.log('TodoApp rendering');
   return (
     <div className="app">
       <div className="workspace">

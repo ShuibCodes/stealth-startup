@@ -221,7 +221,7 @@ padding: 4px;
               try {
                 ${js}
               } catch (err) {
-                console.log('JS Error:', err);
+                // console.log('JS Error:', err);
               }
             </script>
           </body>
@@ -300,14 +300,7 @@ padding: 4px;
       // Step 4: Computer choice code
       if (option.includes('var choices = ["Rock", "Paper", "Scissors"]')) {
         if (prevJs && prevJs.includes("function playGame(userChoice)")) {
-          console.log("old :", prevJs);
-          console.log(
-            "new : ",
-            prevJs.replace(
-              "  // function logic",
-              "  " + option.split("\n").join("\n  ")
-            )
-          );
+          // console.log("old :", prevJs);
           return prevJs.replace(
             "  // function logic",
             "  " + option.split("\n").join("\n  ")
@@ -316,99 +309,81 @@ padding: 4px;
       }
 
       // Step 5: Winner determination code
-      // console.log("Checking step 5...", option);
+      // // console.log("Checking step 5...", option);
 
       // Check if this is step 5's actual code
       if (option && option.includes("if (userChoice === computerChoice)")) {
-        console.log("Step 5 condition matched!");
+        // console.log("Step 5 condition matched!");
         return prevJs.replace(
           "  // next step here",
           "  " + option.split("\n").join("\n  ")
         );
-        // Find where the function starts and ends
-        // const functionStart = prevJs.indexOf("function playGame(userChoice)");
-        // console.log("Function start index:", functionStart);
-
-        //         if (functionStart !== -1) {
-        //           // console.log("Found the function, replacing...");
-
-        //           // Get everything before the function
-        //           // const beforeFunction = prevJs.substring(0, functionStart);
-
-        //           // Our new function without step 6
-        // //           const newFunction = `function playGame(userChoice) {
-        // //   // STEP 4: Computer's random choice
-        // //   var choices = ["Rock", "Paper", "Scissors"];
-        // //   var randomIndex = Math.floor(Math.random() * 3);
-        // //   var computerChoice = choices[randomIndex];
-
-        // //   // STEP 5: If-else structure to decide winner
-        // //   var resultMessage = "";
-
-        // //   if (userChoice === computerChoice) {
-        // //     resultMessage = = "👑 It's a tie! 👑";
-        // //   } else if (
-        // //     (userChoice === "Rock" && computerChoice === "Scissors") ||
-        // //     (userChoice === "Scissors" && computerChoice === "Paper") ||
-        // //     (userChoice === "Paper" && computerChoice === "Rock")
-        // //   ) {
-
-        // //            resultMessage = "👑 You win! 👑";
-        // //   } else {
-        // //        resultMessage = "👑 Computer wins! 👑";
-        // //   }
-        // // }`;
-
-        //           // console.log("Returning new code...");
-        //           // return beforeFunction + newFunction;
-        //         }
       }
 
       // Step 6: Show result
       if (option && option.includes("resultDiv.textContent")) {
-        // console.log("Step 6 triggered");
+        // // console.log("Step 6 triggered");
 
         // Find where the function starts and ends
         const functionStart = prevJs.indexOf("function playGame(userChoice)");
-        // console.log("Function start index:", functionStart);
+        // // console.log("Function start index:", functionStart);
 
         if (functionStart !== -1) {
-          // console.log("Found the function, replacing...");
+          // // console.log("Found the function, replacing...");
 
           // Our new function with step 6
           const newFunction = `// STEP 3: Define the playGame function
-function playGame(userChoice) {
-  // STEP 4: Computer's random choice
-  var choices = ["Rock", "Paper", "Scissors"];
-  var randomIndex = Math.floor(Math.random() * 3);
-  var computerChoice = choices[randomIndex];
+              function playGame(userChoice) {
+              // STEP 4: Computer's random choice
+              var choices = ["Rock", "Paper", "Scissors"];
+              var randomIndex = Math.floor(Math.random() * 3);
+              var computerChoice = choices[randomIndex];
 
-  // STEP 5: If-else structure to decide winner
-  var resultMessage = "";
+              // STEP 5: If-else structure to decide winner
+              var resultMessage = "";
 
-  if (userChoice === computerChoice) {
-    resultMessage = "It's a tie!";
-  } else if (
-    (userChoice === "Rock" && computerChoice === "Scissors") ||
-    (userChoice === "Scissors" && computerChoice === "Paper") ||
-    (userChoice === "Paper" && computerChoice === "Rock")
-  ) {
-    resultMessage = "You win!";
-  } else {
-    resultMessage = "Computer wins!";
-  }
+              if (userChoice === computerChoice) {
+                resultMessage = "👑 It's a tie! 👑";
+              } else if (
+                (userChoice === "Rock" && computerChoice === "Scissors") ||
+                (userChoice === "Scissors" && computerChoice === "Paper") ||
+                (userChoice === "Paper" && computerChoice === "Rock")
+              ) {
+                playerScore++;
+                playerScoreDisplay.textContent = playerScore;
+                resultMessage = "👑 You win! 👑";
+              } else {
+                computerScore++;
+                computerScoreDisplay.textContent = computerScore;
+                resultMessage = "👑 Computer wins! 👑";
+              }
 
-  // STEP 6: Show the result
-  resultDiv.textContent = resultMessage;
-}`;
+              // STEP 6: Show the result
+              resultDiv.textContent = resultMessage;
+              playerScoreDisplay.textContent = playerScore;
+              computerScoreDisplay.textContent = computerScore;
+              // next step
+            }
+  `;
 
           // Get everything before the function and replace
           const beforeFunction = prevJs.substring(0, functionStart);
-          // console.log("Returning new code...");
+          // // console.log("Returning new code...");
           return beforeFunction + newFunction;
         }
       }
 
+      // Step 7
+      if (
+        option &&
+        option.includes("Get the elements where we will show the choices")
+      ) {
+        console.log("js", prevJs);
+        return prevJs.replace(
+          "  // next step",
+          "  " + option.split("\n").join("\n  ")
+        );
+      }
       // Step 2: Get DOM elements
       if (option.includes("document.querySelectorAll")) {
         const domCode = `\n\nvar buttons = document.querySelectorAll(".choice-btn");
