@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import EditorProjectTwo from '../EditorProjectTwo';
-import AIChatSidebar2 from './AIChatSidebar2';
-import '../App.css';
-import Modal from './Modal';
+import React, { useState, useEffect } from "react";
+import EditorProjectTwo from "../EditorProjectTwo";
+import AIChatSidebar2 from "./AIChatSidebar2";
+import "../App.css";
+import Modal from "./Modal";
 
 const NewProjectApp = () => {
   const [html, setHtml] = useState(`<!DOCTYPE html>
@@ -133,8 +133,6 @@ const NewProjectApp = () => {
 </body>
 </html>`);
 
-
-  
   const [css, setCss] = useState(`* {
   box-sizing: border-box;
   margin: 0;
@@ -203,11 +201,11 @@ padding: 4px;
   border-radius: 50%;
   border: 10px solid #000;
 }`);
-  
-  const [js, setJs] = useState('');
+
+  const [js, setJs] = useState("");
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [activeTab, setActiveTab] = useState('html');
-  const [srcDoc, setSrcDoc] = useState('');
+  const [activeTab, setActiveTab] = useState("html");
+  const [srcDoc, setSrcDoc] = useState("");
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -235,8 +233,8 @@ padding: 4px;
   }, [html, css, js]);
 
   const renderEditor = () => {
-    switch(activeTab) {
-      case 'html':
+    switch (activeTab) {
+      case "html":
         return (
           <EditorProjectTwo
             language="xml"
@@ -246,7 +244,7 @@ padding: 4px;
             currentStepIndex={currentStepIndex}
           />
         );
-      case 'css':
+      case "css":
         return (
           <EditorProjectTwo
             language="css"
@@ -256,7 +254,7 @@ padding: 4px;
             currentStepIndex={currentStepIndex}
           />
         );
-      case 'javascript':
+      case "javascript":
         return (
           <EditorProjectTwo
             language="javascript"
@@ -273,7 +271,7 @@ padding: 4px;
 
   const scrollToEditor = () => {
     setTimeout(() => {
-      const editorElement = document.querySelector('.editor');
+      const editorElement = document.querySelector(".editor");
       if (editorElement) {
         const editorHeight = editorElement.scrollHeight;
         editorElement.scrollTop = editorHeight;
@@ -282,86 +280,101 @@ padding: 4px;
   };
 
   const handleCodeSelect = (option) => {
-    console.log('Option received:', option); // Debug log
-    if (!option) return; 
-    
-    setJs(prevJs => {
+    console.log("Option received:", option); // Debug log
+    if (!option) return;
+
+    setJs((prevJs) => {
       // Step 2: Button click code
       if (option.includes('addEventListener("click"')) {
         const newJs = prevJs ? `${prevJs}\n\n${option}\n` : `${option}\n`;
         return newJs;
       }
-      
+
       // Step 3: Function definition
-      if (option.includes('function playGame(userChoice)')) {
-        const newCode = 'function playGame(userChoice) {\n  // function logic\n}';
+      if (option.includes("function playGame(userChoice)")) {
+        const newCode =
+          "function playGame(userChoice) {\n  // function logic\n}";
         return prevJs ? `${prevJs}\n\n${newCode}\n\n` : `${newCode}\n\n`;
       }
-      
+
       // Step 4: Computer choice code
       if (option.includes('var choices = ["Rock", "Paper", "Scissors"]')) {
-        if (prevJs && prevJs.includes('function playGame(userChoice)')) {
-          return prevJs.replace('  // function logic', '  ' + option.split('\n').join('\n  '));
+        if (prevJs && prevJs.includes("function playGame(userChoice)")) {
+          console.log("old :", prevJs);
+          console.log(
+            "new : ",
+            prevJs.replace(
+              "  // function logic",
+              "  " + option.split("\n").join("\n  ")
+            )
+          );
+          return prevJs.replace(
+            "  // function logic",
+            "  " + option.split("\n").join("\n  ")
+          );
         }
       }
-      
+
       // Step 5: Winner determination code
-      console.log('Checking step 5...', option);
-      
+      // console.log("Checking step 5...", option);
+
       // Check if this is step 5's actual code
-      if (option && option.includes('resultMessage = "It\'s a tie!"')) {
-        console.log('Step 5 condition matched!');
-        
+      if (option && option.includes("if (userChoice === computerChoice)")) {
+        console.log("Step 5 condition matched!");
+        return prevJs.replace(
+          "  // next step here",
+          "  " + option.split("\n").join("\n  ")
+        );
         // Find where the function starts and ends
-        const functionStart = prevJs.indexOf('function playGame(userChoice)');
-        console.log('Function start index:', functionStart);
-        
-        if (functionStart !== -1) {
-          console.log('Found the function, replacing...');
-          
-          // Get everything before the function
-          const beforeFunction = prevJs.substring(0, functionStart);
-          
-          // Our new function without step 6
-          const newFunction = `function playGame(userChoice) {
-  // STEP 4: Computer's random choice
-  var choices = ["Rock", "Paper", "Scissors"];
-  var randomIndex = Math.floor(Math.random() * 3);
-  var computerChoice = choices[randomIndex];
+        // const functionStart = prevJs.indexOf("function playGame(userChoice)");
+        // console.log("Function start index:", functionStart);
 
-  // STEP 5: If-else structure to decide winner
-  var resultMessage = "";
+        //         if (functionStart !== -1) {
+        //           // console.log("Found the function, replacing...");
 
-  if (userChoice === computerChoice) {
-    resultMessage = = "👑 It's a tie! 👑";
-  } else if (
-    (userChoice === "Rock" && computerChoice === "Scissors") ||
-    (userChoice === "Scissors" && computerChoice === "Paper") ||
-    (userChoice === "Paper" && computerChoice === "Rock")
-  ) {
-          
-           resultMessage = "👑 You win! 👑";
-  } else {
-       resultMessage = "👑 Computer wins! 👑";
-  }
-}`;
-          
-          console.log('Returning new code...');
-          return beforeFunction + newFunction;
-        }
+        //           // Get everything before the function
+        //           // const beforeFunction = prevJs.substring(0, functionStart);
+
+        //           // Our new function without step 6
+        // //           const newFunction = `function playGame(userChoice) {
+        // //   // STEP 4: Computer's random choice
+        // //   var choices = ["Rock", "Paper", "Scissors"];
+        // //   var randomIndex = Math.floor(Math.random() * 3);
+        // //   var computerChoice = choices[randomIndex];
+
+        // //   // STEP 5: If-else structure to decide winner
+        // //   var resultMessage = "";
+
+        // //   if (userChoice === computerChoice) {
+        // //     resultMessage = = "👑 It's a tie! 👑";
+        // //   } else if (
+        // //     (userChoice === "Rock" && computerChoice === "Scissors") ||
+        // //     (userChoice === "Scissors" && computerChoice === "Paper") ||
+        // //     (userChoice === "Paper" && computerChoice === "Rock")
+        // //   ) {
+
+        // //            resultMessage = "👑 You win! 👑";
+        // //   } else {
+        // //        resultMessage = "👑 Computer wins! 👑";
+        // //   }
+        // // }`;
+
+        //           // console.log("Returning new code...");
+        //           // return beforeFunction + newFunction;
+        //         }
       }
-      
+
       // Step 6: Show result
-      if (option && option.includes('resultDiv.textContent')) {
-        console.log('Step 6 triggered');
-        
+      if (option && option.includes("resultDiv.textContent")) {
+        // console.log("Step 6 triggered");
+
         // Find where the function starts and ends
-        const functionStart = prevJs.indexOf('function playGame(userChoice)');
-        console.log('Function start index:', functionStart);
-        
+        const functionStart = prevJs.indexOf("function playGame(userChoice)");
+        // console.log("Function start index:", functionStart);
+
         if (functionStart !== -1) {
-          console.log('Found the function, replacing...');
-          
+          // console.log("Found the function, replacing...");
+
           // Our new function with step 6
           const newFunction = `// STEP 3: Define the playGame function
 function playGame(userChoice) {
@@ -388,23 +401,23 @@ function playGame(userChoice) {
   // STEP 6: Show the result
   resultDiv.textContent = resultMessage;
 }`;
-          
+
           // Get everything before the function and replace
           const beforeFunction = prevJs.substring(0, functionStart);
-          console.log('Returning new code...');
+          // console.log("Returning new code...");
           return beforeFunction + newFunction;
         }
       }
-      
+
       // Step 2: Get DOM elements
-      if (option.includes('document.querySelectorAll')) {
+      if (option.includes("document.querySelectorAll")) {
         const domCode = `\n\nvar buttons = document.querySelectorAll(".choice-btn");
-var resultDiv = document.getElementById("result");\n`;  // Just one newline after the DOM elements
+var resultDiv = document.getElementById("result");\n`; // Just one newline after the DOM elements
         return prevJs.trimEnd() + domCode;
       }
-      
+
       // Step 3: Add event listeners
-      if (option.includes('buttons[i].addEventListener')) {
+      if (option.includes("buttons[i].addEventListener")) {
         const eventListenerCode = `for (var i = 0; i < buttons.length; i++) {
   buttons[i].addEventListener("click", function() {
     var userChoice = this.getAttribute("data-choice");
@@ -413,7 +426,7 @@ var resultDiv = document.getElementById("result");\n`;  // Just one newline afte
 }`;
         return prevJs.trimEnd() + eventListenerCode;
       }
-      
+
       // Step 1: Add HTML structure
       if (option.includes('<button class="choice-btn"')) {
         const htmlWithTailwind = `<!DOCTYPE html>
@@ -428,12 +441,14 @@ ${option}
 </html>`;
         return htmlWithTailwind;
       }
-      
+
       // Default case
-      const newJs = prevJs ? `${prevJs}\n\n${option}\n\n\n\n\n` : `${option}\n\n\n\n\n`;
-      
+      const newJs = prevJs
+        ? `${prevJs}\n\n${option}\n\n\n\n\n`
+        : `${option}\n\n\n\n\n`;
+
       setTimeout(() => {
-        const editorContainer = document.querySelector('.editor-container');
+        const editorContainer = document.querySelector(".editor-container");
         if (editorContainer) {
           editorContainer.scrollTop = 99999;
         }
@@ -441,7 +456,7 @@ ${option}
 
       return newJs;
     });
-    setActiveTab('javascript');
+    setActiveTab("javascript");
     scrollToEditor();
   };
 
@@ -449,7 +464,8 @@ ${option}
     // ... previous steps ...
     {
       subtitle: "Add Animation",
-      instruction: "Let's add an animation overlay to make the game more exciting!",
+      instruction:
+        "Let's add an animation overlay to make the game more exciting!",
       buttonText: "Add animation",
       action: () => {
         const animationCode = `// STEP 1: Get references to HTML elements
@@ -527,18 +543,18 @@ async function playGame(userChoice) {
     resultDiv.textContent = resultMessage;
 }`;
         setJs(animationCode);
-      }
-    }
+      },
+    },
   ]);
 
   return (
     <div className="App">
-         <Modal 
-           onCodeSelect={handleCodeSelect}
-           currentStepIndex={currentStepIndex}
-         />
+      <Modal
+        onCodeSelect={handleCodeSelect}
+        currentStepIndex={currentStepIndex}
+      />
       <div className="chat-pane">
-        <AIChatSidebar2 
+        <AIChatSidebar2
           html={html}
           css={css}
           js={js}
@@ -559,30 +575,35 @@ async function playGame(userChoice) {
       </div>
       <div className="editor-section">
         <div className="tab-buttons">
-          <button 
-            className={`tab-button ${activeTab === 'html' ? 'active' : ''}`}
-            onClick={() => setActiveTab('html')}
+          <button
+            className={`tab-button ${activeTab === "html" ? "active" : ""}`}
+            onClick={() => setActiveTab("html")}
           >
             HTML
           </button>
-          <button 
-            className={`tab-button ${activeTab === 'css' ? 'active' : ''}`}
-            onClick={() => setActiveTab('css')}
+          <button
+            className={`tab-button ${activeTab === "css" ? "active" : ""}`}
+            onClick={() => setActiveTab("css")}
           >
             CSS
           </button>
-          <button 
-            className={`tab-button ${activeTab === 'javascript' ? 'active' : ''}`}
-            onClick={() => setActiveTab('javascript')}
+          <button
+            className={`tab-button ${
+              activeTab === "javascript" ? "active" : ""
+            }`}
+            onClick={() => setActiveTab("javascript")}
           >
             JavaScript
           </button>
         </div>
-        <div className="editor-container" style={{ 
-          height: '70vh',
-          overflow: 'auto',
-          maxHeight: '800px'
-        }}>
+        <div
+          className="editor-container"
+          style={{
+            height: "70vh",
+            overflow: "auto",
+            maxHeight: "800px",
+          }}
+        >
           {renderEditor()}
         </div>
       </div>
@@ -590,4 +611,4 @@ async function playGame(userChoice) {
   );
 };
 
-export default NewProjectApp; 
+export default NewProjectApp;
