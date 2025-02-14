@@ -10,6 +10,9 @@ import SignUp from "./pages/SignUp";
 import "./App.css";
 import { signOut } from "firebase/auth";
 import { auth } from "./firebaseConfig";
+import RootLayout from "./components/Layout";
+import Settings from "./pages/Settings";
+import Users from "./pages/Users";
 
 const Navbar = () => {
   const { user, loading } = useAuth();
@@ -49,7 +52,7 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <div className="h-screen flex flex-col">
-          <Navbar />
+          {/* <Navbar /> */}
           <Routes>
             <Route
               path="/"
@@ -65,7 +68,29 @@ function App() {
               path="/dashboard"
               element={
                 <ProtectedRoute>
-                  <Dashboard />
+                  <RootLayout>
+                    <Dashboard />
+                  </RootLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/settings"
+              element={
+                <ProtectedRoute>
+                  <RootLayout>
+                    <Settings />
+                  </RootLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/users"
+              element={
+                <ProtectedRoute>
+                  <RootLayout>
+                    <Users />
+                  </RootLayout>
                 </ProtectedRoute>
               }
             />
