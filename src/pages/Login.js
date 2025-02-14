@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
+import image from "../images/pexels-cottonbro-4709291.jpg";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -22,39 +23,52 @@ const Login = () => {
   };
 
   return (
-    <div className="h-full flex flex-col items-center justify-center gap-[15px]">
-      <h2 className="text-5xl font-bold">Welcome</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form className="flex flex-col gap-[10px]" onSubmit={handleLogin}>
-        <input
-          className="border bg-transparent w-[250px] rounded p-1"
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          className="border bg-transparent w-[250px] rounded p-1"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button
-          className="bg-blue-500 rounded p-1 text-white font-bold text-xl"
-          type="submit"
+    <div className="h-full flex">
+      <div className="bg-neutral-100 h-full flex flex-col items-center justify-center gap-[15px] w-1/2">
+        <h2 className="text-5xl text-blue-500 font-bold mb-3">CodingKids</h2>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <form
+          className="flex flex-col bg-white p-5 rounded-lg border w-[350px] shadow-sm"
+          onSubmit={handleLogin}
         >
-          Login
-        </button>
-      </form>
-      <p>
-        Don't have an account?{" "}
-        <Link to="/signup">
-          <span className="text-blue-600 underline">Sign up here</span>
-        </Link>
-      </p>
+          <h1 className="text-lg font-semibold">Log In</h1>
+          <p className="text-xs mb-5">Enter your informations to log in</p>
+          <span className="text-sm mb-1">Email</span>
+          <input
+            className="border bg-transparent w-full rounded p-1 mb-3"
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <span className="text-sm mb-1">Password</span>
+          <input
+            className="border bg-transparent w-full rounded p-1 mb-3"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <span className="text-xs mb-4">Forgot password?</span>
+          <button
+            className="bg-blue-500 rounded p-1 text-white font-semibold text-lg mb-2"
+            type="submit"
+          >
+            Log In
+          </button>
+          <p className="text-sm text-center">
+            Don't have an account?{" "}
+            <Link to="/signup">
+              <span className="text-blue-600 underline">Sign up here</span>
+            </Link>
+          </p>
+        </form>
+      </div>
+      <div className="h-full w-1/2 flex">
+        <img className="object-cover" src={image} alt="a kid coding" />
+      </div>
     </div>
   );
 };

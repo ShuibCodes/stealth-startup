@@ -18,7 +18,7 @@ export function Leaderboard({ title, description, users }) {
           {users.map((user, index) => (
             <li key={index} className="flex items-center space-x-4">
               <div className="relative w-10 h-10">
-                <image
+                <img
                   src={user.avatar || "/placeholder.svg"}
                   alt={user.name}
                   layout="fill"
