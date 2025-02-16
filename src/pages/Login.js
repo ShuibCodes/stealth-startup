@@ -3,6 +3,7 @@ import { auth } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
 import image from "../images/pexels-cottonbro-4709291.jpg";
+import logo from "../images/CodingKids - logo.png";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -25,7 +26,7 @@ const Login = () => {
   return (
     <div className="h-full flex">
       <div className="bg-neutral-100 h-full flex flex-col items-center justify-center gap-[15px] w-1/2">
-        <h2 className="text-5xl text-blue-500 font-bold mb-3">CodingKids</h2>
+        <img className="mix-blend-multiply" src={logo} alt="codingKids logo" />
         {error && <p style={{ color: "red" }}>{error}</p>}
         <form
           className="flex flex-col bg-white p-5 rounded-lg border w-[350px] shadow-sm"
@@ -53,7 +54,7 @@ const Login = () => {
           />
           <span className="text-xs mb-4">Forgot password?</span>
           <button
-            className="bg-blue-500 rounded p-1 text-white font-semibold text-lg mb-2"
+            className="bg-green-500 rounded p-1 text-white font-semibold text-lg mb-2"
             type="submit"
           >
             Log In
@@ -61,7 +62,7 @@ const Login = () => {
           <p className="text-sm text-center">
             Don't have an account?{" "}
             <Link to="/signup">
-              <span className="text-blue-600 underline">Sign up here</span>
+              <span className="text-green-600 underline">Sign up here</span>
             </Link>
           </p>
         </form>

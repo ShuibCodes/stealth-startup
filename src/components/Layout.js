@@ -1,6 +1,7 @@
 import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 import { Chatbot } from "./Chatbot";
+import { useLocation } from "react-router-dom";
 
 export const metadata = {
   title: "Analytics Dashboard with ChatGPT",
@@ -9,6 +10,8 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const location = useLocation();
+
   return (
     <>
       <div className="flex h-screen bg-gray-100">
@@ -20,7 +23,7 @@ export default function RootLayout({ children }) {
           </main>
         </div>
       </div>
-      <Chatbot />
+      {location.pathname !== "/dashboard/ai-chat" && <Chatbot />}
     </>
   );
 }

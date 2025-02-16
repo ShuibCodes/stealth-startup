@@ -13,6 +13,7 @@ import { auth } from "./firebaseConfig";
 import RootLayout from "./components/Layout";
 import Settings from "./pages/Settings";
 import Users from "./pages/Users";
+import AiChat from "./pages/AiChat";
 
 const Navbar = () => {
   const { user, loading } = useAuth();
@@ -90,6 +91,16 @@ function App() {
                 <ProtectedRoute>
                   <RootLayout>
                     <Users />
+                  </RootLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/ai-chat"
+              element={
+                <ProtectedRoute>
+                  <RootLayout>
+                    <AiChat />
                   </RootLayout>
                 </ProtectedRoute>
               }
