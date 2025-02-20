@@ -1,13 +1,14 @@
 import React from 'react';
 import CodeEditor from './CodeEditor';
-import AIChatSidebar from './AIChatSidebar';
+
+import AIChatSidebar2 from './AIChatSidebar2';
 
 const NewProject = () => {
   return (
     <div className="app">
       <div className="workspace">
         <CodeEditor />
-        <AIChatSidebar />
+        <AIChatSidebar2 />
       </div>
     </div>
   );

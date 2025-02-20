@@ -1,5 +1,5 @@
 {
-  "name": "codpen_clone",
+  "name": "CodingKids",
   "version": "1.1.0",
   "private": true,
   "dependencies": {
@@ -8,15 +8,21 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.2",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "@fortawesome/react-fontawesome": "^0.1.14",
+    "@headlessui/react": "^2.2.0",
+    "@heroicons/react": "^2.2.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "codemirror": "^5.57.0",
-    "react": "^16.13.1",
-    "react-codemirror2": "^7.2.1",
-    "react-dom": "^16.13.1",
-    "react-router-dom": "^6.22.3",
-    "react-scripts": "^5.0.1"
+    "firebase": "^11.3.1",
+    "lucide-react": "^0.475.0",
+    "react": "^19.0.0",
+    "react-codemirror2": "^8.0.1",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^6.28.1",
+    "react-scripts": "^5.0.1",
+    "recharts": "^2.15.1",
+    "tailwind-merge": "^3.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

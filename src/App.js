@@ -1,117 +1,123 @@
-import React, { useState } from 'react';
-import Editor from './Editor';
-import AIChatSidebar from './components/AIChatSidebar';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import CodepenApp from "./components/CodepenApp";
+import NewProjectApp from "./components/NewProjectApp";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
+import SignUp from "./pages/SignUp";
+import "./App.css";
+import { signOut } from "firebase/auth";
+import { auth } from "./firebaseConfig";
+import RootLayout from "./components/Layout";
+import Settings from "./pages/Settings";
+import Users from "./pages/Users";
+import AiChat from "./pages/AiChat";
+
+const Navbar = () => {
+  const { user, loading } = useAuth();
+
+  if (loading) return <div>loading...</div>;
+
+  const handleLogout = async () => {
+    await signOut(auth);
+  };
+  return (
+    <nav className="h-[50px] border flex items-center px-3 gap-2">
+      {user ? (
+        <>
+          <Link to="/dashboard">
+            <div className="border rounded p-1">Dashboard</div>
+          </Link>
+          <button className="border rounded p-1" onClick={handleLogout}>
+            Logout
+          </button>
+        </>
+      ) : (
+        <>
+          <Link to="/login">
+            <div className="border rounded p-1">Login</div>
+          </Link>
+          <Link to="/signup">
+            <div className="border rounded p-1">Sign Up</div>
+          </Link>
+        </>
+      )}
+    </nav>
+  );
+};
 
 function App() {
-  const [html, setHtml] = useState('');
-  const [css, setCss] = useState('');
-  const [js, setJs] = useState('');
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [activeTab, setActiveTab] = useState('html');
-
-  // Create srcDoc for the preview iframe
-  const srcDoc = `
-    <!doctype html>
-    <html>
-      <head>
-        <style>${css}</style>
-      </head>
-      <body>
-        ${html}
-        <script>${js}</script>
-      </body>
-    </html>
-  `;
-
-  const renderEditor = () => {
-    switch(activeTab) {
-      case 'html':
-        return (
-          <Editor 
-            language="xml"
-            displayName="HTML"
-            value={html}
-            onChange={setHtml}
-            currentStepIndex={currentStepIndex}
-          />
-        );
-      case 'css':
-        return (
-          <Editor 
-            language="css"
-            displayName="CSS"
-            value={css}
-            onChange={setCss}
-            currentStepIndex={currentStepIndex}
-          />
-        );
-      case 'javascript':
-        return (
-          <Editor 
-            language="javascript"
-            displayName="JavaScript"
-            value={js}
-            onChange={setJs}
-            currentStepIndex={currentStepIndex}
-          />
-        );
-      default:
-        return null;
-    }
-  };
-
   return (
-    <div className="App">
-      <div className="chat-pane">
-        <AIChatSidebar 
-          html={html}
-          css={css}
-          js={js}
-          currentStepIndex={currentStepIndex}
-          setCurrentStepIndex={setCurrentStepIndex}
-        />
-      </div>
-      <div className="preview-pane">
-        <div className="preview-title">Preview</div>
-        <iframe
-          srcDoc={srcDoc}
-          title="preview"
-          sandbox="allow-scripts"
-          frameBorder="0"
-          width="100%"
-          height="100%"
-        />
-      </div>
-      <div className="editor-section">
-        <div className="tab-buttons">
-          <button 
-            className={`tab-button ${activeTab === 'html' ? 'active' : ''}`}
-            onClick={() => setActiveTab('html')}
-          >
-            HTML
-          </button>
-          <button 
-            className={`tab-button ${activeTab === 'css' ? 'active' : ''}`}
-            onClick={() => setActiveTab('css')}
-          >
-            CSS
-          </button>
-          <button 
-            className={`tab-button ${activeTab === 'javascript' ? 'active' : ''}`}
-            onClick={() => setActiveTab('javascript')}
-          >
-            JavaScript
-          </button>
+    <AuthProvider>
+      <BrowserRouter>
+        <div className="h-screen flex flex-col">
+          {/* <Navbar /> */}
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <CodepenApp />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <RootLayout>
+                    <Dashboard />
+                  </RootLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/settings"
+              element={
+                <ProtectedRoute>
+                  <RootLayout>
+                    <Settings />
+                  </RootLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/users"
+              element={
+                <ProtectedRoute>
+                  <RootLayout>
+                    <Users />
+                  </RootLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/ai-chat"
+              element={
+                <ProtectedRoute>
+                  <RootLayout>
+                    <AiChat />
+                  </RootLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/new-project"
+              element={
+                <ProtectedRoute>
+                  <NewProjectApp />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
         </div>
-        <div className="editor-container">
-          {renderEditor()}
-        </div>
-      </div>
-    </div>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
 export default App;
-
-
