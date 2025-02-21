@@ -1,4 +1,10 @@
-import { Home, Users, Settings, BotMessageSquare } from "lucide-react";
+import {
+  Home,
+  Users,
+  Settings,
+  BotMessageSquare,
+  LibraryBig,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 const navItems = [
@@ -6,6 +12,7 @@ const navItems = [
   { name: "Users", href: "/dashboard/users", icon: Users },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
   { name: "AI Chat", href: "/dashboard/ai-chat", icon: BotMessageSquare },
+  { name: "Courses", href: "/dashboard/courses", icon: LibraryBig },
 ];
 
 export function Sidebar() {

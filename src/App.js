@@ -14,6 +14,8 @@ import RootLayout from "./components/Layout";
 import Settings from "./pages/Settings";
 import Users from "./pages/Users";
 import AiChat from "./pages/AiChat";
+import Courses from "./pages/Courses";
+import CoursePage from "./pages/CoursePage";
 
 const Navbar = () => {
   const { user, loading } = useAuth();
@@ -101,6 +103,26 @@ function App() {
                 <ProtectedRoute>
                   <RootLayout>
                     <AiChat />
+                  </RootLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/courses"
+              element={
+                <ProtectedRoute>
+                  <RootLayout>
+                    <Courses />
+                  </RootLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/courses/*"
+              element={
+                <ProtectedRoute>
+                  <RootLayout>
+                    <CoursePage />
                   </RootLayout>
                 </ProtectedRoute>
               }
