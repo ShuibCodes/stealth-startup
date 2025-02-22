@@ -4,7 +4,7 @@ import { CoursesDummyData } from "../utils/coursesData";
 
 export default function Courses() {
   return (
-    <div className="bg-white h-full px-20">
+    <div className="bg-white h-full px-20 flex flex-col *:shrink-0 overflow-hidden">
       <header className=" h-24 py-6">
         <div className="bg-gray-100 h-full rounded-2xl flex items-center justify-center gap-4 px-5">
           <Search className="text-gray-600" />
@@ -16,7 +16,7 @@ export default function Courses() {
         </div>
       </header>
       <h1 className="text-4xl font-semibold">Your courses</h1>
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4  gap-8 py-6">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 h-full gap-8 py-6 overflow-auto pb-[200px]">
         {CoursesDummyData.map((item) => (
           <CourseCard data={item} />
         ))}

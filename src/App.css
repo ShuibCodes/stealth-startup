@@ -8,6 +8,9 @@
   height: 100%;
   /* overflow: hidden; */
 }
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
 
 .chat-pane {
   grid-area: chat;
@@ -215,4 +218,26 @@
 
 .CodeMirror-linenumber {
   padding-right: 8px;
+}
+
+.courses-scroll {
+  &::-webkit-scrollbar {
+    opacity: 0;
+  }
+  &:hover::-webkit-scrollbar-thumb {
+    background: oklch(0.872 0.01 258.338);
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: transparent;
+  }
+}
+
+button.selected {
+  /* border-bottom: 2px solid black; */
+  border-color: black;
+  transition: all 0.5s;
 }

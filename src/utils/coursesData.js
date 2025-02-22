@@ -41,4 +41,22 @@ export const CoursesDummyData = [
     image: pcImage,
     duration: "90 min",
   },
+  {
+    id: "7",
+    name: "course 7",
+    image: pcImage,
+    duration: "90 min",
+  },
+  {
+    id: "8",
+    name: "course 8",
+    image: pcImage,
+    duration: "90 min",
+  },
+  {
+    id: "9",
+    name: "course 9",
+    image: pcImage,
+    duration: "90 min",
+  },
 ];

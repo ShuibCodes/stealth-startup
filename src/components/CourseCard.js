@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export default function CourseCard({ data }) {
   return (
     <Link to={`/dashboard/courses/${data.id}`}>
-      <div className="h-[300px] max-w-[400px] rounded-3xl border overflow-hidden relative flex p-6 flex-col justify-between items-end cursor-pointer hover:shadow-2xl transition-transform duration-300 hover:scale-105">
+      <div className="h-[300px] max-w-[400px] rounded-3xl border overflow-hidden relative flex p-6 flex-col justify-between items-end cursor-pointer hover:shadow-2xl ">
         <div className="z-10 bg-green-500 rounded-lg w-fit p-1 text-white">
           {data.duration}
         </div>
