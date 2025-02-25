@@ -1,6 +1,10 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+
+// context
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { CourseProvider } from "./context/CourseContext";
+
 import CodepenApp from "./components/CodepenApp";
 import NewProjectApp from "./components/NewProjectApp";
 import Login from "./pages/Login";
@@ -10,6 +14,8 @@ import SignUp from "./pages/SignUp";
 import "./App.css";
 import { signOut } from "firebase/auth";
 import { auth } from "./firebaseConfig";
+
+// pages
 import RootLayout from "./components/Layout";
 import Settings from "./pages/Settings";
 import Users from "./pages/Users";
@@ -53,91 +59,93 @@ const Navbar = () => {
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <div className="h-screen flex flex-col">
-          {/* <Navbar /> */}
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <CodepenApp />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <RootLayout>
-                    <Dashboard />
-                  </RootLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard/settings"
-              element={
-                <ProtectedRoute>
-                  <RootLayout>
-                    <Settings />
-                  </RootLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard/users"
-              element={
-                <ProtectedRoute>
-                  <RootLayout>
-                    <Users />
-                  </RootLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard/ai-chat"
-              element={
-                <ProtectedRoute>
-                  <RootLayout>
-                    <AiChat />
-                  </RootLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard/courses"
-              element={
-                <ProtectedRoute>
-                  <RootLayout>
-                    <Courses />
-                  </RootLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard/courses/*"
-              element={
-                <ProtectedRoute>
-                  <RootLayout>
-                    <CoursePage />
-                  </RootLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/new-project"
-              element={
-                <ProtectedRoute>
-                  <NewProjectApp />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </div>
-      </BrowserRouter>
+      <CourseProvider>
+        <BrowserRouter>
+          <div className="h-screen flex flex-col">
+            {/* <Navbar /> */}
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <CodepenApp />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <RootLayout>
+                      <Dashboard />
+                    </RootLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/settings"
+                element={
+                  <ProtectedRoute>
+                    <RootLayout>
+                      <Settings />
+                    </RootLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/users"
+                element={
+                  <ProtectedRoute>
+                    <RootLayout>
+                      <Users />
+                    </RootLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/ai-chat"
+                element={
+                  <ProtectedRoute>
+                    <RootLayout>
+                      <AiChat />
+                    </RootLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/courses"
+                element={
+                  <ProtectedRoute>
+                    <RootLayout>
+                      <Courses />
+                    </RootLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/courses/:courseId/:moduleId"
+                element={
+                  <ProtectedRoute>
+                    <RootLayout>
+                      <CoursePage />
+                    </RootLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/new-project"
+                element={
+                  <ProtectedRoute>
+                    <NewProjectApp />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </CourseProvider>
     </AuthProvider>
   );
 }

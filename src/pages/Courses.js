@@ -1,8 +1,10 @@
 import { Search } from "lucide-react";
 import CourseCard from "../components/CourseCard";
-import { CoursesDummyData } from "../utils/coursesData";
+import { useCourses } from "../context/CourseContext";
 
 export default function Courses() {
+  const { courses, loading } = useCourses();
+
   return (
     <div className="bg-white h-full px-20 flex flex-col *:shrink-0 overflow-hidden">
       <header className=" h-24 py-6">
@@ -17,9 +19,8 @@ export default function Courses() {
       </header>
       <h1 className="text-4xl font-semibold">Your courses</h1>
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 h-full gap-8 py-6 overflow-auto pb-[200px]">
-        {CoursesDummyData.map((item) => (
-          <CourseCard data={item} />
-        ))}
+        {!loading &&
+          courses?.map((item) => <CourseCard key={item.id} data={item} />)}
       </div>
     </div>
   );

@@ -1,12 +1,14 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 export default function CourseView() {
   const [selectedTab, setSelectedTab] = useState(1);
+  const { courseId, moduleId } = useParams();
 
   return (
     <div className="w-full bg-white mt-5 rounded-tl-xl rounded-tr-xl overflow-auto ">
       <div className="bg-gray-500 h-[450px] flex items-center justify-center text-white mb-2">
-        video player
+        video player <br /> course ID: {courseId} <br /> module ID: {moduleId}
       </div>
       <div className="p-5">
         <h1 className="mb-2 text-2xl font-semibold">
