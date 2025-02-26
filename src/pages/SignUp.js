@@ -34,6 +34,7 @@ const SignUp = () => {
         email: user.email,
         createdAt: new Date().toISOString(),
         startedCourses: [],
+        role: "user",
       });
       navigate("/dashboard"); // Redirect to dashboard after successful sign-up
     } catch (err) {
