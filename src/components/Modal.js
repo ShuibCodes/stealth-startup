@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import ContextModal from "./ContextModal";
 import { useSearchParams, useLocation } from "react-router-dom";
 import step1 from "../images/step-1.png";
@@ -12,6 +11,7 @@ import step4 from "../images/step-4.png";
 import step5 from "../images/step-5.png";
 import step6 from "../images/step-6.png";
 import wizard from "../images/wizard.png";
+import Confetti from "react-confetti";
 
 const baseQuestions = [
   {
@@ -307,6 +307,23 @@ const Modal = ({ onCodeSelect }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const stepParam = searchParams.get("step");
+  const [windowDimensions, setWindowDimensions] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight
+  });
+
+  // Update window dimensions when window resizes
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const buttonColor = () => {
     setHandleButtonColor(!handleButtonColor);
@@ -453,8 +470,22 @@ const Modal = ({ onCodeSelect }) => {
     );
   }
 
+  // Check if this is the congratulation step
+  const isCongratulationStep = questions[currentQuestion]?.title === "Congratulations!";
+
   return (
     <>
+      {/* Show confetti when on the congratulation step */}
+      {isCongratulationStep && (
+        <Confetti
+          width={windowDimensions.width}
+          height={windowDimensions.height}
+          recycle={false}
+          numberOfPieces={500}
+          gravity={0.2}
+        />
+      )}
+
       <Dialog
         open={isOpen && !showBlankModal}
         onClose={() => setIsOpen(false)}

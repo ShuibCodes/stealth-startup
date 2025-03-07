@@ -19,6 +19,7 @@
     "next": "^15.2.1",
     "react": "^19.0.0",
     "react-codemirror2": "^8.0.1",
+    "react-confetti": "^6.4.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^6.28.1",
     "react-scripts": "^5.0.1",
