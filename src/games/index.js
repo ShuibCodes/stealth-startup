@@ -7,6 +7,8 @@ import ticTacToe from './tic-tac-toe';
  * @param {string} gameType - The type/path of the game (e.g., 'rock-paper-scissors', 'tic-tac-toe')
  * @returns {Object} The game configuration object
  */
+
+
 export const getGameConfig = (gameType) => {
   const configs = {
     'rock-paper-scissors': rockPaperScissors,

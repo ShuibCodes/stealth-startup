@@ -31,7 +31,7 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
               try {
                 ${js}
               } catch (err) {
-                // console.log('JS Error:', err);
+                console.log('JS Error:', err);
               }
             </script>
           </body>
@@ -99,9 +99,6 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
     setActiveTab("javascript");
     scrollToEditor();
   };
-
-  // Keep this section simplified as the specific game steps will be handled in the game configs
-  const [steps] = useState([]);
 
   return (
     <div className="App">

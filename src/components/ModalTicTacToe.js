@@ -357,9 +357,6 @@ const Modal = ({ onCodeSelect }) => {
     }
   };
 
-  // Let's also verify the questions array
-  //  // console.log("Current question:", questions[currentQuestion]);
-
   // Render empty step modal
   if (questions[currentQuestion]?.isEmptyStep) {
     return (
