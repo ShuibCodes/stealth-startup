@@ -212,6 +212,24 @@ computerChoiceDisplay.textContent = computerChoice;`,
     ],
     correctLetter: "B",
   },
+  {
+    title: "Congratulations!",
+    text: (
+      <div>
+        <p className="text-lg font-bold text-green-600 mb-2">🎉 You've successfully built a Rock Paper Scissors game! 🎉</p>
+        <p>You've created a fully functional game with:</p>
+        <ul className="list-disc pl-6 mt-2">
+          <li>Score tracking</li>
+          <li>Player and computer choices</li>
+          <li>Winner determination</li>
+          <li>Visual feedback</li>
+        </ul>
+        <p className="mt-3">Feel free to play the game and enjoy your creation!</p>
+      </div>
+    ),
+    options: [],
+    correctAnswer: [],
+  }
 ];
 
 // Define the content for empty modals
@@ -258,16 +276,21 @@ const questions = baseQuestions.reduce((acc, question, index) => {
   acc.push(question);
 
   // Add empty step after every 2nd question (but not after the last question)
+  // Also, don't add an empty step if the next question is the congratulation step
   if ((index + 1) % 2 === 0 && index < baseQuestions.length - 1) {
-    acc.push({
-      isEmptyStep: true,
-      continueToStep: acc.length + 2,
-      content: emptyModalContent[Math.floor(index / 2)] || {
-        title: "Keep going!",
-        description: "You're making great progress.",
-        image: null,
-      },
-    });
+    // Check if the next question is the congratulation step
+    const nextQuestion = baseQuestions[index + 1];
+    if (nextQuestion && nextQuestion.title !== "Congratulations!") {
+      acc.push({
+        isEmptyStep: true,
+        continueToStep: acc.length + 2,
+        content: emptyModalContent[Math.floor(index / 2)] || {
+          title: "Keep going!",
+          description: "You're making great progress.",
+          image: null,
+        },
+      });
+    }
   }
   return acc;
 }, []);
@@ -309,8 +332,8 @@ const Modal = ({ onCodeSelect }) => {
   }, [selectedOption, onCodeSelect, currentQuestion]);
 
   useEffect(() => {
-    // Only handle step parameter if we're on the new-project path
-    if (location.pathname === "/new-project" && stepParam) {
+    // Only handle step parameter if we're on the new-project/rock-paper-scissors path
+    if (location.pathname === "/new-project/rock-paper-scissors" && stepParam) {
       const stepNumber = parseInt(stepParam);
       if (stepNumber >= 1 && stepNumber <= questions.length) {
         setCurrentQuestion(stepNumber - 1);
@@ -422,7 +445,8 @@ const Modal = ({ onCodeSelect }) => {
             onClick={handleNext}
             className="bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition-colors absolute bottom-8 right-8"
           >
-            Continue
+            {currentQuestion + 1 < questions.length && 
+             questions[currentQuestion + 1].title === "Congratulations!" ? "Finish" : "Continue"}
           </button>
         </div>
       </div>
@@ -524,10 +548,17 @@ const Modal = ({ onCodeSelect }) => {
                 {questions[currentQuestion].options.length === 0 && (
                   <button
                     type="button"
-                    onClick={handleNext}
+                    onClick={() => {
+                      // If it's the congratulation step, just close the modal
+                      if (questions[currentQuestion].title === "Congratulations!") {
+                        setIsOpen(false);
+                      } else {
+                        handleNext();
+                      }
+                    }}
                     className="inline-flex w-full justify-center rounded-md bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-20 sm:w-auto"
                   >
-                    Next
+                    {questions[currentQuestion].title === "Congratulations!" ? "Close" : "Next"}
                   </button>
                 )}
               </div>
