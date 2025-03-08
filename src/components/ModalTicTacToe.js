@@ -282,6 +282,9 @@ const Modal = ({ onCodeSelect }) => {
   const [handleButtonColor, setHandleButtonColor] = useState(false);
   const [selectedButtonIndex, setSelectedButtonIndex] = useState(null);
   const [showError, setShowError] = useState(false);
+  const [incorrectSelection, setIncorrectSelection] = useState(null); // Track incorrect selection
+  const [errorMessage, setErrorMessage] = useState(""); // Custom error message
+  const [showHint, setShowHint] = useState(false); // State for showing hints
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const stepParam = searchParams.get("step");
@@ -330,30 +333,41 @@ const Modal = ({ onCodeSelect }) => {
     // Only handle step parameter if we're on the new-project/tic-tac-toe path
     if (location.pathname === "/new-project/tic-tac-toe" && stepParam) {
       const stepNumber = parseInt(stepParam);
-      if (stepNumber >= 1 && stepNumber <= questions.length) {
+      if (stepNumber >= 1 && stepNumber <= baseQuestions.length) {
         setCurrentQuestion(stepNumber - 1);
       }
     }
   }, [stepParam, location.pathname]);
 
   const handleOptionClick = (option, index) => {
-    const currentQ = questions[currentQuestion];
+    const currentQ = baseQuestions[currentQuestion];
     const selectedCode =
       currentQ.actualCode?.[index] || currentQ.codeSnippets[index];
 
     if (option === currentQ.correctLetter) {
       setSelectedOption(selectedCode);
+      setSelectedButtonIndex(index); // Only set selectedButtonIndex for correct answers
+      setIncorrectSelection(null); // Reset incorrect selection
+      setShowError(false); // Hide any error message
     } else {
       setShowError(true);
-      alert("WRONG ANSWER"); // fix the handling of this && make it a data-point
-
-      setSelectedButtonIndex(null);
+      setIncorrectSelection(index); // Store the incorrect selection for highlighting
+      setSelectedButtonIndex(null); // Ensure no "correct" indicator is shown
+      
+      // Generate a more helpful error message based on the current question
+      const messages = [
+        "Hmm, that's not quite right. Look closer at what the code needs to do!",
+        "Not quite! Review the requirements and try again.",
+        "That option doesn't match what we need. Try another approach!",
+        "Close, but not correct. Think about what the code should accomplish."
+      ];
+      setErrorMessage(messages[Math.floor(Math.random() * messages.length)]);
     }
   };
 
   const handleNext = () => {
     setShowBlankModal(false);
-    if (currentQuestion < questions.length - 1) {
+    if (currentQuestion < baseQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
     }
@@ -361,7 +375,7 @@ const Modal = ({ onCodeSelect }) => {
 
   // Add step to URL while maintaining the /new-project path
   const handleNextQuestion = () => {
-    if (currentQuestion < questions.length - 1) {
+    if (currentQuestion < baseQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
       setSearchParams({ step: currentQuestion + 2 });
     }
@@ -374,8 +388,17 @@ const Modal = ({ onCodeSelect }) => {
     }
   };
 
+  // Function to provide a hint based on the current question
+  const handleShowHint = () => {
+    setShowHint(true);
+    // Hide hint after 5 seconds
+    setTimeout(() => {
+      setShowHint(false);
+    }, 7000);
+  };
+
   // Render empty step modal
-  if (questions[currentQuestion]?.isEmptyStep) {
+  if (baseQuestions[currentQuestion]?.isEmptyStep) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[9999]">
         <div className="bg-white rounded-lg p-12 max-w-6xl w-full h-[600px] relative">
@@ -416,17 +439,17 @@ const Modal = ({ onCodeSelect }) => {
             {/* Left side - Content */}
             <div className="flex-1 flex flex-col justify-center">
               <h2 className="text-3xl font-bold mb-4">
-                {questions[currentQuestion].content.title}
+                {baseQuestions[currentQuestion].content.title}
               </h2>
               <h4 className="text-xl text-gray-600 leading-relaxed">
-                {questions[currentQuestion].content.description}
+                {baseQuestions[currentQuestion].content.description}
               </h4>
             </div>
 
             {/* Right side - Image */}
             <div className="flex-1">
               <img
-                src={questions[currentQuestion].content.image}
+                src={baseQuestions[currentQuestion].content.image}
                 alt="Step visualization"
                 className="w-full h-full object-contain"
               />
@@ -437,8 +460,8 @@ const Modal = ({ onCodeSelect }) => {
             onClick={handleNext}
             className="bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition-colors absolute bottom-8 right-8"
           >
-            {currentQuestion + 1 < questions.length && 
-             questions[currentQuestion + 1].title === "Congratulations!" ? "Finish" : "Continue"}
+            {currentQuestion + 1 < baseQuestions.length && 
+             baseQuestions[currentQuestion + 1].title === "Congratulations!" ? "Finish" : "Continue"}
           </button>
         </div>
       </div>
@@ -446,7 +469,7 @@ const Modal = ({ onCodeSelect }) => {
   }
 
   // Check if this is the congratulation step
-  const isCongratulationStep = questions[currentQuestion]?.title === "Congratulations!";
+  const isCongratulationStep = baseQuestions[currentQuestion]?.title === "Congratulations!";
 
   return (
     <>
@@ -481,7 +504,7 @@ const Modal = ({ onCodeSelect }) => {
             {/* Fun header with decorative elements but toned down */}
             <div className="bg-blue-500 py-4 px-6 flex items-center justify-center">
               <h2 className="text-2xl font-bold text-white drop-shadow-md">
-                {questions[currentQuestion].title}
+                {baseQuestions[currentQuestion].title}
               </h2>
               {/* Minimal decorative elements */}
               <div className="absolute right-4">
@@ -493,27 +516,28 @@ const Modal = ({ onCodeSelect }) => {
               <div className="h-[300px] overflow-auto p-4">
                 <div className="text-center sm:text-left w-full">
                   <div className="text-lg text-slate-700 mb-6 font-medium bg-slate-50 p-4 rounded-xl border border-slate-200">
-                    {questions[currentQuestion].text}
+                    {baseQuestions[currentQuestion].text}
                   </div>
                   
                   {/* Keep the fun code option styling */}
-                  {questions[currentQuestion].codeSnippets?.map(
+                  {baseQuestions[currentQuestion].codeSnippets?.map(
                     (snippet, index) => (
                       <div 
                         key={index} 
                         className={`mb-6 rounded-xl transition-all duration-200 transform hover:scale-[1.01] ${
                           selectedButtonIndex === index 
                             ? "bg-green-50 border-2 border-green-300 shadow-md" 
-                            : "bg-blue-50 border-2 border-blue-200 shadow"
+                            : incorrectSelection === index
+                              ? "bg-red-50 border-2 border-red-300 shadow-md" 
+                              : "bg-blue-50 border-2 border-blue-200 shadow"
                         }`}
                         onClick={() => {
-                          setSelectedButtonIndex(index);
-                          handleOptionClick(questions[currentQuestion].options[index], index);
+                          handleOptionClick(baseQuestions[currentQuestion].options[index], index);
                         }}
                       >
                         {/* Keep fun option badge but tone it down */}
                         <div className="absolute -top-2 -right-2 bg-blue-100 text-blue-800 font-bold py-1 px-4 rounded-full text-sm shadow border border-blue-200">
-                          Option {questions[currentQuestion].options[index]}
+                          Option {baseQuestions[currentQuestion].options[index]}
                         </div>
                         
                         <div className="pt-6 pb-2 px-5 rounded-t-xl relative">
@@ -532,6 +556,15 @@ const Modal = ({ onCodeSelect }) => {
                             </div>
                           </div>
                         )}
+                        
+                        {/* Add indicator for incorrect selection */}
+                        {incorrectSelection === index && (
+                          <div className="flex justify-center pb-2">
+                            <div className="text-red-600 font-bold flex items-center">
+                              <span className="mr-2">❌</span> Not quite right
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )
                   )}
@@ -545,7 +578,7 @@ const Modal = ({ onCodeSelect }) => {
                 <div className="text-md font-semibold text-slate-700">
                   {selectedButtonIndex !== null ? (
                     <span className="flex items-center">
-                      <span className="mr-2">🎯</span> Option {questions[currentQuestion].options[selectedButtonIndex]} selected
+                      <span className="mr-2">🎯</span> Option {baseQuestions[currentQuestion].options[selectedButtonIndex]} selected
                     </span>
                   ) : (
                     <span className="flex items-center">
@@ -554,7 +587,18 @@ const Modal = ({ onCodeSelect }) => {
                   )}
                 </div>
                 <div className="flex space-x-4">
-                  {questions[currentQuestion].options.length > 0 && (
+                  {/* Add hint button */}
+                  {baseQuestions[currentQuestion].options.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleShowHint}
+                      className="bg-amber-100 text-amber-800 rounded-xl px-4 py-2 text-sm font-medium shadow border border-amber-200 hover:bg-amber-200 transition-all duration-200"
+                    >
+                      <span className="mr-1">💡</span> Hint
+                    </button>
+                  )}
+                  
+                  {baseQuestions[currentQuestion].options.length > 0 && (
                     <button
                       type="button"
                       disabled={selectedButtonIndex === null}
@@ -563,12 +607,13 @@ const Modal = ({ onCodeSelect }) => {
                         setIsOpen(false);
 
                         // Show next question after 3 seconds
-                        if (currentQuestion < questions.length - 1) {
+                        if (currentQuestion < baseQuestions.length - 1) {
                           setTimeout(() => {
                             setCurrentQuestion(currentQuestion + 1);
                             setIsOpen(true);
                             setSelectedButtonIndex(null); // Reset selected button
                             setShowError(false); // Reset error state
+                            setIncorrectSelection(null); // Reset incorrect selection
                           }, 2000);
                         }
                       }}
@@ -581,12 +626,12 @@ const Modal = ({ onCodeSelect }) => {
                       <span className="mr-2">🚀 Run Code</span>
                     </button>
                   )}
-                  {questions[currentQuestion].options.length === 0 && (
+                  {baseQuestions[currentQuestion].options.length === 0 && (
                     <button
                       type="button"
                       onClick={() => {
                         // If it's the congratulation step, just close the modal
-                        if (questions[currentQuestion].title === "Congratulations!") {
+                        if (baseQuestions[currentQuestion].title === "Congratulations!") {
                           setIsOpen(false);
                         } else {
                           handleNext();
@@ -594,7 +639,7 @@ const Modal = ({ onCodeSelect }) => {
                       }}
                       className="bg-blue-500 text-white rounded-xl px-6 py-2 text-md font-bold shadow-md hover:bg-blue-600 transition-all duration-200"
                     >
-                      {questions[currentQuestion].title === "Congratulations!" ? (
+                      {baseQuestions[currentQuestion].title === "Congratulations!" ? (
                         <>
                           <span className="mr-2">🎉 Finish</span>
                         </>
@@ -615,10 +660,30 @@ const Modal = ({ onCodeSelect }) => {
       {/* Blank modal */}
       <ContextModal isOpen={showBlankModal} onNext={handleNext} />
 
+      {/* Customized error message */}
       {showError && (
-        <div className="absolute bottom-20 left-0 right-0 mx-auto w-fit bg-pink-50 border-2 border-pink-300 text-pink-600 px-5 py-3 rounded-xl flex items-center">
-          <span className="text-xl mr-3">🙈</span>
-          <span className="font-bold">Try another one!</span>
+        <div className="fixed bottom-4 left-0 right-0 mx-auto w-fit bg-pink-50 border-2 border-pink-300 text-pink-700 px-5 py-3 rounded-xl flex items-center shadow-lg animate-pulse" style={{ zIndex: 60 }}>
+          <span className="text-xl mr-3">🤔</span>
+          <span className="font-bold">{errorMessage}</span>
+        </div>
+      )}
+      
+      {/* Hint tooltip */}
+      {showHint && (
+        <div className="fixed top-4 left-0 right-0 mx-auto w-fit max-w-md bg-amber-50 border-2 border-amber-300 text-amber-800 px-5 py-3 rounded-xl flex items-start shadow-lg" style={{ zIndex: 60 }}>
+          <span className="text-xl mr-3 mt-1">💡</span>
+          <div>
+            <span className="font-bold block mb-1">Hint:</span>
+            <span className="block">
+              {baseQuestions[currentQuestion].title.includes("board") 
+                ? "Look for code that initializes variables for the game board and player." 
+                : baseQuestions[currentQuestion].title.includes("function") 
+                  ? "The correct option should define a proper JavaScript function with the right parameters."
+                  : baseQuestions[currentQuestion].title.includes("elements") 
+                    ? "Look for code that correctly selects elements using document methods."
+                    : "Read the requirements carefully and choose the option that best matches what's needed."}
+            </span>
+          </div>
         </div>
       )}
     </>

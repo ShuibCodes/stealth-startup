@@ -304,6 +304,9 @@ const Modal = ({ onCodeSelect }) => {
   const [handleButtonColor, setHandleButtonColor] = useState(false);
   const [selectedButtonIndex, setSelectedButtonIndex] = useState(null);
   const [showError, setShowError] = useState(false);
+  const [incorrectSelection, setIncorrectSelection] = useState(null); // Track incorrect selection
+  const [errorMessage, setErrorMessage] = useState(""); // Custom error message
+  const [showHint, setShowHint] = useState(false); // State for showing hints
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const stepParam = searchParams.get("step");
@@ -365,11 +368,22 @@ const Modal = ({ onCodeSelect }) => {
 
     if (option === currentQ.correctLetter) {
       setSelectedOption(selectedCode);
+      setSelectedButtonIndex(index); // Only set selectedButtonIndex for correct answers
+      setIncorrectSelection(null); // Reset incorrect selection
+      setShowError(false); // Hide any error message
     } else {
       setShowError(true);
-      alert("WRONG ANSWER"); // fix the handling of this && make it a data-point
-
-      setSelectedButtonIndex(null);
+      setIncorrectSelection(index); // Store the incorrect selection for highlighting
+      setSelectedButtonIndex(null); // Ensure no "correct" indicator is shown
+      
+      // Generate a more helpful error message based on the current question
+      const messages = [
+        "Hmm, that's not quite right. Look closer at what the code needs to do!",
+        "Not quite! Review the requirements and try again.",
+        "That option doesn't match what we need. Try another approach!",
+        "Close, but not correct. Think about what the code should accomplish."
+      ];
+      setErrorMessage(messages[Math.floor(Math.random() * messages.length)]);
     }
   };
 
@@ -394,6 +408,15 @@ const Modal = ({ onCodeSelect }) => {
       setCurrentQuestion(currentQuestion - 1);
       setSearchParams({ step: currentQuestion });
     }
+  };
+
+  // Function to provide a hint based on the current question
+  const handleShowHint = () => {
+    setShowHint(true);
+    // Hide hint after 5 seconds
+    setTimeout(() => {
+      setShowHint(false);
+    }, 7000);
   };
 
   // Let's also verify the questions array
@@ -529,10 +552,11 @@ const Modal = ({ onCodeSelect }) => {
                         className={`mb-6 rounded-xl transition-all duration-200 transform hover:scale-[1.01] ${
                           selectedButtonIndex === index 
                             ? "bg-green-50 border-2 border-green-300 shadow-md" 
-                            : "bg-blue-50 border-2 border-blue-200 shadow"
+                            : incorrectSelection === index
+                              ? "bg-red-50 border-2 border-red-300 shadow-md" 
+                              : "bg-blue-50 border-2 border-blue-200 shadow"
                         }`}
                         onClick={() => {
-                          setSelectedButtonIndex(index);
                           handleOptionClick(questions[currentQuestion].options[index], index);
                         }}
                       >
@@ -554,6 +578,15 @@ const Modal = ({ onCodeSelect }) => {
                           <div className="flex justify-center pb-2">
                             <div className="text-green-600 font-bold flex items-center">
                               <span className="mr-2">✅</span> Great choice!
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Add indicator for incorrect selection */}
+                        {incorrectSelection === index && (
+                          <div className="flex justify-center pb-2">
+                            <div className="text-red-600 font-bold flex items-center">
+                              <span className="mr-2">❌</span> Not quite right
                             </div>
                           </div>
                         )}
@@ -579,6 +612,17 @@ const Modal = ({ onCodeSelect }) => {
                   )}
                 </div>
                 <div className="flex space-x-4">
+                  {/* Add hint button */}
+                  {questions[currentQuestion].options.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleShowHint}
+                      className="bg-amber-100 text-amber-800 rounded-xl px-4 py-2 text-sm font-medium shadow border border-amber-200 hover:bg-amber-200 transition-all duration-200"
+                    >
+                      <span className="mr-1">💡</span> Hint
+                    </button>
+                  )}
+                  
                   {questions[currentQuestion].options.length > 0 && (
                     <button
                       type="button"
@@ -594,6 +638,7 @@ const Modal = ({ onCodeSelect }) => {
                             setIsOpen(true);
                             setSelectedButtonIndex(null); // Reset selected button
                             setShowError(false); // Reset error state
+                            setIncorrectSelection(null); // Reset incorrect selection
                           }, 2000);
                         }
                       }}
@@ -640,10 +685,30 @@ const Modal = ({ onCodeSelect }) => {
       {/* Blank modal */}
       <ContextModal isOpen={showBlankModal} onNext={handleNext} />
 
+      {/* Customized error message */}
       {showError && (
-        <div className="absolute bottom-20 left-0 right-0 mx-auto w-fit bg-pink-50 border-2 border-pink-300 text-pink-600 px-5 py-3 rounded-xl flex items-center">
-          <span className="text-xl mr-3">🙈</span>
-          <span className="font-bold">Try another one!</span>
+        <div className="fixed bottom-4 left-0 right-0 mx-auto w-fit bg-pink-50 border-2 border-pink-300 text-pink-700 px-5 py-3 rounded-xl flex items-center shadow-lg animate-pulse" style={{ zIndex: 60 }}>
+          <span className="text-xl mr-3">🤔</span>
+          <span className="font-bold">{errorMessage}</span>
+        </div>
+      )}
+      
+      {/* Hint tooltip */}
+      {showHint && (
+        <div className="fixed top-4 left-0 right-0 mx-auto w-fit max-w-md bg-amber-50 border-2 border-amber-300 text-amber-800 px-5 py-3 rounded-xl flex items-start shadow-lg" style={{ zIndex: 60 }}>
+          <span className="text-xl mr-3 mt-1">💡</span>
+          <div>
+            <span className="font-bold block mb-1">Hint:</span>
+            <span className="block">
+              {questions[currentQuestion].title.includes("board") 
+                ? "Look for code that initializes variables for the game board and player." 
+                : questions[currentQuestion].title.includes("function") 
+                  ? "The correct option should define a proper JavaScript function with the right parameters."
+                  : questions[currentQuestion].title.includes("elements") 
+                    ? "Look for code that correctly selects elements using document methods."
+                    : "Read the requirements carefully and choose the option that best matches what's needed."}
+            </span>
+          </div>
         </div>
       )}
     </>
