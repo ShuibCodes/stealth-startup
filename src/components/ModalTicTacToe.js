@@ -450,15 +450,17 @@ const Modal = ({ onCodeSelect }) => {
 
   return (
     <>
-      {/* Show confetti when on the congratulation step */}
+      {/* Show confetti when on the congratulation step - positioned behind modal but above backdrop */}
       {isCongratulationStep && (
-        <Confetti
-          width={windowDimensions.width}
-          height={windowDimensions.height}
-          recycle={false}
-          numberOfPieces={500}
-          gravity={0.2}
-        />
+        <div className="fixed inset-0" style={{ zIndex: 45, pointerEvents: 'none' }}>
+          <Confetti
+            width={windowDimensions.width}
+            height={windowDimensions.height}
+            recycle={false}
+            numberOfPieces={300}
+            gravity={0.2}
+          />
+        </div>
       )}
 
       <Dialog
@@ -468,105 +470,142 @@ const Modal = ({ onCodeSelect }) => {
       >
         {/* The backdrop, rendered as a fixed sibling to the panel container */}
         <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm"
+          className="fixed inset-0 bg-blue-500/30 backdrop-blur-sm"
           aria-hidden="true"
+          style={{ zIndex: 40 }}
         />
 
         {/* Full-screen container to center the panel */}
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel className="w-[screen] h-[screen] max-w-3xl transform overflow-hidden rounded-2xl bg-white">
-            <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-              <div className="sm:flex sm:items-center h-[300px]">
-                <div className="mx-auto flex size-12 shrink-0 items-center justify-center  sm:mx-0 sm:size-10">
-                  {/* <ExclamationTriangleIcon aria-hidden="true" className="size-6 text-red-600" /> */}
-                </div>
-                <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-base font-semibold text-gray-900"
-                  >
-                    {questions[currentQuestion].title}
-                  </Dialog.Title>
-                  <div className="mt-2">
-                    <div className="text-sm text-gray-500 mb-4">
-                      {questions[currentQuestion].text}
-                    </div>
-                    {/* Display code snippets */}
-                    {questions[currentQuestion].codeSnippets?.map(
-                      (snippet, index) => (
-                        <pre
-                          key={index}
-                          className="bg-gray-100 p-2 mb-2 rounded"
-                        >
-                          <code>{snippet}</code>
-                        </pre>
-                      )
-                    )}
+        <div className="fixed inset-0 flex items-center justify-center p-4" style={{ zIndex: 50 }}>
+          <Dialog.Panel className="w-[screen] h-[screen] max-w-3xl transform overflow-hidden rounded-2xl bg-white shadow-xl border-2 border-blue-200">
+            {/* Fun header with decorative elements but toned down */}
+            <div className="bg-blue-500 py-4 px-6 flex items-center justify-center">
+              <h2 className="text-2xl font-bold text-white drop-shadow-md">
+                {questions[currentQuestion].title}
+              </h2>
+              {/* Minimal decorative elements */}
+              <div className="absolute right-4">
+                <div className="text-xl">✨</div>
+              </div>
+            </div>
+            
+            <div className="bg-white px-4 pb-4 pt-5 sm:p-6 rounded-b-2xl">
+              <div className="h-[300px] overflow-auto p-4">
+                <div className="text-center sm:text-left w-full">
+                  <div className="text-lg text-slate-700 mb-6 font-medium bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    {questions[currentQuestion].text}
                   </div>
+                  
+                  {/* Keep the fun code option styling */}
+                  {questions[currentQuestion].codeSnippets?.map(
+                    (snippet, index) => (
+                      <div 
+                        key={index} 
+                        className={`mb-6 rounded-xl transition-all duration-200 transform hover:scale-[1.01] ${
+                          selectedButtonIndex === index 
+                            ? "bg-green-50 border-2 border-green-300 shadow-md" 
+                            : "bg-blue-50 border-2 border-blue-200 shadow"
+                        }`}
+                        onClick={() => {
+                          setSelectedButtonIndex(index);
+                          handleOptionClick(questions[currentQuestion].options[index], index);
+                        }}
+                      >
+                        {/* Keep fun option badge but tone it down */}
+                        <div className="absolute -top-2 -right-2 bg-blue-100 text-blue-800 font-bold py-1 px-4 rounded-full text-sm shadow border border-blue-200">
+                          Option {questions[currentQuestion].options[index]}
+                        </div>
+                        
+                        <div className="pt-6 pb-2 px-5 rounded-t-xl relative">
+                          <pre
+                            className="p-4 rounded-xl font-mono text-md overflow-auto bg-white shadow-inner"
+                          >
+                            <code>{snippet}</code>
+                          </pre>
+                        </div>
+                        
+                        {/* Keep fun indicators for selection */}
+                        {selectedButtonIndex === index && (
+                          <div className="flex justify-center pb-2">
+                            <div className="text-green-600 font-bold flex items-center">
+                              <span className="mr-2">✅</span> Great choice!
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
             </div>
-            <div className="bg-gray-50 px-4 py-3 sm:flex sm:px-6">
-              {questions[currentQuestion].options.map((option, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => {
-                    setSelectedButtonIndex(index);
-                    handleOptionClick(option, index);
-                  }}
-                  className={`inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto
-                    ${
-                      selectedButtonIndex === index
-                        ? "bg-green-500"
-                        : "bg-[#2096F3]"
-                    }`}
-                >
-                  {option}
-                </button>
-              ))}
-
-              <div className="ml-[160px]">
-                {questions[currentQuestion].options.length > 0 && (
-                  <button
-                    type="button"
-                    disabled={selectedButtonIndex === null}
-                    onClick={() => {
-                      // console.log("selctedoption:", questions);
-                      onCodeSelect?.(selectedOption);
-                      setIsOpen(false);
-
-                      // Show next question after 3 seconds
-                      if (currentQuestion < questions.length - 1) {
-                        setTimeout(() => {
-                          setCurrentQuestion(currentQuestion + 1);
-                          setIsOpen(true);
-                          setSelectedButtonIndex(null); // Reset selected button
-                          setShowError(false); // Reset error state
-                        }, 2000);
-                      }
-                    }}
-                    className=" disabled:opacity-75 disabled:bg-gray-400 inline-flex w-full justify-center rounded-md bg-green-400 px-5 py-2 text-sm font-semibold text-black shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                  >
-                    Run
-                  </button>
-                )}
-                {questions[currentQuestion].options.length === 0 && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      // If it's the congratulation step, just close the modal
-                      if (questions[currentQuestion].title === "Congratulations!") {
+            
+            {/* Footer with toned down styling */}
+            <div className="bg-slate-50 px-6 py-4 border-t border-slate-200 sticky bottom-0">
+              <div className="flex justify-between items-center">
+                <div className="text-md font-semibold text-slate-700">
+                  {selectedButtonIndex !== null ? (
+                    <span className="flex items-center">
+                      <span className="mr-2">🎯</span> Option {questions[currentQuestion].options[selectedButtonIndex]} selected
+                    </span>
+                  ) : (
+                    <span className="flex items-center">
+                      <span className="mr-2">👉</span> Pick your favorite code
+                    </span>
+                  )}
+                </div>
+                <div className="flex space-x-4">
+                  {questions[currentQuestion].options.length > 0 && (
+                    <button
+                      type="button"
+                      disabled={selectedButtonIndex === null}
+                      onClick={() => {
+                        onCodeSelect?.(selectedOption);
                         setIsOpen(false);
-                      } else {
-                        handleNext();
-                      }
-                    }}
-                    className="inline-flex w-full justify-center rounded-md bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-20 sm:w-auto"
-                  >
-                    {questions[currentQuestion].title === "Congratulations!" ? "Close" : "Next"}
-                  </button>
-                )}
+
+                        // Show next question after 3 seconds
+                        if (currentQuestion < questions.length - 1) {
+                          setTimeout(() => {
+                            setCurrentQuestion(currentQuestion + 1);
+                            setIsOpen(true);
+                            setSelectedButtonIndex(null); // Reset selected button
+                            setShowError(false); // Reset error state
+                          }, 2000);
+                        }
+                      }}
+                      className={`disabled:opacity-75 disabled:bg-gray-300 rounded-xl px-6 py-2 text-md font-bold shadow-md transition-all duration-200 ${
+                        selectedButtonIndex === null
+                          ? "bg-gray-300 text-gray-600"
+                          : "bg-blue-500 text-white hover:bg-blue-600"
+                      }`}
+                    >
+                      <span className="mr-2">🚀 Run Code</span>
+                    </button>
+                  )}
+                  {questions[currentQuestion].options.length === 0 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        // If it's the congratulation step, just close the modal
+                        if (questions[currentQuestion].title === "Congratulations!") {
+                          setIsOpen(false);
+                        } else {
+                          handleNext();
+                        }
+                      }}
+                      className="bg-blue-500 text-white rounded-xl px-6 py-2 text-md font-bold shadow-md hover:bg-blue-600 transition-all duration-200"
+                    >
+                      {questions[currentQuestion].title === "Congratulations!" ? (
+                        <>
+                          <span className="mr-2">🎉 Finish</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="mr-2">🔜 Next</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </Dialog.Panel>
@@ -577,8 +616,9 @@ const Modal = ({ onCodeSelect }) => {
       <ContextModal isOpen={showBlankModal} onNext={handleNext} />
 
       {showError && (
-        <div className="absolute bottom-20 left-0 right-0 mx-auto w-fit bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded">
-          Wrong answer! Think again.
+        <div className="absolute bottom-20 left-0 right-0 mx-auto w-fit bg-pink-50 border-2 border-pink-300 text-pink-600 px-5 py-3 rounded-xl flex items-center">
+          <span className="text-xl mr-3">🙈</span>
+          <span className="font-bold">Try another one!</span>
         </div>
       )}
     </>
