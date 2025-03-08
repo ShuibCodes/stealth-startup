@@ -205,6 +205,11 @@ padding: 4px;
 
   // Handle code selection specifically for rock-paper-scissors
   handleCodeSelect: (option, prevJs) => {
+    // Special case for resets
+    if (option === "RESET_CODE_TO_INITIAL") {
+      return ""; // Return empty string to reset JS
+    }
+    
     if (!option) return prevJs;
 
     // Step 2: Button click code

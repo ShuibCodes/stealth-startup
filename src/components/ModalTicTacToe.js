@@ -276,6 +276,7 @@ const questions = baseQuestions.reduce((acc, question, index) => {
 const Modal = ({ onCodeSelect }) => {
   //  // console.log("Modal component rendering");
   const [isOpen, setIsOpen] = useState(true);
+  const [isMinimized, setIsMinimized] = useState(false); // Track minimized state
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [showBlankModal, setShowBlankModal] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -397,6 +398,47 @@ const Modal = ({ onCodeSelect }) => {
     }, 7000);
   };
 
+  // Toggle minimized state
+  const toggleMinimize = () => {
+    setIsMinimized(!isMinimized);
+    // Hide any error or hint when minimizing
+    if (!isMinimized) {
+      setShowError(false);
+      setShowHint(false);
+    }
+  };
+
+  // Reset quiz to start over
+  const handleRestart = () => {
+    // Force reopen the modal if it was about to close
+    setIsOpen(true);
+    
+    // Reset to the first question
+    setCurrentQuestion(0);
+    
+    // Clear all selections and states
+    setSelectedOption(null);
+    setSelectedButtonIndex(null);
+    setShowError(false);
+    setIncorrectSelection(null);
+    setShowHint(false);
+    
+    // Reset the code in the parent component by sending a special reset command
+    // Use the game config's initial JS as the reset value to properly trigger the handler
+    onCodeSelect?.("RESET_CODE_TO_INITIAL");
+    
+    // Reset URL parameter if using them
+    if (location.pathname.includes("/new-project")) {
+      setSearchParams({ step: 1 });
+    }
+    
+    // If we're using confetti, wait a moment for it to clear
+    setTimeout(() => {
+      // Ensure modal is fully reset and visible
+      setShowBlankModal(false);
+    }, 100);
+  };
+
   // Render empty step modal
   if (baseQuestions[currentQuestion]?.isEmptyStep) {
     return (
@@ -486,9 +528,34 @@ const Modal = ({ onCodeSelect }) => {
         </div>
       )}
 
+      {/* Minimized floating button */}
+      {isMinimized && (
+        <div 
+          className="fixed bottom-6 right-6 bg-blue-500 text-white py-3 px-4 rounded-full shadow-lg cursor-pointer flex items-center z-50 hover:bg-blue-600 transition-all duration-200"
+          onClick={toggleMinimize}
+        >
+          <span className="text-xl mr-2">📝</span>
+          <span className="font-bold">Show Quiz</span>
+        </div>
+      )}
+
+      {/* Restart quiz button - only shown when completed and not minimized */}
+      {isCongratulationStep && !isMinimized && (
+        <div 
+          className="fixed bottom-6 right-6 bg-green-500 text-white py-3 px-4 rounded-full shadow-lg cursor-pointer flex items-center z-50 hover:bg-green-600 transition-all duration-200"
+          onClick={handleRestart}
+        >
+          <span className="text-xl mr-2">🔄</span>
+          <span className="font-bold">Restart Quiz</span>
+        </div>
+      )}
+
       <Dialog
-        open={isOpen && !showBlankModal}
-        onClose={() => setIsOpen(false)}
+        open={(isOpen && !showBlankModal && !isMinimized)}
+        onClose={() => {
+          // Do nothing when clicking outside - this prevents accidental closing
+          // Only allow closing through explicit buttons
+        }}
         className="relative z-50"
       >
         {/* The backdrop, rendered as a fixed sibling to the panel container */}
@@ -502,14 +569,27 @@ const Modal = ({ onCodeSelect }) => {
         <div className="fixed inset-0 flex items-center justify-center p-4" style={{ zIndex: 50 }}>
           <Dialog.Panel className="w-[screen] h-[screen] max-w-3xl transform overflow-hidden rounded-2xl bg-white shadow-xl border-2 border-blue-200">
             {/* Fun header with decorative elements but toned down */}
-            <div className="bg-blue-500 py-4 px-6 flex items-center justify-center">
+            <div className="bg-blue-500 py-4 px-6 flex items-center justify-center relative">
               <h2 className="text-2xl font-bold text-white drop-shadow-md">
                 {baseQuestions[currentQuestion].title}
               </h2>
-              {/* Minimal decorative elements */}
+              
+              {/* Decorative element on right side */}
               <div className="absolute right-4">
                 <div className="text-xl">✨</div>
               </div>
+              
+              {/* Minimize button - original left position */}
+              <button 
+                className="absolute left-4 bg-blue-400 hover:bg-blue-600 text-white p-1.5 rounded-lg transition-all duration-200"
+                onClick={toggleMinimize}
+                aria-label="Minimize quiz"
+                title="Minimize quiz"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 12H6" />
+                </svg>
+              </button>
             </div>
             
             <div className="bg-white px-4 pb-4 pt-5 sm:p-6 rounded-b-2xl">
@@ -648,6 +728,17 @@ const Modal = ({ onCodeSelect }) => {
                           <span className="mr-2">🔜 Next</span>
                         </>
                       )}
+                    </button>
+                  )}
+                  
+                  {/* Add restart button inside modal when on congratulation step */}
+                  {baseQuestions[currentQuestion].title === "Congratulations!" && (
+                    <button
+                      type="button"
+                      onClick={handleRestart}
+                      className="ml-4 bg-green-500 text-white rounded-xl px-6 py-2 text-md font-bold shadow-md hover:bg-green-600 transition-all duration-200"
+                    >
+                      <span className="mr-2">🔄 Start Over</span>
                     </button>
                   )}
                 </div>
