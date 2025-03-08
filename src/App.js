@@ -106,10 +106,18 @@ function App() {
               }
             />
             <Route
-              path="/new-project"
+              path="/new-project/rock-paper-scissors"
               element={
                 <ProtectedRoute>
-                  <NewProjectApp />
+                  <NewProjectApp gameType="rock-paper-scissors" />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/new-project/tic-tac-toe"
+              element={
+                <ProtectedRoute>
+                  <NewProjectApp gameType="tic-tac-toe" />
                 </ProtectedRoute>
               }
             />
