@@ -440,25 +440,31 @@ const Modal = ({ onCodeSelect }) => {
   };
 
   // Render empty step modal
-  if (baseQuestions[currentQuestion]?.isEmptyStep) {
+  if (questions[currentQuestion]?.isEmptyStep) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[9999]">
-        <div className="bg-white rounded-lg p-12 max-w-6xl w-full h-[600px] relative">
-          {/* Wizard image */}
-          <img
-            src={wizard}
-            alt="Wizard avatar"
-            className="absolute top-4 left-16 w-32 h-32 object-contain"
-          />
+      <div className="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-[9999] transition-all duration-300 ease-in-out">
+        <div className="bg-gradient-to-br from-white to-gray-100 rounded-2xl shadow-2xl p-12 max-w-6xl w-full h-[600px] relative overflow-hidden border border-purple-100 animate-fadeIn">
+          {/* Background decorative elements */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-purple-100 rounded-full -mr-32 -mt-32 opacity-50"></div>
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-100 rounded-full -ml-40 -mb-40 opacity-50"></div>
+          
+          {/* Wizard image with enhanced styling */}
+          <div className="absolute top-4 left-16 w-36 h-36 rounded-full bg-purple-100 p-2 shadow-lg transform hover:scale-105 transition-transform duration-300">
+            <img
+              src={wizard}
+              alt="Wizard avatar"
+              className="w-full h-full object-contain rounded-full"
+            />
+          </div>
 
-          {/* Close button */}
+          {/* Close button with improved styling */}
           <button
             onClick={() => {
               setCurrentQuestion(0);
               setShowBlankModal(false);
               onCodeSelect?.(null);
             }}
-            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
+            className="absolute top-4 right-4 text-gray-500 hover:text-red-500 hover:bg-red-50 transition-all p-2 rounded-full"
             aria-label="Close modal"
           >
             <svg
@@ -477,34 +483,58 @@ const Modal = ({ onCodeSelect }) => {
             </svg>
           </button>
 
-          <div className="flex h-full items-center justify-between gap-8">
-            {/* Left side - Content */}
-            <div className="flex-1 flex flex-col justify-center">
-              <h2 className="text-3xl font-bold mb-4">
-                {baseQuestions[currentQuestion].content.title}
-              </h2>
-              <h4 className="text-xl text-gray-600 leading-relaxed">
-                {baseQuestions[currentQuestion].content.description}
-              </h4>
+          <div className="flex h-full items-center justify-between gap-12 pt-6">
+            {/* Left side - Content with improved typography and layout */}
+            <div className="flex-1 flex flex-col justify-center pl-6">
+              <div className="bg-white/80 backdrop-blur-sm p-8 rounded-xl shadow-md border-l-4 border-purple-500 transform hover:translate-y-[-5px] transition-all duration-300">
+                <h2 className="text-4xl font-bold mb-6 text-purple-700 relative">
+                  {questions[currentQuestion].content.title}
+                  <span className="absolute bottom-0 left-0 w-16 h-1 bg-purple-500 rounded"></span>
+                </h2>
+                <p className="text-xl text-gray-700 leading-relaxed">
+                  {questions[currentQuestion].content.description}
+                </p>
+              </div>
             </div>
 
-            {/* Right side - Image */}
-            <div className="flex-1">
-              <img
-                src={baseQuestions[currentQuestion].content.image}
-                alt="Step visualization"
-                className="w-full h-full object-contain"
-              />
+            {/* Right side - Image with enhancement */}
+            <div className="flex-1 flex justify-center items-center p-4">
+              {questions[currentQuestion].content.image && (
+                <div className="rounded-xl overflow-hidden shadow-xl border-4 border-white transform hover:rotate-1 transition-all duration-300">
+                  <img
+                    src={questions[currentQuestion].content.image}
+                    alt="Step visualization"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              )}
             </div>
           </div>
 
+          {/* Continue button with improved styling */}
           <button
             onClick={handleNext}
-            className="bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition-colors absolute bottom-8 right-8"
+            className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 absolute bottom-8 right-8 shadow-lg font-semibold flex items-center group"
           >
-            {currentQuestion + 1 < baseQuestions.length && 
-             baseQuestions[currentQuestion + 1].title === "Congratulations!" ? "Finish" : "Continue"}
+            <span>
+              {currentQuestion + 1 < questions.length && 
+              questions[currentQuestion + 1].title === "Congratulations!" ? "Finish" : "Continue"}
+            </span>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
           </button>
+          
+          {/* Progress indicator */}
+          <div className="absolute bottom-8 left-8 flex items-center">
+            <div className="text-sm text-gray-500 mr-2">Progress:</div>
+            <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 transition-all duration-500"
+                style={{ width: `${(currentQuestion / (questions.length - 1)) * 100}%` }}
+              ></div>
+            </div>
+          </div>
         </div>
       </div>
     );
