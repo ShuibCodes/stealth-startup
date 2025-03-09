@@ -4,12 +4,13 @@ import React, { useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
 import ContextModal from "./ContextModal";
 import { useSearchParams, useLocation } from "react-router-dom";
-import step1 from "../images/step-1.png";
-import step2 from "../images/step-2.png";
-import step3 from "../images/step-3.png";
-import step4 from "../images/step-4.png";
-import step5 from "../images/step-5.png";
-import step6 from "../images/step-6.png";
+import step1 from "../images/step-1-tic-tac-toe.png";
+import step2 from "../images/step-2-tic-tac-toe.png";
+import step3 from "../images/step-3-tic-tac-toe.png";
+import step4 from "../images/step-4-tic-tac-toe.png";
+import step5 from "../images/step-5-tic-tac-toe.png";
+import step6 from "../images/step-6-tic-tac-toe.png";
+import step7 from "../images/step-7-tic-tac-toe.png";
 import wizard from "../images/wizard.png";
 import Confetti from "react-confetti";
 
@@ -219,13 +220,13 @@ const emptyModalContent = [
     {
       title: "Now it's getting interesting!",
       description:
-        "You've added click events to mark the grid. Time to handle turns.",
+        "Time to add events to cells!",
       image: step2,
     },
     {
-      title: "Almost there!",
+      title: "Big step!",
       description:
-        "You've implemented the logic to check for a winner. Just a bit more to go!",
+        "Let's create a function to handle the moves!",
       image: step3,
     },
     {
@@ -237,14 +238,20 @@ const emptyModalContent = [
     {
       title: "Getting close to the finish line!",
       description:
-        "Now it's time to add a reset button and handle game restarts.",
+        "Let's add now logic to check for a winner! ",
       image: step5,
     },
     {
       title: "Final steps!",
-      description: "You're about to complete your Tic-Tac-Toe game!",
+      description: "You're about to complete your Tic-Tac-Toe game! Let's display the winner.",
       image: step6,
     },
+    {
+      title: "Getting close to the finish line!",
+      description:
+        "Now it's time to add a reset button and handle game restarts.",
+      image: step7,
+    }
   ];
   
 
@@ -341,7 +348,13 @@ const Modal = ({ onCodeSelect }) => {
   }, [stepParam, location.pathname]);
 
   const handleOptionClick = (option, index) => {
-    const currentQ = baseQuestions[currentQuestion];
+    const currentQ = questions[currentQuestion];
+    
+    // Skip processing if it's an empty step or missing required properties
+    if (!currentQ || currentQ.isEmptyStep || !currentQ.codeSnippets) {
+      return;
+    }
+    
     const selectedCode =
       currentQ.actualCode?.[index] || currentQ.codeSnippets[index];
 
@@ -368,7 +381,7 @@ const Modal = ({ onCodeSelect }) => {
 
   const handleNext = () => {
     setShowBlankModal(false);
-    if (currentQuestion < baseQuestions.length - 1) {
+    if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
     }
@@ -376,7 +389,7 @@ const Modal = ({ onCodeSelect }) => {
 
   // Add step to URL while maintaining the /new-project path
   const handleNextQuestion = () => {
-    if (currentQuestion < baseQuestions.length - 1) {
+    if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
       setSearchParams({ step: currentQuestion + 2 });
     }
@@ -541,7 +554,7 @@ const Modal = ({ onCodeSelect }) => {
   }
 
   // Check if this is the congratulation step
-  const isCongratulationStep = baseQuestions[currentQuestion]?.title === "Congratulations!";
+  const isCongratulationStep = questions[currentQuestion]?.title === "Congratulations!";
 
   return (
     <>
@@ -601,7 +614,7 @@ const Modal = ({ onCodeSelect }) => {
             {/* Fun header with decorative elements but toned down */}
             <div className="bg-blue-500 py-4 px-6 flex items-center justify-center relative">
               <h2 className="text-2xl font-bold text-white drop-shadow-md">
-                {baseQuestions[currentQuestion].title}
+                {questions[currentQuestion].title}
               </h2>
               
               {/* Decorative element on right side */}
@@ -626,11 +639,11 @@ const Modal = ({ onCodeSelect }) => {
               <div className="h-[300px] overflow-auto p-4">
                 <div className="text-center sm:text-left w-full">
                   <div className="text-lg text-slate-700 mb-6 font-medium bg-slate-50 p-4 rounded-xl border border-slate-200">
-                    {baseQuestions[currentQuestion].text}
+                    {questions[currentQuestion].text}
                   </div>
                   
                   {/* Keep the fun code option styling */}
-                  {baseQuestions[currentQuestion].codeSnippets?.map(
+                  {questions[currentQuestion].codeSnippets?.map(
                     (snippet, index) => (
                       <div 
                         key={index} 
@@ -642,12 +655,12 @@ const Modal = ({ onCodeSelect }) => {
                               : "bg-blue-50 border-2 border-blue-200 shadow"
                         }`}
                         onClick={() => {
-                          handleOptionClick(baseQuestions[currentQuestion].options[index], index);
+                          handleOptionClick(questions[currentQuestion].options[index], index);
                         }}
                       >
                         {/* Keep fun option badge but tone it down */}
                         <div className="absolute -top-2 -right-2 bg-blue-100 text-blue-800 font-bold py-1 px-4 rounded-full text-sm shadow border border-blue-200">
-                          Option {baseQuestions[currentQuestion].options[index]}
+                          Option {questions[currentQuestion].options[index]}
                         </div>
                         
                         <div className="pt-6 pb-2 px-5 rounded-t-xl relative">
@@ -688,7 +701,7 @@ const Modal = ({ onCodeSelect }) => {
                 <div className="text-md font-semibold text-slate-700">
                   {selectedButtonIndex !== null ? (
                     <span className="flex items-center">
-                      <span className="mr-2">🎯</span> Option {baseQuestions[currentQuestion].options[selectedButtonIndex]} selected
+                      <span className="mr-2">🎯</span> Option {questions[currentQuestion].options[selectedButtonIndex]} selected
                     </span>
                   ) : (
                     <span className="flex items-center">
@@ -698,7 +711,7 @@ const Modal = ({ onCodeSelect }) => {
                 </div>
                 <div className="flex space-x-4">
                   {/* Add hint button */}
-                  {baseQuestions[currentQuestion].options.length > 0 && (
+                  {questions[currentQuestion].options.length > 0 && (
                     <button
                       type="button"
                       onClick={handleShowHint}
@@ -708,7 +721,7 @@ const Modal = ({ onCodeSelect }) => {
                     </button>
                   )}
                   
-                  {baseQuestions[currentQuestion].options.length > 0 && (
+                  {questions[currentQuestion].options.length > 0 && (
                     <button
                       type="button"
                       disabled={selectedButtonIndex === null}
@@ -717,7 +730,7 @@ const Modal = ({ onCodeSelect }) => {
                         setIsOpen(false);
 
                         // Show next question after 3 seconds
-                        if (currentQuestion < baseQuestions.length - 1) {
+                        if (currentQuestion < questions.length - 1) {
                           setTimeout(() => {
                             setCurrentQuestion(currentQuestion + 1);
                             setIsOpen(true);
@@ -736,12 +749,12 @@ const Modal = ({ onCodeSelect }) => {
                       <span className="mr-2">🚀 Run Code</span>
                     </button>
                   )}
-                  {baseQuestions[currentQuestion].options.length === 0 && (
+                  {questions[currentQuestion].options.length === 0 && (
                     <button
                       type="button"
                       onClick={() => {
                         // If it's the congratulation step, just close the modal
-                        if (baseQuestions[currentQuestion].title === "Congratulations!") {
+                        if (questions[currentQuestion].title === "Congratulations!") {
                           setIsOpen(false);
                         } else {
                           handleNext();
@@ -749,7 +762,7 @@ const Modal = ({ onCodeSelect }) => {
                       }}
                       className="bg-blue-500 text-white rounded-xl px-6 py-2 text-md font-bold shadow-md hover:bg-blue-600 transition-all duration-200"
                     >
-                      {baseQuestions[currentQuestion].title === "Congratulations!" ? (
+                      {questions[currentQuestion].title === "Congratulations!" ? (
                         <>
                           <span className="mr-2">🎉 Finish</span>
                         </>
@@ -762,7 +775,7 @@ const Modal = ({ onCodeSelect }) => {
                   )}
                   
                   {/* Add restart button inside modal when on congratulation step */}
-                  {baseQuestions[currentQuestion].title === "Congratulations!" && (
+                  {questions[currentQuestion].title === "Congratulations!" && (
                     <button
                       type="button"
                       onClick={handleRestart}
@@ -796,11 +809,11 @@ const Modal = ({ onCodeSelect }) => {
           <div>
             <span className="font-bold block mb-1">Hint:</span>
             <span className="block">
-              {baseQuestions[currentQuestion].title.includes("board") 
+              {questions[currentQuestion].title.includes("board") 
                 ? "Look for code that initializes variables for the game board and player." 
-                : baseQuestions[currentQuestion].title.includes("function") 
+                : questions[currentQuestion].title.includes("function") 
                   ? "The correct option should define a proper JavaScript function with the right parameters."
-                  : baseQuestions[currentQuestion].title.includes("elements") 
+                  : questions[currentQuestion].title.includes("elements") 
                     ? "Look for code that correctly selects elements using document methods."
                     : "Read the requirements carefully and choose the option that best matches what's needed."}
             </span>
