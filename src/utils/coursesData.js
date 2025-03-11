@@ -1,6 +1,4 @@
 import pcImage from "../images/pc-image.jpg";
-// import { collection, addDoc } from "firebase/firestore";
-// import { db } from "../firebaseConfig";
 
 export const CoursesDummyData = [
   {
@@ -137,12 +135,16 @@ export const CoursesDummyData = [
 
 // CoursesDummyData.map(async (item) => {
 //   try {
-//     await addDoc(collection(db, "courses"), {
-//       id: item.id,
-//       name: item.name,
-//       duration: item.duration,
-//       modules: item.modules,
-//     });
+//     const { error } = await supabase.from("courses").insert([
+//       {
+//         id: item.id,
+//         name: item.name,
+//         duration: item.duration,
+//         modules: item.modules, // Ensure this is stored as JSONB in Supabase
+//       },
+//     ]);
+
+//     if (error) throw error;
 //   } catch (error) {
 //     console.error(error);
 //   }

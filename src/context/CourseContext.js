@@ -1,12 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import {
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  doc,
-} from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import supabase from "../supabaseClient";
 
 // Create Context
 const CourseContext = createContext();
@@ -16,16 +9,14 @@ export const CourseProvider = ({ children }) => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch courses from Firestore
+  // Fetch courses from Supabase
   const fetchCourses = async () => {
     setLoading(true);
     try {
-      const querySnapshot = await getDocs(collection(db, "courses"));
-      const courseList = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setCourses(courseList);
+      const { data, error } = await supabase.from("courses").select("*");
+      if (error) throw error;
+      console.log("🚀 ~ fetchCourses ~ data:", data);
+      setCourses(data || []);
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
@@ -35,17 +26,22 @@ export const CourseProvider = ({ children }) => {
   // Add a new course
   const addCourse = async (title, description, instructor) => {
     try {
-      const docRef = await addDoc(collection(db, "courses"), {
-        title,
-        description,
-        instructor,
-        modules: [],
-        createdAt: new Date().toISOString(),
-      });
-      setCourses([
-        ...courses,
-        { id: docRef.id, title, description, instructor, modules: [] },
-      ]);
+      const { data, error } = await supabase
+        .from("courses")
+        .insert([
+          {
+            title,
+            description,
+            instructor,
+            modules: [], // Make sure `modules` is stored as JSONB in Supabase
+            createdAt: new Date().toISOString(),
+          },
+        ])
+        .select("*")
+        .single(); // Return inserted data
+
+      if (error) throw error;
+      setCourses([...courses, data]); // Update local state
     } catch (error) {
       console.error("Error adding course:", error);
     }
@@ -54,11 +50,17 @@ export const CourseProvider = ({ children }) => {
   // Update an existing course
   const updateCourse = async (courseId, newData) => {
     try {
-      const courseRef = doc(db, "courses", courseId);
-      await updateDoc(courseRef, newData);
+      const { data, error } = await supabase
+        .from("courses")
+        .update(newData)
+        .eq("id", courseId)
+        .select("*")
+        .single(); // Return updated data
+
+      if (error) throw error;
       setCourses(
         courses.map((course) =>
-          course.id === courseId ? { ...course, ...newData } : course
+          course.id === courseId ? { ...course, ...data } : course
         )
       );
     } catch (error) {

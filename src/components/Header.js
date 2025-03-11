@@ -1,10 +1,9 @@
 import { LogOut } from "lucide-react";
-import { signOut } from "firebase/auth";
-import { auth } from "../firebaseConfig";
+import supabase from "../supabaseClient";
 
 export function Header() {
   const handleLogout = async () => {
-    await signOut(auth);
+    await supabase.auth.signOut(); // Logs out the user
   };
 
   return (

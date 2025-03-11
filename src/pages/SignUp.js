@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { auth, db } from "../firebaseConfig";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import supabase from "../supabaseClient";
 import { useNavigate, Link } from "react-router-dom";
 import image from "../images/pexels-cottonbro-4709291.jpg";
 import logo from "../images/CodingKids - logo.png";
-import { doc, setDoc } from "firebase/firestore";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -23,19 +21,30 @@ const SignUp = () => {
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
+      // Create a new user in Supabase Auth
+      const { data, error } = await supabase.auth.signUp({
         email,
-        password
-      );
-      const user = userCredential.user;
-      await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid,
-        email: user.email,
-        createdAt: new Date().toISOString(),
-        startedCourses: [],
-        role: "user",
+        password,
       });
+
+      if (error) throw error;
+
+      // Store additional user details in Supabase database
+      const user = data.user;
+      if (user) {
+        const { error: dbError } = await supabase.from("users").insert([
+          {
+            id: user.id,
+            email: user.email,
+            created_at: new Date().toISOString(),
+            startedCourses: [],
+            role: "user",
+          },
+        ]);
+
+        if (dbError) throw dbError;
+      }
+
       navigate("/dashboard"); // Redirect to dashboard after successful sign-up
     } catch (err) {
       setError(err.message);

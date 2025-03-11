@@ -2,8 +2,7 @@ import { Search } from "lucide-react";
 import { useCourses } from "../context/CourseContext";
 import pcImage from "../images/pc-image.jpg";
 import { useParams, Link } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../firebaseConfig";
+import supabase from "../supabaseClient";
 import { useEffect, useState } from "react";
 
 export default function CoursesSidebar() {
@@ -11,15 +10,30 @@ export default function CoursesSidebar() {
   const { courses, loading } = useCourses();
   const { courseId, moduleId } = useParams();
 
-  const getUserId = () => {
-    const user = auth.currentUser;
-    return user ? user.uid : null;
+  const getUserId = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    return user ? user.id : null;
   };
   const getCompletedCourses = async () => {
-    const userId = getUserId();
-    const userRef = doc(db, "users", userId);
-    const userDoc = await getDoc(userRef);
-    setStartedCourses(userDoc.data().startedCourses);
+    const userId = await getUserId();
+    if (!userId) return;
+
+    const { data, error } = await supabase
+      .from("users")
+      .select("startedCourses")
+      .eq("id", userId)
+      .single();
+
+    if (error) {
+      console.error("Error fetching started courses:", error);
+      return;
+    }
+
+    if (data?.startedCourses) {
+      setStartedCourses(data.startedCourses);
+    }
   };
   const getProgress = (id) => {
     const item = startedCourses.find((item) => {
@@ -44,7 +58,10 @@ export default function CoursesSidebar() {
       <div className="courses-scroll flex flex-col gap-4 overflow-auto h-full pr-2">
         {!loading &&
           courses.map((item) => (
-            <Link to={`/dashboard/courses/${item.id}/${item.modules[0].id}`}>
+            <Link
+              key={item.id}
+              to={`/dashboard/courses/${item.id}/${item.modules[0].id}`}
+            >
               <div
                 className={`flex h-28 gap-2 shrink-0 cursor-pointer hover:bg-gray-100 rounded-lg transition-all duration-300 ${
                   item.id === courseId && "bg-gray-100"

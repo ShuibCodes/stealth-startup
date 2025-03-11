@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { auth } from "../firebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import supabase from "../supabaseClient";
 import { useNavigate, Link } from "react-router-dom";
 import image from "../images/pexels-cottonbro-4709291.jpg";
 import logo from "../images/CodingKids - logo.png";
@@ -16,7 +15,13 @@ const Login = () => {
     setError("");
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+
       navigate("/dashboard"); // Redirect to dashboard after login
     } catch (err) {
       setError("Invalid email or password");

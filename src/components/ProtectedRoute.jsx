@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { auth, db } from "../firebaseConfig";
-import { getDoc, doc } from "firebase/firestore";
+import supabase from "../supabaseClient";
 
 const ProtectedRoute = ({ children, adminOnly }) => {
   const [role, setRole] = useState("");
@@ -11,13 +10,25 @@ const ProtectedRoute = ({ children, adminOnly }) => {
     getRole();
   }, []);
   const getRole = async () => {
-    const user = auth.currentUser;
-    if (user) {
-      const userDoc = await getDoc(doc(db, "users", user.uid));
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        setRole(userData.role);
-      }
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+
+    // Fetch user role from Supabase
+    const { data, error } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (error) {
+      console.error("Error fetching role:", error);
+      return;
+    }
+
+    if (data) {
+      setRole(data.role);
     }
   };
 

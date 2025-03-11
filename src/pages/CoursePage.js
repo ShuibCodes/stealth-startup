@@ -1,79 +1,92 @@
 import CourseModuleSelect from "../components/CourseModuleSelect";
 import CoursesSidebar from "../components/CoursesSidebar";
 import CourseView from "../components/CourseView";
-import {
-  doc,
-  updateDoc,
-  arrayUnion,
-  getDoc,
-  query,
-  collection,
-  where,
-  getDocs,
-} from "firebase/firestore";
 import { useEffect } from "react";
-import { auth, db } from "../firebaseConfig";
 import { useParams } from "react-router-dom";
+import supabase from "../supabaseClient";
 
 export default function CoursePage() {
   const { courseId, moduleId } = useParams();
-  const getUserId = () => {
-    const user = auth.currentUser;
-    return user ? user.uid : null;
+
+  const getUserId = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    console.log("🚀 ~ getUserId ~ user:", user);
+    return user ? user.id : null;
   };
+
   const startCourse = async (userId, courseId) => {
     try {
-      const userRef = doc(db, "users", userId);
-      const userDoc = await getDoc(userRef);
-      if (!userDoc.exists()) {
-        console.error("user not found");
+      // Fetch the user data
+      const { data: userData, error: userError } = await supabase
+        .from("users")
+        .select("startedCourses")
+        .eq("id", userId)
+        .single();
+
+      if (userError) {
+        console.error("Error fetching user:", userError);
         return;
       }
-      let startedCourses = userDoc.data().startedCourses || [];
+
+      let startedCourses = userData?.startedCourses || [];
       const isCourseStarted = startedCourses.some(
         (course) => course.courseId === courseId
       );
+
       if (!isCourseStarted) {
-        await updateDoc(userRef, {
-          startedCourses: arrayUnion({
-            courseId,
-            progress: 0, // Initial progress
-            completedModules: [],
-          }),
+        startedCourses.push({
+          courseId,
+          progress: 0, // Initial progress
+          completedModules: [],
         });
+
+        // Update user data with new startedCourses array
+        const { error: updateError } = await supabase
+          .from("users")
+          .update({ startedCourses })
+          .eq("id", userId);
+
+        if (updateError) throw updateError;
       }
     } catch (error) {
       console.error("Error starting course:", error);
     }
   };
+
   const completeModule = async (userId, courseId, moduleId) => {
     try {
       console.log("Fetching course with field ID:", courseId);
-      const courseQuery = query(
-        collection(db, "courses"),
-        where("id", "==", courseId)
-      );
-      const courseSnapshot = await getDocs(courseQuery);
 
-      if (courseSnapshot.empty) {
-        console.error("Course not found for ID:", courseId);
+      // Fetch course details
+      const { data: courseData, error: courseError } = await supabase
+        .from("courses")
+        .select("modules")
+        .eq("id", courseId)
+        .single();
+
+      if (courseError || !courseData) {
+        console.error("Course not found for ID:", courseId, courseError);
         return;
       }
-
-      const courseDoc = courseSnapshot.docs[0];
-      const courseData = courseDoc.data();
 
       console.log("Course Data:", courseData);
       let totalModules = courseData.modules.length;
-      const userRef = doc(db, "users", userId);
-      const userDoc = await getDoc(userRef);
 
-      if (!userDoc.exists()) {
-        console.error("User not found:", userId);
+      // Fetch user data
+      const { data: userData, error: userError } = await supabase
+        .from("users")
+        .select("startedCourses")
+        .eq("id", userId)
+        .single();
+
+      if (userError || !userData) {
+        console.error("User not found:", userId, userError);
         return;
       }
 
-      let startedCourses = userDoc.data().startedCourses || [];
+      let startedCourses = userData.startedCourses || [];
       let courseIndex = startedCourses.findIndex(
         (c) => c.courseId === courseId
       );
@@ -84,12 +97,20 @@ export default function CoursePage() {
         );
         completedModules.add(moduleId);
         let progress = Math.round((completedModules.size / totalModules) * 100);
+
         startedCourses[courseIndex] = {
           ...startedCourses[courseIndex],
           completedModules: Array.from(completedModules),
           progress: progress,
         };
-        await updateDoc(userRef, { startedCourses });
+
+        // Update user progress
+        const { error: updateError } = await supabase
+          .from("users")
+          .update({ startedCourses })
+          .eq("id", userId);
+
+        if (updateError) throw updateError;
 
         console.log(`Module ${moduleId} completed. Progress: ${progress}%`);
       }
@@ -97,13 +118,20 @@ export default function CoursePage() {
       console.error("Error updating progress:", error);
     }
   };
+
   useEffect(() => {
-    const userId = getUserId();
-    startCourse(userId, courseId);
+    const initStart = async () => {
+      const userId = await getUserId();
+      startCourse(userId, courseId);
+    };
+    initStart();
   }, [courseId]);
   useEffect(() => {
-    const userId = getUserId();
-    completeModule(userId, courseId, moduleId);
+    const initCompleteModule = async () => {
+      const userId = await getUserId();
+      completeModule(userId, courseId, moduleId);
+    };
+    initCompleteModule();
   }, [moduleId, courseId]);
   return (
     <div className="h-full flex gap-5">

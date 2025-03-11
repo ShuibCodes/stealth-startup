@@ -2,8 +2,7 @@ import { MonitorPlay, Check } from "lucide-react";
 import { useCourses } from "../context/CourseContext";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { auth, db } from "../firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
+import supabase from "../supabaseClient";
 
 export default function CourseModuleSelect() {
   const [currentCourse, setCurrentCourse] = useState({});
@@ -11,23 +10,38 @@ export default function CourseModuleSelect() {
   const { courses } = useCourses();
   const { courseId, moduleId } = useParams();
 
-  const getUserId = () => {
-    const user = auth.currentUser;
-    return user ? user.uid : null;
+  const getUserId = async () => {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+    if (error) {
+      console.error("Error getting user:", error);
+      return null;
+    }
+    return user ? user.id : null;
   };
 
   const getCompletedModules = async () => {
-    const userId = getUserId();
-    const userRef = doc(db, "users", userId);
-    const userDoc = await getDoc(userRef);
-    const current = userDoc
-      .data()
-      .startedCourses.find((item) => item.courseId === courseId);
-    setCompletedModules(current?.completedModules || []);
-    console.log(
-      "🚀 ~ getCompletedModules ~ current.completedModules:",
-      current?.completedModules
+    const userId = await getUserId();
+    if (!userId) return;
+
+    // Fetch the user's startedCourses from Supabase
+    const { data, error } = await supabase
+      .from("users")
+      .select("startedCourses")
+      .eq("id", userId)
+      .single();
+
+    if (error) {
+      console.error("Error fetching completed modules:", error);
+      return;
+    }
+
+    const current = data?.startedCourses?.find(
+      (item) => item.courseId === courseId
     );
+    setCompletedModules(current?.completedModules || []);
   };
 
   useEffect(() => {
@@ -40,7 +54,7 @@ export default function CourseModuleSelect() {
     <div className="w-[260px] bg-white mt-5 rounded-tl-xl rounded-tr-xl shrink-0 mr-5">
       <h1 className="text-xl p-3">Modules</h1>
       {currentCourse?.modules?.map((item) => (
-        <Link to={`/dashboard/courses/${courseId}/${item.id}`}>
+        <Link key={item.id} to={`/dashboard/courses/${courseId}/${item.id}`}>
           <div
             className={`flex hover:bg-green-100 py-2 cursor-pointer ${
               moduleId === item.id && "bg-green-100"

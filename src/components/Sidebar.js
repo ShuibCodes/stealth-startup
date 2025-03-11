@@ -7,9 +7,8 @@ import {
   LayoutGrid,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { auth, db } from "../firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import supabase from "../supabaseClient";
 
 const navItems = [
   { name: "Dashboard", href: "/dashboard", icon: Home, onylAdmin: true },
@@ -47,11 +46,25 @@ export function Sidebar() {
     getRole();
   }, []);
   const getRole = async () => {
-    const user = auth.currentUser;
-    const userDoc = await getDoc(doc(db, "users", user.uid));
-    if (userDoc.exists()) {
-      const userData = userDoc.data();
-      setRole(userData.role);
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+
+    // Fetch user role from Supabase
+    const { data, error } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (error) {
+      console.error("Error fetching role:", error);
+      return;
+    }
+
+    if (data) {
+      setRole(data.role);
     }
   };
 
