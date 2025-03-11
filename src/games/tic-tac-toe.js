@@ -200,6 +200,11 @@ body {
 
   // Handle code selection specifically for tic-tac-toe
   handleCodeSelect: (option, prevJs) => {
+    // Special case for resets
+    if (option === "RESET_CODE_TO_INITIAL") {
+      return ""; // Return empty string to reset JS
+    }
+    
     if (!option) return prevJs;
 
     // Step 1: Initialize board

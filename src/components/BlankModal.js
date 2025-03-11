@@ -1,3 +1,5 @@
+import { Dialog } from "@headlessui/react";
+
 const BlankModal = ({ isOpen, onNext }) => {
   const RockPaperS = [
    
@@ -33,4 +35,6 @@ const BlankModal = ({ isOpen, onNext }) => {
       </div>
     </Dialog>
   )
-} 
+}
+
+export default BlankModal; 
