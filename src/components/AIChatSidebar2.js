@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import newProjectRequirements from "../utils/newProjectRequirements";
+import { getAuth } from "firebase/auth";
+import { db2 } from "../firebaseConfig";
+import { doc, updateDoc, increment, getDoc, setDoc, collection, addDoc, arrayUnion } from "firebase/firestore";
 
 const API_KEY =
   "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";
@@ -354,17 +357,78 @@ function deleteTodo(e) {
     const step = newProjectRequirements.steps[currentStepIndex];
     if (!step) return;
 
-    setMessages((prev) => [
-      ...prev,
-      { type: "user", content: "Can I get a hint for this step?" },
-      {
-        type: "ai",
-        content: `Here's a hint for ${step.name}:`,
-        isCode: true,
-        code: step.hint,
-      },
-    ]);
+    try {
+      // Update hint count in Firestore
+      const auth = getAuth();
+      if (auth.currentUser) {
+        // Create a reference to the user's hints document
+        const hintsDocRef = doc(db2, 'hintButtonUsage', auth.currentUser.uid);
+        
+        try {
+          // Get the current hints document
+          const hintsDoc = await getDoc(hintsDocRef);
+          
+          if (!hintsDoc.exists()) {
+            // If document doesn't exist, create it with initial data
+            await setDoc(hintsDocRef, {
+              totalHintRequests: 1,
+              
+              hints: [{
+                stepIndex: currentStepIndex,
+                stepName: step.name,
+                timestamp: new Date()
+              }],
+              createdAt: new Date(),
+              lastHintRequestAt: new Date()
+            });
+          } else {
+            
+            // If document exists, update it with new hint and increment total
+            await updateDoc(hintsDocRef, {
+              totalHintRequests: increment(1),
+              hints: arrayUnion({
+                stepIndex: currentStepIndex,
+                stepName: step.name,
+                timestamp: new Date()
+              }),
+              lastHintRequestAt: new Date()
+            });
+          }
+          
+          console.log("Hint recorded successfully");
+        } catch (firestoreError) {
+          console.error("Firestore operation failed:", firestoreError);
+        }
+      } else {
+        console.log("No authenticated user - skipping stats update");
+      }
+
+      setMessages((prev) => [
+        ...prev,
+        { type: "user", content: "Can I get a hint for this step?" },
+        {
+          type: "ai",
+          content: `Here's a hint for ${step.name}:`,
+          isCode: true,
+          code: step.hint,
+        },
+      ]);
+    } catch (error) {
+      console.error("Error in handleHint:", error);
+      // Still show the hint even if there was an error
+      setMessages((prev) => [
+        ...prev,
+        { type: "user", content: "Can I get a hint for this step?" },
+        {
+          type: "ai",
+          content: `Here's a hint for ${step.name}:`,
+          isCode: true,
+          code: step.hint,
+        },
+      ]);
+    }
   };
+
 
   const moveToNextStep = () => {
     if (currentStepIndex < newProjectRequirements.steps.length - 1) {
