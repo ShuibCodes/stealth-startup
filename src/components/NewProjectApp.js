@@ -4,68 +4,105 @@ import AIChatSidebar2 from "./AIChatSidebar2";
 import "../App.css";
 import Modal from "./Modal";
 import ModalTicTacToe from "./ModalTicTacToe";
-import ModalPokemon from "./ModalPokemon"; 
+import ModalPokemon from "./ModalPokemon";
 import { getGameConfig } from "../games";
+import { useLocation } from "react-router-dom";
 
 const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
   // Get the appropriate game configuration based on the gameType
   const gameConfig = getGameConfig(gameType);
+  const location = useLocation();
 
+  // Check if the URL indicates Python mode (e.g., /py/pokemon-battle)
+  const isPython = location.pathname.includes("/py/");
+
+  // For JS-based games we use the js state; for Python games, we use the python state.
   const [html, setHtml] = useState(gameConfig.getInitialHtml());
   const [css, setCss] = useState(gameConfig.getInitialCss());
   const [js, setJs] = useState(gameConfig.getInitialJs());
+  const [python, setPython] = useState(
+    isPython && gameConfig.getInitialPy ? gameConfig.getInitialPy() : ""
+  );
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  // For tab names, if we're in Python mode the third tab is "Python" instead of "JavaScript"
   const [activeTab, setActiveTab] = useState("html");
   const [srcDoc, setSrcDoc] = useState("");
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setSrcDoc(`
-        <!doctype html>
-        <html>
-          <head>
-            <style>${css}</style>
-          </head>
-          <body>
-            ${html}
-            <script>
-              try {
-                ${js}
-              } catch (err) {
-                console.log('JS Error:', err);
-              }
-            </script>
-          </body>
-        </html>
-      `);
-    }, 250);
-
+    let timeout;
+    if (!isPython) {
+      // JS mode: execute the code in an iframe
+      timeout = setTimeout(() => {
+        setSrcDoc(`
+          <!doctype html>
+          <html>
+            <head>
+              <style>${css}</style>
+            </head>
+            <body>
+              ${html}
+              <script>
+                try {
+                  ${js}
+                } catch (err) {
+                  console.log('JS Error:', err);
+                }
+              </script>
+            </body>
+          </html>
+        `);
+      }, 250);
+    } else {
+      timeout = setTimeout(() => {
+        setSrcDoc(`
+          <!doctype html>
+          <html>
+            <head>
+              <style>${css}</style>
+            </head>
+            <body>
+              ${html}
+            </body>
+          </html>
+        `);
+      }, 250);
+    }
     return () => clearTimeout(timeout);
-  }, [html, css, js]);
+  }, [html, css, js, python, isPython]);
 
   const renderEditor = () => {
-    switch (activeTab) {
-      case "html":
+    if (activeTab === "html") {
+      return (
+        <EditorProjectTwo
+          language="xml"
+          displayName="HTML"
+          value={html}
+          onChange={setHtml}
+          currentStepIndex={currentStepIndex}
+        />
+      );
+    } else if (activeTab === "css") {
+      return (
+        <EditorProjectTwo
+          language="css"
+          displayName="CSS"
+          value={css}
+          onChange={setCss}
+          currentStepIndex={currentStepIndex}
+        />
+      );
+    } else if (activeTab === (isPython ? "python" : "javascript")) {
+      if (isPython) {
         return (
           <EditorProjectTwo
-            language="xml"
-            displayName="HTML"
-            value={html}
-            onChange={setHtml}
+            language="python"
+            displayName="Python"
+            value={python}
+            onChange={setPython}
             currentStepIndex={currentStepIndex}
           />
         );
-      case "css":
-        return (
-          <EditorProjectTwo
-            language="css"
-            displayName="CSS"
-            value={css}
-            onChange={setCss}
-            currentStepIndex={currentStepIndex}
-          />
-        );
-      case "javascript":
+      } else {
         return (
           <EditorProjectTwo
             language="javascript"
@@ -75,9 +112,9 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
             currentStepIndex={currentStepIndex}
           />
         );
-      default:
-        return null;
+      }
     }
+    return null;
   };
 
   const scrollToEditor = () => {
@@ -95,9 +132,14 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
     if (!option) return;
 
     // Use the game-specific handler from the config
-    setJs((prevJs) => gameConfig.handleCodeSelect(option, prevJs));
+    if (!isPython) {
+      setJs((prevJs) => gameConfig.handleCodeSelect(option, prevJs));
+    } else {
+      setPython((prevPy) => gameConfig.handleCodeSelect(option, prevPy));
+    }
     
-    setActiveTab("javascript");
+    // In either case, switch to the code tab for editing
+    setActiveTab(isPython ? "python" : "javascript");
     scrollToEditor();
   };
 
@@ -163,10 +205,12 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
             CSS
           </button>
           <button
-            className={`tab-button ${activeTab === "javascript" ? "active" : ""}`}
-            onClick={() => setActiveTab("javascript")}
+            className={`tab-button ${
+              activeTab === (isPython ? "python" : "javascript") ? "active" : ""
+            }`}
+            onClick={() => setActiveTab(isPython ? "python" : "javascript")}
           >
-            JavaScript
+            {isPython ? "Python" : "JavaScript"}
           </button>
         </div>
         <div

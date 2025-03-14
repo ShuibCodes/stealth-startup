@@ -1,5 +1,148 @@
 // Configuration for the Pokemon Battle game
 
+const pythonSteps = [
+  // Step 1: Create Pokémon Objects
+  `# Create the Pokemon dictionary objects with their stats
+import random
+
+pikachu = { 
+    "name": "Pikachu", 
+    "health": 100,
+    "max_health": 100,
+    "attacks": ["Thunder Shock", "Quick Attack", "Thunderbolt"],
+    "damage": [20, 10, 30]
+}
+
+charmander = {
+    "name": "Charmander",
+    "health": 120,
+    "max_health": 120,
+    "attacks": ["Ember", "Scratch", "Flamethrower"],
+    "damage": [15, 10, 25]
+}`,
+  
+  // Step 2: Display Pokémon Stats 
+  `# Function to show current stats of both Pokemon
+def show_stats():
+    print(f"\n{pikachu['name']} HP: {pikachu['health']}/{pikachu['max_health']}")
+    print(f"{charmander['name']} HP: {charmander['health']}/{charmander['max_health']}")
+    
+# Show initial stats
+show_stats()`,
+  
+  // Step 3: Build the Attack Menu
+  `# Function to display available attacks
+def show_attack_menu():
+    print("\nChoose your attack:")
+    for i, attack in enumerate(pikachu["attacks"]):
+        print(f"{i+1}. {attack} (Damage: {pikachu['damage'][i]})")
+        
+show_attack_menu()`,
+  
+  // Step 4: Get Player Input
+  `# Function to get player's attack choice
+def get_player_choice():
+    while True:
+        try:
+            choice = int(input("Enter attack number (1-3): ")) - 1
+            if 0 <= choice < len(pikachu["attacks"]):
+                return choice
+            else:
+                print("Invalid choice. Please enter 1, 2, or 3.")
+        except ValueError:
+            print("Please enter a number.")`,
+  
+  // Step 5: Implement the Player Attack Function
+  `# Function for player's attack turn
+def player_attack():
+    # Get the attack choice from player
+    attack_index = get_player_choice()
+    attack = pikachu["attacks"][attack_index]
+    damage = pikachu["damage"][attack_index]
+    
+    # Show attack message
+    print(f"\n{pikachu['name']} uses {attack}!")
+    
+    # Apply damage to opponent
+    charmander["health"] -= damage
+    if charmander["health"] < 0:
+        charmander["health"] = 0
+    
+    # Show updated stats
+    show_stats()
+    
+    # Return True if the battle should continue
+    return charmander["health"] > 0`,
+  
+  // Step 6: Implement the Opponent's Turn
+  `# Function for opponent's attack turn
+def opponent_attack():
+    # Randomly select an attack
+    attack_index = random.randint(0, len(charmander["attacks"]) - 1)
+    attack = charmander["attacks"][attack_index]
+    damage = charmander["damage"][attack_index]
+    
+    # Show attack message
+    print(f"\n{charmander['name']} uses {attack}!")
+    
+    # Apply damage to player
+    pikachu["health"] -= damage
+    if pikachu["health"] < 0:
+        pikachu["health"] = 0
+    
+    # Show updated stats
+    show_stats()
+    
+    # Return True if the battle should continue
+    return pikachu["health"] > 0`,
+  
+  // Step 7: Main Battle Loop
+  `# Main battle function
+def battle():
+    print("\n===== BATTLE START =====\n")
+    
+    while True:
+        # Player's turn
+        if not player_attack():
+            print(f"\n{pikachu['name']} wins!")
+            break
+        
+        # Opponent's turn
+        if not opponent_attack():
+            print(f"\n{charmander['name']} wins!")
+            break
+        
+        # Show attack menu for next turn
+        show_attack_menu()`,
+  
+  // Step 8: Game Setup and Main Function
+  `# Function to reset the game
+def reset_game():
+    pikachu["health"] = pikachu["max_health"]
+    charmander["health"] = charmander["max_health"]
+    print("\n===== GAME RESET =====\n")
+    show_stats()
+    show_attack_menu()
+
+# Main function to run the game
+def main():
+    print("===== POKEMON BATTLE =====")
+    print(f"{pikachu['name']} vs {charmander['name']}")
+    
+    # Start the battle
+    battle()
+    
+    # Ask if player wants to play again
+    play_again = input("\nPlay again? (y/n): ").lower()
+    if play_again == 'y':
+        reset_game()
+        battle()
+
+# Run the game
+if __name__ == "__main__":
+    main()`
+];
+
 const gameConfig = {
   // Initial HTML content
   getInitialHtml: () => `<!DOCTYPE html>
@@ -42,42 +185,6 @@ const gameConfig = {
             <button class="attack-btn" id="attack-1">Thunder Shock</button>
             <button class="attack-btn" id="attack-2">Quick Attack</button>
             <button class="attack-btn" id="attack-3">Thunderbolt</button>
-        </div>
-        
-        <div class="python-code">
-            <h3>Python Code:</h3>
-            <pre id="python-code">
-# Pokemon Battle Game in Python
-import random
-
-# Step 1: Create Pokemon Objects
-# Fill in the code for creating pokemon objects
-
-# Step 2: Display Pokemon Stats
-# Fill in the code for displaying pokemon stats
-
-# Step 3: Player Turn
-# Fill in the code for player's turn
-
-# Step 4: Calculate Damage
-# Fill in the code for calculating damage
-
-# Step 5: Check for Winner
-# Fill in the code for checking the winner
-            </pre>
-        </div>
-        
-        <button id="reset">Reset Game</button>
-    </div>
-    
-    <div id="code-input-modal" class="modal">
-        <div class="modal-content">
-            <h2>Enter Your Code</h2>
-            <textarea id="code-input" rows="6" placeholder="Enter your Python code here..."></textarea>
-            <div class="button-group">
-                <button id="submit-code">Submit</button>
-                <button id="cancel-code">Cancel</button>
-            </div>
         </div>
     </div>
 </body>
@@ -386,287 +493,71 @@ body {
   animation: damage 0.5s ease;
 }`,
 
-  // Initial JS content
-  getInitialJs: () => `// Pokemon Battle Game
+getInitialJs: () => `// Pokemon Battle Game in JS
 
-// Pokemon objects
-const pikachu = {
-  name: "Pikachu",
-  hp: 100,
-  maxHp: 100,
-  attacks: [
-    { name: "Thunder Shock", damage: 20 },
-    { name: "Quick Attack", damage: 10 },
-    { name: "Thunderbolt", damage: 30 }
-  ],
-  image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
-};
-
-const charmander = {
-  name: "Charmander",
-  hp: 120,
-  maxHp: 120,
-  attacks: [
-    { name: "Ember", damage: 15 },
-    { name: "Scratch", damage: 10 },
-    { name: "Flamethrower", damage: 25 }
-  ],
-  image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png"
-};
-
-// DOM elements
-const playerNameEl = document.getElementById('player-name');
-const playerHpEl = document.getElementById('player-hp');
-const playerHpBarEl = document.getElementById('player-hp-bar');
-const playerImgEl = document.getElementById('player-img');
-
-const opponentNameEl = document.getElementById('opponent-name');
-const opponentHpEl = document.getElementById('opponent-hp');
-const opponentHpBarEl = document.getElementById('opponent-hp-bar');
-const opponentImgEl = document.getElementById('opponent-img');
-
-const battleMessageEl = document.getElementById('battle-message');
-const attackButtons = document.querySelectorAll('.attack-btn');
-const resetButton = document.getElementById('reset');
-const pythonCodeEl = document.getElementById('python-code');
-
-// Initialize the game
-function initGame() {
-  // Set player and opponent info
-  playerNameEl.textContent = pikachu.name;
-  playerHpEl.textContent = \`HP: \${pikachu.hp}/\${pikachu.maxHp}\`;
-  playerHpBarEl.style.width = '100%';
-  playerImgEl.src = pikachu.image;
-  
-  opponentNameEl.textContent = charmander.name;
-  opponentHpEl.textContent = \`HP: \${charmander.hp}/\${charmander.maxHp}\`;
-  opponentHpBarEl.style.width = '100%';
-  opponentImgEl.src = charmander.image;
-  
-  // Set attack button labels
-  attackButtons[0].textContent = pikachu.attacks[0].name;
-  attackButtons[1].textContent = pikachu.attacks[1].name;
-  attackButtons[2].textContent = pikachu.attacks[2].name;
-  
-  battleMessageEl.textContent = "Choose your attack!";
-  
-  // Reset Python code display
-  updatePythonCode();
-}
-
-// Update Python code display based on current state
-function updatePythonCode() {
-  const pythonCode = \`# Pokemon Battle Game in Python
-import random
-
-# Step 1: Create Pokemon Objects
-pikachu = { "name": "Pikachu", "hp": 100, "attacks": [
-    { "name": "Thunder Shock", "damage": 20 },
-    { "name": "Quick Attack", "damage": 10 },
-    { "name": "Thunderbolt", "damage": 30 }
-]}
-
-charmander = { "name": "Charmander", "hp": 120, "attacks": [
-    { "name": "Ember", "damage": 15 },
-    { "name": "Scratch", "damage": 10 },
-    { "name": "Flamethrower", "damage": 25 }
-]}
-
-# Step 2: Display Pokemon Stats
-print(f"{pikachu['name']} HP: {pikachu['hp']}")
-print(f"{charmander['name']} HP: {charmander['hp']}")
-
-# Step 3: Player Turn
-choice = int(input("Enter attack number (1-3): ")) - 1
-attack = pikachu["attacks"][choice]
-print(f"{pikachu['name']} used {attack['name']}!")
-
-# Step 4: Calculate Damage
-charmander["hp"] -= attack["damage"]
-print(f"{charmander['name']} took {attack['damage']} damage!")
-print(f"{charmander['name']} HP: {charmander['hp']}")
-
-# Step 5: Check for Winner
-if charmander["hp"] <= 0:
-    print(f"{pikachu['name']} wins!")
-else:
-    # Opponent's turn
-    opponent_attack = random.choice(charmander["attacks"])
-    print(f"{charmander['name']} used {opponent_attack['name']}!")
-    pikachu["hp"] -= opponent_attack["damage"]
-    print(f"{pikachu['name']} took {opponent_attack['damage']} damage!")
-    print(f"{pikachu['name']} HP: {pikachu['hp']}")
-    
-    if pikachu["hp"] <= 0:
-        print(f"{charmander['name']} wins!")
-\`;
-
-  pythonCodeEl.textContent = pythonCode;
-}
-
-// Attack functionality
-function playerAttack(attackIndex) {
-  const attack = pikachu.attacks[attackIndex];
-  
-  // Display attack message
-  battleMessageEl.textContent = \`\${pikachu.name} used \${attack.name}!\`;
-  
-  // Animation
-  playerImgEl.classList.add('attack-animation');
-  setTimeout(() => {
-    playerImgEl.classList.remove('attack-animation');
-    
-    // Calculate damage
-    charmander.hp -= attack.damage;
-    if (charmander.hp < 0) charmander.hp = 0;
-    
-    // Update HP display
-    const hpPercentage = (charmander.hp / charmander.maxHp) * 100;
-    opponentHpBarEl.style.width = \`\${hpPercentage}%\`;
-    opponentHpEl.textContent = \`HP: \${charmander.hp}/\${charmander.maxHp}\`;
-    
-    // Animation for taking damage
-    opponentImgEl.classList.add('damage-animation');
-    setTimeout(() => {
-      opponentImgEl.classList.remove('damage-animation');
-      
-      // Check for winner
-      if (charmander.hp <= 0) {
-        battleMessageEl.textContent = \`\${pikachu.name} wins!\`;
-        disableAttacks();
-      } else {
-        // Opponent's turn
-        setTimeout(opponentAttack, 1000);
-      }
-    }, 500);
-  }, 500);
-}
-
-// Opponent attack
-function opponentAttack() {
-  // Randomly select an attack
-  const attackIndex = Math.floor(Math.random() * charmander.attacks.length);
-  const attack = charmander.attacks[attackIndex];
-  
-  // Display attack message
-  battleMessageEl.textContent = \`\${charmander.name} used \${attack.name}!\`;
-  
-  // Animation
-  opponentImgEl.classList.add('attack-animation');
-  setTimeout(() => {
-    opponentImgEl.classList.remove('attack-animation');
-    
-    // Calculate damage
-    pikachu.hp -= attack.damage;
-    if (pikachu.hp < 0) pikachu.hp = 0;
-    
-    // Update HP display
-    const hpPercentage = (pikachu.hp / pikachu.maxHp) * 100;
-    playerHpBarEl.style.width = \`\${hpPercentage}%\`;
-    playerHpEl.textContent = \`HP: \${pikachu.hp}/\${pikachu.maxHp}\`;
-    
-    // Animation for taking damage
-    playerImgEl.classList.add('damage-animation');
-    setTimeout(() => {
-      playerImgEl.classList.remove('damage-animation');
-      
-      // Check for winner
-      if (pikachu.hp <= 0) {
-        battleMessageEl.textContent = \`\${charmander.name} wins!\`;
-        disableAttacks();
-      } else {
-        battleMessageEl.textContent = "Choose your attack!";
-      }
-    }, 500);
-  }, 500);
-}
-
-// Disable attack buttons
-function disableAttacks() {
-  attackButtons.forEach(button => {
-    button.disabled = true;
-    button.style.opacity = 0.5;
-  });
-}
-
-// Enable attack buttons
-function enableAttacks() {
-  attackButtons.forEach(button => {
-    button.disabled = false;
-    button.style.opacity = 1;
-  });
-}
-
-// Event listeners
-attackButtons.forEach((button, index) => {
-  button.addEventListener('click', () => playerAttack(index));
-});
-
-resetButton.addEventListener('click', () => {
-  // Reset pokemon stats
-  pikachu.hp = pikachu.maxHp;
-  charmander.hp = charmander.maxHp;
-  
-  // Re-initialize game
-  initGame();
-  enableAttacks();
-});
-
-// Initialize game on load
-initGame();
-
-// Modal functionality for code input
-const codeInputModal = document.getElementById('code-input-modal');
-const codeInput = document.getElementById('code-input');
-const submitCodeBtn = document.getElementById('submit-code');
-const cancelCodeBtn = document.getElementById('cancel-code');
-
-// Function to open modal
-function openCodeModal() {
-  codeInputModal.style.display = 'flex';
-}
-
-// Function to close modal
-function closeCodeModal() {
-  codeInputModal.style.display = 'none';
-}
-
-// Submit code
-submitCodeBtn.addEventListener('click', () => {
-  const code = codeInput.value;
-  console.log("Submitted Python code:", code);
-  // Here you would typically send the code to a server for execution
-  // For now, we'll just close the modal
-  closeCodeModal();
-});
-
-// Cancel button
-cancelCodeBtn.addEventListener('click', closeCodeModal);
-
-// For demonstration purposes, double click on code area to open modal
-pythonCodeEl.addEventListener('dblclick', openCodeModal);
+// Create Pokemon objects, initialize DOM elements, etc.
 `,
 
-  // Handle code selection specifically for Pokemon battle
-  handleCodeSelect: (option, prevJs) => {
-    // Special case for resets
+getInitialPy: () => `# Pokemon Battle Game in Python
+# This is a simple turn-based Pokemon battle game
+# Follow the steps to build your own working game!
+
+# Step 1: Create your Pokemon
+
+`,
+
+  // A counter to keep track of which Python step has been appended
+  pythonStepCounter: 0,
+
+  // Handle code selection for both JS and Python modes.
+  handleCodeSelect: (option, prevCode) => {
     if (option === "RESET_CODE_TO_INITIAL") {
-      return gameConfig.getInitialJs();
+      gameConfig.pythonStepCounter = 0;
+      return prevCode.startsWith("#")
+        ? gameConfig.getInitialPy()
+        : gameConfig.getInitialJs();
     }
     
-    if (!option) return prevJs;
+    if (!option) return prevCode;
+    
+    // For Python mode
+    if (prevCode.startsWith("#")) {
+      // Instead of trying to be clever with detection, let's use a more direct approach
+      // We'll use the full array of steps and keep track of which one we're on
 
-    // We would handle the specific Python code snippets here based on steps in the lesson
-    // For example:
-    if (option.includes('pikachu = { "name": "Pikachu", "hp": 100')) {
-      // Step 1: Create Pokemon objects
-      return prevJs;
+      // When a correct answer is selected, we get the corresponding code block from pythonSteps
+      // First, figure out which step we're on based on prevCode
+      let stepsThusFar = prevCode.split(/# Step \d+:/g).filter(part => part.trim().length > 0);
+      
+      // The number of steps so far is our current step
+      // Initial state or reset state just has the comment but no actual step
+      let currentStepNumber = (prevCode === gameConfig.getInitialPy() || stepsThusFar.length === 0) ? 0 : stepsThusFar.length;
+      
+      // Get the appropriate step content from our predefined steps
+      let stepIndex = currentStepNumber;
+      const stepContent = pythonSteps[stepIndex];
+      
+      if (stepIndex === 0) {
+        // First step replaces everything
+        return stepContent;
+      } else {
+        // For subsequent steps, append with proper step marker
+        // Ensure we use the exact step number (based on array index + 1)
+        let nextStepNumber = stepIndex + 1;
+        
+        // Only append if we have content and it's not already there
+        if (stepContent && !prevCode.includes(stepContent)) {
+          return prevCode + `\n\n# Step ${nextStepNumber}:\n` + stepContent;
+        } else {
+          // If we're seeing a duplicate, don't append
+          return prevCode;
+        }
+      }
+    } else {
+      // JS mode: Append the provided option as before
+      return prevCode + "\n\n" + option + "\n\n";
     }
-
-    // More handlers for other steps would go here
-
-    return prevJs; // Return unchanged if no specific handler
   }
 };
 
-export default gameConfig; 
+export default gameConfig;
