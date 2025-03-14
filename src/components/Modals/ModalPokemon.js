@@ -24,16 +24,15 @@ const baseQuestions = [
     title: "Which pseudocode correctly creates a Pikachu and its opponent?",
     text: "Pick the best approach to define the Pokémon objects:",
     codeSnippets: [
+      `MAKE a Pokémon with just a name`,
       `CREATE Pikachu!
   name = "Pikachu"
   health = 100
   attacks = [ Thunder Shock, Quick Attack, Thunderbolt ]`,
-      `SET Pikachu to a simple string`,
-      `MAKE a Pokémon with just a name`
+      `SET Pikachu to a simple string`
     ],
     actualCode: [
-      `# Create the Pokemon dictionary objects with their stats
-import random
+      `import random
 
 pikachu = {
     "name": "Pikachu", 
@@ -51,10 +50,9 @@ charmander = {
     "damage": [15, 10, 25]
 }`
     ],
-    correctLetter: "A",
+    correctLetter: "B",
     options: ["A", "B", "C"]
   },
-  
   {
     title: "Step 2: Display Pokémon Stats",
     text: "We need to create a function to show both Pokémon's current health.",
@@ -65,24 +63,21 @@ charmander = {
     title: "Which pseudocode is best for displaying Pokémon stats?",
     text: "Select the approach that will show both Pokémon's stats:",
     codeSnippets: [
-      `CREATE a function that displays both Pokémon's health
-CALL this function to show initial stats`,
       `PRINT only Pikachu stats to the console`,
-      `UPDATE a page element with text "Stats"`
+      `UPDATE a page element with text "Stats"`,
+      `CREATE a function that displays both Pokémon's health
+CALL this function to show initial stats`
     ],
     actualCode: [
-      `# Function to show current stats of both Pokemon
-def show_stats():
+      `def show_stats():
     print(f"\n{pikachu['name']} HP: {pikachu['health']}/{pikachu['max_health']}")
     print(f"{charmander['name']} HP: {charmander['health']}/{charmander['max_health']}")
     
-# Show initial stats
 show_stats()`
     ],
-    correctLetter: "A",
+    correctLetter: "C",
     options: ["A", "B", "C"]
   },
-  
   {
     title: "Step 3: Build the Attack Menu",
     text: "Players need to see what attacks are available and their damage values.",
@@ -93,13 +88,12 @@ show_stats()`
     title: "Which pseudocode correctly displays available attacks?",
     text: "Choose the approach that best shows the attack options:",
     codeSnippets: [
-      `SET attack button texts to each of Pikachu.attacks and display the corresponding damage`,
-      `ASSIGN the whole list of attacks to one button`,
-      `LOG the attack list to the console`
+      `SET attack button attack names to each of Pikachu.attacks and display the corresponding damage`,
+      `LOG the attack list to the console`,
+      `ASSIGN the whole list of attacks to one button`
     ],
     actualCode: [
-      `# Function to display available attacks
-def show_attack_menu():
+      `def show_attack_menu():
     print("\nChoose your attack:")
     for i, attack in enumerate(pikachu["attacks"]):
         print(f"{i+1}. {attack} (Damage: {pikachu['damage'][i]})")
@@ -109,7 +103,6 @@ show_attack_menu()`
     correctLetter: "A",
     options: ["A", "B", "C"]
   },
-  
   {
     title: "Step 4: Get Player Input",
     text: "The player needs to choose which attack to use for each turn.",
@@ -120,27 +113,25 @@ show_attack_menu()`
     title: "Which pseudocode correctly handles player input?",
     text: "Select the best approach to get and validate the player's attack choice:",
     codeSnippets: [
-      `GET input as a number between 1 and 3, then subtract 1 to return an index`,
-      `GET input once and return it without checking`,
-      `GET input in a loop, subtract 1, and validate that the index is in range`
+      `WHEN attack button is clicked, check if it's a valid attack before proceeding`,
+      `WHEN attack button is clicked, get the attack index from the button's data attribute`,
+      `ALLOW any button click without validating which attack was chosen`
     ],
     actualCode: [
-      `# Function to get player's attack choice
-def get_player_choice():
+      `def get_player_choice():
     while True:
         try:
             choice = int(input("Enter attack number (1-3): ")) - 1
-            if 0 <= choice < len(pikachu["attacks"]):
+            if (0 <= choice && choice < len(pikachu["attacks"])):
                 return choice
             else:
                 print("Invalid choice. Please enter 1, 2, or 3.")
         except ValueError:
             print("Please enter a number.")`
     ],
-    correctLetter: "C",
+    correctLetter: "A",
     options: ["A", "B", "C"]
   },
-  
   {
     title: "Step 5: Implement the Player Attack Function",
     text: "Now we need a function to handle what happens when the player attacks.",
@@ -151,39 +142,28 @@ def get_player_choice():
     title: "Which pseudocode correctly implements the player's attack?",
     text: "Choose the best approach for the player's attack function:",
     codeSnippets: [
+      `DEFINE player_attack() that just prints "Attack executed"`,
       `DEFINE player_attack():
     CALL get_player_choice() to get an index,
     GET the attack from Pikachu.attacks,
     SHOW a message "Pikachu uses (attack)!" and subtract damage from Charmander's health`,
-      `DEFINE player_attack() that just prints "Attack executed"`,
       `DEFINE player_attack() that subtracts damage from Pikachu's health`
     ],
     actualCode: [
-      `# Function for player's attack turn
-def player_attack():
-    # Get the attack choice from player
+      `def player_attack():
     attack_index = get_player_choice()
     attack = pikachu["attacks"][attack_index]
     damage = pikachu["damage"][attack_index]
-    
-    # Show attack message
     print(f"\n{pikachu['name']} uses {attack}!")
-    
-    # Apply damage to opponent
     charmander["health"] -= damage
-    if charmander["health"] < 0:
+    if (charmander["health"] < 0):
         charmander["health"] = 0
-    
-    # Show updated stats
     show_stats()
-    
-    # Return True if battle continues
-    return charmander["health"] > 0`
+    return (charmander["health"] > 0)`
     ],
-    correctLetter: "A",
+    correctLetter: "B",
     options: ["A", "B", "C"]
   },
-  
   {
     title: "Step 6: Implement the Opponent's Turn",
     text: "After the player attacks, the opponent should get a turn to attack back.",
@@ -194,38 +174,27 @@ def player_attack():
     title: "Which pseudocode correctly implements the opponent's attack?",
     text: "Choose the best approach for the opponent's attack function:",
     codeSnippets: [
+      `DEFINE opponent_attack() that simply prints "Opponent attacks!"`,
       `DEFINE opponent_attack():
     RANDOMLY select an attack from Charmander.attacks,
     SHOW "Charmander uses (attack)!" and subtract damage from Pikachu's health`,
-      `DEFINE opponent_attack() that simply prints "Opponent attacks!"`,
       `DEFINE opponent_attack() that always uses the first attack`
     ],
     actualCode: [
-      `# Function for opponent's attack turn
-def opponent_attack():
-    # Randomly select an attack
+      `def opponent_attack():
     attack_index = random.randint(0, len(charmander["attacks"]) - 1)
     attack = charmander["attacks"][attack_index]
     damage = charmander["damage"][attack_index]
-    
-    # Show attack message
     print(f"\n{charmander['name']} uses {attack}!")
-    
-    # Apply damage to player
     pikachu["health"] -= damage
-    if pikachu["health"] < 0:
+    if (pikachu["health"] < 0):
         pikachu["health"] = 0
-    
-    # Show updated stats
     show_stats()
-    
-    # Return True if battle continues
-    return pikachu["health"] > 0`
+    return (pikachu["health"] > 0)`
     ],
-    correctLetter: "A",
+    correctLetter: "B",
     options: ["A", "B", "C"]
   },
-  
   {
     title: "Step 7: Create the Battle Loop",
     text: "Let's create a main battle function that alternates between player and opponent turns.",
@@ -236,37 +205,29 @@ def opponent_attack():
     title: "Which pseudocode correctly implements the battle loop?",
     text: "Choose the best structure for the main battle function:",
     codeSnippets: [
+      `SHOW "Pikachu wins!" unconditionally`,
+      `IF both have same health, SHOW "It's a tie!"`,
       `WHILE both Pokémon have health > 0:
     CALL player_attack()
     IF opponent's health <= 0, SHOW "Pikachu wins!" and EXIT loop;
     CALL opponent_attack()
-    IF player's health <= 0, SHOW "Charmander wins!" and EXIT loop;`,
-      `SHOW "Pikachu wins!" unconditionally`,
-      `IF both have same health, SHOW "It's a tie!"`
+    IF player's health <= 0, SHOW "Charmander wins!" and EXIT loop;`
     ],
     actualCode: [
-      `# Main battle function
-def battle():
+      `def battle():
     print("\n===== BATTLE START =====\n")
-    
     while True:
-        # Player's turn
-        if not player_attack():
+        if (!player_attack()):
             print(f"\n{pikachu['name']} wins!")
             break
-        
-        # Opponent's turn
-        if not opponent_attack():
+        if (!opponent_attack()):
             print(f"\n{charmander['name']} wins!")
             break
-        
-        # Show attack menu for next turn
         show_attack_menu()`
     ],
-    correctLetter: "A",
+    correctLetter: "C",
     options: ["A", "B", "C"]
   },
-  
   {
     title: "Step 8: Create Game Setup and Main Functions",
     text: "Finally, we need functions to reset the game and start the main game loop.",
@@ -286,52 +247,54 @@ DEFINE main():
     CALL battle(),
     ASK if player wants to play again,
     IF yes, reset and restart battle;`,
-      `DEFINE reset_game() that reloads the page`,
-      `DEFINE reset_game() that just prints "Resetting game"`
+      `DEFINE reset_game() that just prints "Resetting game"`,
+      `DEFINE reset_game() that reloads the page`
     ],
     actualCode: [
-      `# Function to reset the game
-def reset_game():
+      `def reset_game():
     pikachu["health"] = pikachu["max_health"]
     charmander["health"] = charmander["max_health"]
     print("\n===== GAME RESET =====\n")
     show_stats()
     show_attack_menu()
 
-# Main function to run the game
 def main():
     print("===== POKEMON BATTLE =====")
     print(f"{pikachu['name']} vs {charmander['name']}")
-    
-    # Start the battle
     battle()
-    
-    # Ask if player wants to play again
-    play_again = input("\nPlay again? (y/n): ").lower()
-    if play_again == 'y':
+    let play_again = input("\nPlay again? (y/n): ").toLowerCase()
+    if (play_again === 'y'):
         reset_game()
         battle()
-
-# Run the game
-if __name__ == "__main__":
-    main()`
+if (__name__ === "__main__") {
+    main()
+}`
     ],
     correctLetter: "A",
     options: ["A", "B", "C"]
   },
   {
-    title: "Congratulations!",
-    text: (
-      <div>
-        <p className="text-lg font-bold text-green-600 mb-2">🎉 You've built the complete Pokémon Battle game! 🎉</p>
-        <p>You created the Pokémon, displayed their stats, set up the attack menu, handled turns, determined a winner, and reset the game.</p>
-        <p>Awesome job!</p>
-      </div>
-    ),
-    options: [],
-    correctAnswer: []
-  }
+      title: "Congratulations!",
+      text: (
+        <div>
+          <p className="text-lg font-bold text-green-600 mb-2">🎉 You've built the complete Pokémon Battle game! 🎉</p>
+          <p>Here's what you accomplished:</p>
+          <ul className="list-disc pl-6 mt-2">
+            <li>Created Pokémon characters with stats and abilities</li>
+            <li>Displayed Pokémon stats during battle</li>
+            <li>Set up the attack menu for player choices</li>
+            <li>Handled player and opponent turns</li>
+            <li>Determined the battle outcome</li>
+            <li>Reset the game for a new round</li>
+          </ul>
+          <p className="mt-3">Awesome job!</p>
+        </div>
+      ),
+      options: [],
+      correctAnswer: []
+    }    
 ];
+
 
 // Define empty modal content for friendly feedback between steps
 const emptyModalContent = [

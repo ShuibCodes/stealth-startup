@@ -15,119 +15,122 @@ import wizard from "../../images/wizard.png";
 import Confetti from "react-confetti";
 
 const baseQuestions = [
-    {
-      title: "Step 1: Set up the game board",
-      text: "Let's start by creating a 3x3 grid to represent our Tic-Tac-Toe board.",
-      codeSnippets: [
-        'SET board TO an array with 9 empty strings ["", "", "", "", "", "", "", "", ""]',
-        "var board = [null, null, null, null, null, null, null, null, null];",
-        "let board = Array(9).fill(null);",
-      ],
-      actualCode: [
-        'var board = ["", "", "", "", "", "", "", "", ""];',
-      ],
-      correctLetter: "A",
-      options: ["A", "B", "C"],
-    },
-    {
-      title: "Step 2: Find the game board and status display elements",
-      text: (
-        <div>
-          We want to find:
-          <ul className="list-disc pl-6 mt-2">
-            <li>The <code>&lt;div&gt;</code> elements representing each cell in the grid.</li>
-            <li>The <code>&lt;div&gt;</code> where we'll display the game status (e.g., whose turn it is or who won).</li>
-          </ul>
-        </div>
-      ),
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which lines of code correctly select these elements?",
-      codeSnippets: [
-        'var cells = document.querySelectorAll(".cell");\nvar statusDiv = document.getElementById("status");',
-        'var cells = "some cells";\nvar statusDiv = "status bar";',
-        'var board = document.createElement("div");\nvar statusDiv = document.createElement("div");',
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "A",
-    },
-    {
-      title: "Step 3: Adding Click Events",
-      text: "We need to detect when a player clicks on a cell to make a move.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which code snippet correctly adds a click event to each cell?",
-      codeSnippets: [
-        "IF user clicks on a cell:\n    place 'X' or 'O'\nELSE:\n    do nothing",
-        "FOR each cell in cells:\n    WHEN cell is clicked:\n        do something",
-        'cells = "Not a real array!"',
-      ],
-      actualCode: [
-        null,
-        `cells.forEach((cell, index) => {
+  {
+    title: "Step 1: Set up the game board",
+    text: "Let's start by creating a 3x3 grid to represent our Tic-Tac-Toe board.",
+    codeSnippets: [
+      "var board = [null, null, null, null, null, null, null, null, null];",
+      'SET board TO an array with 9 empty strings ["", "", "", "", "", "", "", "", ""]',
+      "let board = Array(9).fill(null);"
+    ],
+    actualCode: [
+      'var board = ["", "", "", "", "", "", "", "", ""];',
+      'var board = ["", "", "", "", "", "", "", "", ""];',
+      'var board = ["", "", "", "", "", "", "", "", ""];'
+    ],
+    correctLetter: "B",
+    options: ["A", "B", "C"]
+  },
+  {
+    title: "Step 2: Find the game board and status display elements",
+    text: (
+      <div>
+        We want to find:
+        <ul className="list-disc pl-6 mt-2">
+          <li>The <code>&lt;div&gt;</code> elements representing each cell in the grid.</li>
+          <li>The <code>&lt;div&gt;</code> where we'll display the game status (e.g., whose turn it is or who won).</li>
+        </ul>
+      </div>
+    ),
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which lines of code correctly select these elements?",
+    codeSnippets: [
+      'var board = document.createElement("div");\nvar statusDiv = document.createElement("div");',
+      'var cells = document.querySelectorAll(".cell");\nvar statusDiv = document.getElementById("status");',
+      'var cells = "some cells";\nvar statusDiv = "status bar";'
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "B"
+  },
+  {
+    title: "Step 3: Adding Click Events",
+    text: "We need to detect when a player clicks on a cell to make a move.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which code snippet correctly adds a click event to each cell?",
+    codeSnippets: [
+      "FOR each cell in cells:\n    WHEN cell is clicked:\n        do something",
+      'cells = "Not a real array!"',
+      "IF user clicks on a cell:\n    place 'X' or 'O'\nELSE:\n    do nothing"
+    ],
+    actualCode: [
+      `cells.forEach((cell, index) => {
     cell.addEventListener("click", () => handleMove(index));
   });`,
-        null,
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "B",
-    },
-    {
-      title: "Step 4: Handling a player's move",
-      text: "We need a function that handles when a player clicks on a cell, places their mark, and checks if the game is over.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet correctly sets up the function signature?",
-      codeSnippets: [
-        'var handleMove = "moveFunction";',
-        "handleMove = index {\n  // function logic\n}",
-        "function handleMove(index) {\n  // function logic\n}",
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "C",
-    },
-    {
-      title: "Step 5: Alternating turns between players",
-      text: "We need to track whose turn it is and alternate between 'X' and 'O'.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet correctly switches turns?",
-      codeSnippets: [
-        'IF currentPlayer == "X":\n    currentPlayer = "O"\nELSE:\n    currentPlayer = "X"',
-        'SET currentPlayer = "Always X";',
-        "console.log('Turns not needed');",
-      ],
-      options: ["A", "B", "C"],
-      actualCode: [
-        `currentPlayer = currentPlayer === "X" ? "O" : "X";`,
-        null,
-        null,
-      ],
-      correctLetter: "A",
-    },
-    {
-      title: "Step 6: Checking for a winner",
-      text: "We need to determine if the current player has won the game.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet correctly checks for a winning condition?",
-      codeSnippets: [
-        'var winningCombos = [\n  [0, 1, 2], [3, 4, 5], [6, 7, 8],\n  [0, 3, 6], [1, 4, 7], [2, 5, 8],\n  [0, 4, 8], [2, 4, 6]\n];\nFOR each combo in winningCombos:\n    IF board[combo[0]] == board[combo[1]] == board[combo[2]] AND board[combo[0]] is not empty:\n        return true',
-        'console.log("Everyone wins!");',
-        'winningMove = "Just guess";',
-      ],
-      actualCode: [
-        `const winningCombos = [
+      null,
+      null
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "A"
+  },
+  {
+    title: "Step 4: Handling a player's move",
+    text: "We need a function that handles when a player clicks on a cell, places their mark, and checks if the game is over.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which snippet correctly sets up the function signature?",
+    codeSnippets: [
+      "handleMove = index {\n  // function logic\n}",
+      "function handleMove(index) {\n  // function logic\n}",
+      'var handleMove = "moveFunction";'
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "B"
+  },
+  {
+    title: "Step 5: Alternating turns between players",
+    text: "We need to track whose turn it is and alternate between 'X' and 'O'.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which snippet correctly switches turns?",
+    codeSnippets: [
+      "console.log('Turns not needed');",
+      'IF currentPlayer == "X":\n    currentPlayer = "O"\nELSE:\n    currentPlayer = "X"',
+      'SET currentPlayer = "Always X";'
+    ],
+    actualCode: [
+      null,
+      `currentPlayer = currentPlayer === "X" ? "O" : "X";`,
+      null
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "B"
+  },
+  {
+    title: "Step 6: Checking for a winner",
+    text: "We need to determine if the current player has won the game.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which snippet correctly checks for a winning condition?",
+    codeSnippets: [
+      'winningMove = "Just guess";',
+      'var winningCombos = [\n  [0, 1, 2], [3, 4, 5], [6, 7, 8],\n  [0, 3, 6], [1, 4, 7], [2, 5, 8],\n  [0, 4, 8], [2, 4, 6]\n];\nFOR each combo in winningCombos:\n    IF board[combo[0]] == board[combo[1]] == board[combo[2]] AND board[combo[0]] is not empty:\n        return true',
+      'console.log("Everyone wins!");'
+    ],
+    actualCode: [
+      null,
+      `const winningCombos = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8],
     [0, 3, 6], [1, 4, 7], [2, 5, 8],
     [0, 4, 8], [2, 4, 6]
@@ -140,73 +143,73 @@ const baseQuestions = [
       board[combo[0]] === board[combo[2]]
     );
   }`,
-        null,
-        null,
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "A",
-    },
-    {
-      title: "Step 7: Displaying the result",
-      text: "Once a winner is found or the game ends in a tie, we need to update the status message.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet updates the game status?",
-      codeSnippets: [
-        'statusDiv.textContent = "Winner: " + currentPlayer;',
-        "prompt('Game Over!');",
-        'alert("Done!");',
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "A",
-    },
-    {
-      title: "Step 8: Resetting the game",
-      text: "We need a function to reset the game and start a new round.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet correctly resets the game?",
-      codeSnippets: [
-        'FOR each cell in cells:\n    set cell text to ""\nRESET board\nRESET currentPlayer to "X"',
-        "window.location.reload();",
-        'alert("Restarting!");',
-      ],
-      actualCode: [
-        `function resetGame() {
+      null
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "B"
+  },
+  {
+    title: "Step 7: Displaying the result",
+    text: "Once a winner is found or the game ends in a tie, we need to update the status message.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which snippet updates the game status?",
+    codeSnippets: [
+      "prompt('Game Over!');",
+      'statusDiv.textContent = "Winner: " + currentPlayer;',
+      'alert("Done!");'
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "B"
+  },
+  {
+    title: "Step 8: Resetting the game",
+    text: "We need a function to reset the game and start a new round.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which snippet correctly resets the game?",
+    codeSnippets: [
+      "window.location.reload();",
+      'FOR each cell in cells:\n    set cell text to ""\nRESET board\nRESET currentPlayer to "X"',
+      'alert("Restarting!");'
+    ],
+    actualCode: [
+      null,
+      `function resetGame() {
     board.fill("");
     cells.forEach(cell => cell.textContent = "");
     currentPlayer = "X";
     statusDiv.textContent = "Player X's turn";
   }`,
-        null,
-        null,
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "A",
-    },
-    {
-      title: "Congratulations!",
-      text: (
-        <div>
-          <p className="text-lg font-bold text-green-600 mb-2">🎉 You've successfully built a Tic Tac Toe game! 🎉</p>
-          <p>You've created a fully functional game with:</p>
-          <ul className="list-disc pl-6 mt-2">
-            <li>Game board setup</li>
-            <li>Player turn tracking</li>
-            <li>Win condition checking</li>
-            <li>Game reset functionality</li>
-          </ul>
-          <p className="mt-3">Feel free to play the game and challenge a friend!</p>
-        </div>
-      ),
-      options: [],
-      correctAnswer: [],
-    }
-  ];
+      null
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "B"
+  },
+  {
+    title: "Congratulations!",
+    text: (
+      <div>
+        <p className="text-lg font-bold text-green-600 mb-2">🎉 You've successfully built a Tic Tac Toe game! 🎉</p>
+        <p>You've created a fully functional game with:</p>
+        <ul className="list-disc pl-6 mt-2">
+          <li>Game board setup</li>
+          <li>Player turn tracking</li>
+          <li>Win condition checking</li>
+          <li>Game reset functionality</li>
+        </ul>
+        <p className="mt-3">Feel free to play the game and challenge a friend!</p>
+      </div>
+    ),
+    options: [],
+    correctAnswer: []
+  }
+];
+
   
 
 // Define the content for empty modals
