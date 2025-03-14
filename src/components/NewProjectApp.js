@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import EditorProjectTwo from "../EditorProjectTwo";
 import AIChatSidebar2 from "./AIChatSidebar2";
 import "../App.css";
-import Modal from "./Modal";
-import ModalTicTacToe from "./ModalTicTacToe";
-import ModalPokemon from "./ModalPokemon";
+import Modal from "./Modals/Modal";
+import ModalTicTacToe from "./Modals/ModalTicTacToe";
+import ModalPokemon from "./Modals/ModalPokemon";
 import { getGameConfig } from "../games";
 import { useLocation } from "react-router-dom";
 

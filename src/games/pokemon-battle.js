@@ -151,6 +151,140 @@ const gameConfig = {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokemon Battle</title>
+    <script>
+    // Pokemon objects with their stats
+    const pikachu = { 
+        name: "Pikachu", 
+        health: 100,
+        maxHealth: 100,
+        attacks: ["Thunder Shock", "Quick Attack", "Thunderbolt"],
+        damage: [20, 10, 30]
+    };
+
+    const charmander = {
+        name: "Charmander",
+        health: 120,
+        maxHealth: 120,
+        attacks: ["Ember", "Scratch", "Flamethrower"],
+        damage: [15, 10, 25]
+    };
+
+    // Initialize when the DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        // Get DOM elements
+        const battleMessage = document.getElementById('battle-message');
+        const playerHpBar = document.getElementById('player-hp-bar');
+        const playerHp = document.getElementById('player-hp');
+        const opponentHpBar = document.getElementById('opponent-hp-bar');
+        const opponentHp = document.getElementById('opponent-hp');
+        const attackButtons = [
+            document.getElementById('attack-1'),
+            document.getElementById('attack-2'),
+            document.getElementById('attack-3')
+        ];
+        const resetButton = document.getElementById('reset-game');
+        
+        // Set up attack buttons
+        attackButtons.forEach((button, index) => {
+            button.textContent = pikachu.attacks[index];
+            button.addEventListener('click', () => playerAttack(index));
+        });
+        
+        // Set up reset button
+        resetButton.addEventListener('click', resetGame);
+        
+        // Update HP display
+        function updateHpDisplay() {
+            playerHpBar.style.width = (pikachu.health / pikachu.maxHealth * 100) + '%';
+            playerHp.textContent = 'HP: ' + pikachu.health + '/' + pikachu.maxHealth;
+            
+            opponentHpBar.style.width = (charmander.health / charmander.maxHealth * 100) + '%';
+            opponentHp.textContent = 'HP: ' + charmander.health + '/' + charmander.maxHealth;
+            
+            // Update HP bar colors based on health percentage
+            playerHpBar.style.backgroundColor = getHpColor(pikachu.health / pikachu.maxHealth);
+            opponentHpBar.style.backgroundColor = getHpColor(charmander.health / charmander.maxHealth);
+        }
+        
+        // Get HP bar color based on health percentage
+        function getHpColor(percentage) {
+            if (percentage > 0.5) return '#78c850'; // Green
+            if (percentage > 0.2) return '#f8d030'; // Yellow
+            return '#f05030'; // Red
+        }
+        
+        // Player attack function
+        function playerAttack(attackIndex) {
+            // Disable attack buttons during animation
+            attackButtons.forEach(btn => btn.disabled = true);
+            
+            const attack = pikachu.attacks[attackIndex];
+            const damage = pikachu.damage[attackIndex];
+            
+            battleMessage.textContent = pikachu.name + ' uses ' + attack + '!';
+            
+            // Apply damage to opponent
+            setTimeout(() => {
+                charmander.health = Math.max(0, charmander.health - damage);
+                updateHpDisplay();
+                
+                // Check if opponent fainted
+                if (charmander.health <= 0) {
+                    battleMessage.textContent = charmander.name + ' fainted! ' + pikachu.name + ' wins!';
+                    attackButtons.forEach(btn => btn.disabled = true);
+                } else {
+                    // If opponent still has health, it's their turn
+                    opponentAttack();
+                }
+            }, 1000);
+        }
+        
+        // Opponent attack function
+        function opponentAttack() {
+            setTimeout(() => {
+                // Randomly select an attack
+                const attackIndex = Math.floor(Math.random() * charmander.attacks.length);
+                const attack = charmander.attacks[attackIndex];
+                const damage = charmander.damage[attackIndex];
+                
+                battleMessage.textContent = charmander.name + ' uses ' + attack + '!';
+                
+                // Apply damage to player
+                setTimeout(() => {
+                    pikachu.health = Math.max(0, pikachu.health - damage);
+                    updateHpDisplay();
+                    
+                    // Check if player fainted
+                    if (pikachu.health <= 0) {
+                        battleMessage.textContent = pikachu.name + ' fainted! ' + charmander.name + ' wins!';
+                        attackButtons.forEach(btn => btn.disabled = true);
+                    } else {
+                        // If player still has health, allow attacks again
+                        battleMessage.textContent = 'Choose your attack!';
+                        attackButtons.forEach(btn => btn.disabled = false);
+                    }
+                }, 1000);
+            }, 1000);
+        }
+        
+        // Reset game function
+        function resetGame() {
+            // Reset Pokemon health
+            pikachu.health = pikachu.maxHealth;
+            charmander.health = charmander.maxHealth;
+            
+            // Reset UI
+            battleMessage.textContent = 'Choose your attack!';
+            updateHpDisplay();
+            
+            // Re-enable attack buttons
+            attackButtons.forEach(btn => btn.disabled = false);
+        }
+        
+        // Initialize the game
+        updateHpDisplay();
+    });
+    </script>
 </head>
 <body>
     <div class="game">
@@ -185,6 +319,10 @@ const gameConfig = {
             <button class="attack-btn" id="attack-1">Thunder Shock</button>
             <button class="attack-btn" id="attack-2">Quick Attack</button>
             <button class="attack-btn" id="attack-3">Thunderbolt</button>
+        </div>
+        
+        <div class="reset-container">
+            <button class="reset-btn" id="reset-game">Reset Game</button>
         </div>
     </div>
 </body>
@@ -377,6 +515,35 @@ body {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+.reset-container {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.reset-btn {
+  padding: 10px 25px;
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.reset-btn:hover {
+  background: linear-gradient(135deg, #f5371c, #f53f2a);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.reset-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
 .modal {
   display: none;
   position: fixed;
@@ -495,7 +662,138 @@ body {
 
 getInitialJs: () => `// Pokemon Battle Game in JS
 
-// Create Pokemon objects, initialize DOM elements, etc.
+// Pokemon objects with their stats
+const pikachu = { 
+    name: "Pikachu", 
+    health: 100,
+    maxHealth: 100,
+    attacks: ["Thunder Shock", "Quick Attack", "Thunderbolt"],
+    damage: [20, 10, 30]
+};
+
+const charmander = {
+    name: "Charmander",
+    health: 120,
+    maxHealth: 120,
+    attacks: ["Ember", "Scratch", "Flamethrower"],
+    damage: [15, 10, 25]
+};
+
+// Initialize DOM elements
+document.addEventListener('DOMContentLoaded', () => {
+    // Get DOM elements
+    const battleMessage = document.getElementById('battle-message');
+    const playerHpBar = document.getElementById('player-hp-bar');
+    const playerHp = document.getElementById('player-hp');
+    const opponentHpBar = document.getElementById('opponent-hp-bar');
+    const opponentHp = document.getElementById('opponent-hp');
+    const attackButtons = [
+        document.getElementById('attack-1'),
+        document.getElementById('attack-2'),
+        document.getElementById('attack-3')
+    ];
+    const resetButton = document.getElementById('reset-game');
+    
+    // Set up attack buttons
+    attackButtons.forEach((button, index) => {
+        button.textContent = pikachu.attacks[index];
+        button.addEventListener('click', () => playerAttack(index));
+    });
+    
+    // Set up reset button
+    resetButton.addEventListener('click', resetGame);
+    
+    // Update HP display
+    function updateHpDisplay() {
+        playerHpBar.style.width = (pikachu.health / pikachu.maxHealth * 100) + '%';
+        playerHp.textContent = 'HP: ' + pikachu.health + '/' + pikachu.maxHealth;
+        
+        opponentHpBar.style.width = (charmander.health / charmander.maxHealth * 100) + '%';
+        opponentHp.textContent = 'HP: ' + charmander.health + '/' + charmander.maxHealth;
+        
+        // Update HP bar colors based on health percentage
+        playerHpBar.style.backgroundColor = getHpColor(pikachu.health / pikachu.maxHealth);
+        opponentHpBar.style.backgroundColor = getHpColor(charmander.health / charmander.maxHealth);
+    }
+    
+    // Get HP bar color based on health percentage
+    function getHpColor(percentage) {
+        if (percentage > 0.5) return '#78c850'; // Green
+        if (percentage > 0.2) return '#f8d030'; // Yellow
+        return '#f05030'; // Red
+    }
+    
+    // Player attack function
+    function playerAttack(attackIndex) {
+        // Disable attack buttons during animation
+        attackButtons.forEach(btn => btn.disabled = true);
+        
+        const attack = pikachu.attacks[attackIndex];
+        const damage = pikachu.damage[attackIndex];
+        
+        battleMessage.textContent = pikachu.name + ' uses ' + attack + '!';
+        
+        // Apply damage to opponent
+        setTimeout(() => {
+            charmander.health = Math.max(0, charmander.health - damage);
+            updateHpDisplay();
+            
+            // Check if opponent fainted
+            if (charmander.health <= 0) {
+                battleMessage.textContent = charmander.name + ' fainted! ' + pikachu.name + ' wins!';
+                attackButtons.forEach(btn => btn.disabled = true);
+            } else {
+                // If opponent still has health, it's their turn
+                opponentAttack();
+            }
+        }, 1000);
+    }
+    
+    // Opponent attack function
+    function opponentAttack() {
+        setTimeout(() => {
+            // Randomly select an attack
+            const attackIndex = Math.floor(Math.random() * charmander.attacks.length);
+            const attack = charmander.attacks[attackIndex];
+            const damage = charmander.damage[attackIndex];
+            
+            battleMessage.textContent = charmander.name + ' uses ' + attack + '!';
+            
+            // Apply damage to player
+            setTimeout(() => {
+                pikachu.health = Math.max(0, pikachu.health - damage);
+                updateHpDisplay();
+                
+                // Check if player fainted
+                if (pikachu.health <= 0) {
+                    battleMessage.textContent = pikachu.name + ' fainted! ' + charmander.name + ' wins!';
+                    attackButtons.forEach(btn => btn.disabled = true);
+                } else {
+                    // If player still has health, allow attacks again
+                    battleMessage.textContent = 'Choose your attack!';
+                    attackButtons.forEach(btn => btn.disabled = false);
+                }
+            }, 1000);
+        }, 1000);
+    }
+    
+    // Reset game function
+    function resetGame() {
+        // Reset Pokemon health
+        pikachu.health = pikachu.maxHealth;
+        charmander.health = charmander.maxHealth;
+        
+        // Reset UI
+        battleMessage.textContent = 'Choose your attack!';
+        updateHpDisplay();
+        
+        // Re-enable attack buttons
+        attackButtons.forEach(btn => btn.disabled = false);
+    }
+    
+    // Initialize the game
+    updateHpDisplay();
+});
 `,
 
 getInitialPy: () => `# Pokemon Battle Game in Python
