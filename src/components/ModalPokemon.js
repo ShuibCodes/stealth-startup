@@ -4,272 +4,175 @@ import React, { useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
 import ContextModal from "./ContextModal";
 import { useSearchParams, useLocation } from "react-router-dom";
-import step1 from "../images/step-1-tic-tac-toe.png";
-import step2 from "../images/step-2-tic-tac-toe.png";
-import step3 from "../images/step-3-tic-tac-toe.png";
-import step4 from "../images/step-4-tic-tac-toe.png";
-import step5 from "../images/step-5-tic-tac-toe.png";
-import step6 from "../images/step-6-tic-tac-toe.png";
-import step7 from "../images/step-7-tic-tac-toe.png";
+import step1 from "../images/step-1.png"; 
+import step2 from "../images/step-2.png";
+import step3 from "../images/step-3.png";
+import step4 from "../images/step-4.png";
+import step5 from "../images/step-5.png";
+import step6 from "../images/step-6.png";
 import wizard from "../images/wizard.png";
 import Confetti from "react-confetti";
 
 const baseQuestions = [
-    {
-      title: "Step 1: Set up the game board",
-      text: "Let's start by creating a 3x3 grid to represent our Tic-Tac-Toe board.",
-      codeSnippets: [
-        'SET board TO an array with 9 empty strings ["", "", "", "", "", "", "", "", ""]',
-        "var board = [null, null, null, null, null, null, null, null, null];",
-        "let board = Array(9).fill(null);",
-      ],
-      actualCode: [
-        'var board = ["", "", "", "", "", "", "", "", ""];',
-      ],
-      correctLetter: "A",
-      options: ["A", "B", "C"],
-    },
-    {
-      title: "Step 2: Find the game board and status display elements",
-      text: (
-        <div>
-          We want to find:
-          <ul className="list-disc pl-6 mt-2">
-            <li>The <code>&lt;div&gt;</code> elements representing each cell in the grid.</li>
-            <li>The <code>&lt;div&gt;</code> where we'll display the game status (e.g., whose turn it is or who won).</li>
-          </ul>
-        </div>
-      ),
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which lines of code correctly select these elements?",
-      codeSnippets: [
-        'var cells = document.querySelectorAll(".cell");\nvar statusDiv = document.getElementById("status");',
-        'var cells = "some cells";\nvar statusDiv = "status bar";',
-        'var board = document.createElement("div");\nvar statusDiv = document.createElement("div");',
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "A",
-    },
-    {
-      title: "Step 3: Adding Click Events",
-      text: "We need to detect when a player clicks on a cell to make a move.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which code snippet correctly adds a click event to each cell?",
-      codeSnippets: [
-        "IF user clicks on a cell:\n    place 'X' or 'O'\nELSE:\n    do nothing",
-        "FOR each cell in cells:\n    WHEN cell is clicked:\n        do something",
-        'cells = "Not a real array!"',
-      ],
-      actualCode: [
-        null,
-        `cells.forEach((cell, index) => {
-    cell.addEventListener("click", () => handleMove(index));
-  });`,
-        null,
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "B",
-    },
-    {
-      title: "Step 4: Handling a player's move",
-      text: "We need a function that handles when a player clicks on a cell, places their mark, and checks if the game is over.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet correctly sets up the function signature?",
-      codeSnippets: [
-        'var handleMove = "moveFunction";',
-        "handleMove = index {\n  // function logic\n}",
-        "function handleMove(index) {\n  // function logic\n}",
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "C",
-    },
-    {
-      title: "Step 5: Alternating turns between players",
-      text: "We need to track whose turn it is and alternate between 'X' and 'O'.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet correctly switches turns?",
-      codeSnippets: [
-        'IF currentPlayer == "X":\n    currentPlayer = "O"\nELSE:\n    currentPlayer = "X"',
-        'SET currentPlayer = "Always X";',
-        "console.log('Turns not needed');",
-      ],
-      options: ["A", "B", "C"],
-      actualCode: [
-        `currentPlayer = currentPlayer === "X" ? "O" : "X";`,
-        null,
-        null,
-      ],
-      correctLetter: "A",
-    },
-    {
-      title: "Step 6: Checking for a winner",
-      text: "We need to determine if the current player has won the game.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet correctly checks for a winning condition?",
-      codeSnippets: [
-        'var winningCombos = [\n  [0, 1, 2], [3, 4, 5], [6, 7, 8],\n  [0, 3, 6], [1, 4, 7], [2, 5, 8],\n  [0, 4, 8], [2, 4, 6]\n];\nFOR each combo in winningCombos:\n    IF board[combo[0]] == board[combo[1]] == board[combo[2]] AND board[combo[0]] is not empty:\n        return true',
-        'console.log("Everyone wins!");',
-        'winningMove = "Just guess";',
-      ],
-      actualCode: [
-        `const winningCombos = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8],
-    [0, 3, 6], [1, 4, 7], [2, 5, 8],
-    [0, 4, 8], [2, 4, 6]
-  ];
-  
-  function checkWinner() {
-    return winningCombos.some(combo => 
-      board[combo[0]] && 
-      board[combo[0]] === board[combo[1]] && 
-      board[combo[0]] === board[combo[2]]
-    );
-  }`,
-        null,
-        null,
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "A",
-    },
-    {
-      title: "Step 7: Displaying the result",
-      text: "Once a winner is found or the game ends in a tie, we need to update the status message.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet updates the game status?",
-      codeSnippets: [
-        'statusDiv.textContent = "Winner: " + currentPlayer;',
-        "prompt('Game Over!');",
-        'alert("Done!");',
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "A",
-    },
-    {
-      title: "Step 8: Resetting the game",
-      text: "We need a function to reset the game and start a new round.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet correctly resets the game?",
-      codeSnippets: [
-        'FOR each cell in cells:\n    set cell text to ""\nRESET board\nRESET currentPlayer to "X"',
-        "window.location.reload();",
-        'alert("Restarting!");',
-      ],
-      actualCode: [
-        `function resetGame() {
-    board.fill("");
-    cells.forEach(cell => cell.textContent = "");
-    currentPlayer = "X";
-    statusDiv.textContent = "Player X's turn";
-  }`,
-        null,
-        null,
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "A",
-    },
-    {
-      title: "Congratulations!",
-      text: (
-        <div>
-          <p className="text-lg font-bold text-green-600 mb-2">🎉 You've successfully built a Tic Tac Toe game! 🎉</p>
-          <p>You've created a fully functional game with:</p>
-          <ul className="list-disc pl-6 mt-2">
-            <li>Game board setup</li>
-            <li>Player turn tracking</li>
-            <li>Win condition checking</li>
-            <li>Game reset functionality</li>
-          </ul>
-          <p className="mt-3">Feel free to play the game and challenge a friend!</p>
-        </div>
-      ),
-      options: [],
-      correctAnswer: [],
-    }
-  ];
-  
+  {
+    title: "Step 1: Create Pokémon Objects",
+    text: "Let's start by creating Pokémon objects to represent our battling creatures. Which code correctly creates a Pikachu?",
+    codeSnippets: [
+      'CREATE Pikachu!\n\nname = "Pikachu"\nhealth = 100\nattacks = [\n    Thunder Shock\n    Quick Attack\n    Thunderbolt\n]',
+      
+      'Pikachu = "just a string"',
+      
+      'CREATE Pikachu!\n\nname = "Pikachu"'
+    ],
+    actualCode: [
+      `pikachu = { 
+  "name": "Pikachu", 
+  "hp": 100, 
+  "attacks": [
+    { "name": "Thunder Shock", "damage": 20 },
+    { "name": "Quick Attack", "damage": 10 },
+    { "name": "Thunderbolt", "damage": 30 }
+  ]
+}`
+    ],
+    correctLetter: "A",
+    options: ["A", "B", "C"],
+  },
+  {
+    title: "Step 2: Display Pokémon Stats",
+    text: "Now, let's show our Pikachu's health points on the screen. Which code correctly displays Pikachu's health?",
+    codeSnippets: [
+      'SHOW Message: "Pikachu HP: 100"',
+      
+      'SHOW Message: "Pickachu HP: 1000"',
+      
+      'SHOW Message: "HP: ???"'
+    ],
+    actualCode: [
+      'print(f"{pikachu[\'name\']} HP: {pikachu[\'hp\']}")'
+    ],
+    correctLetter: "A",
+    options: ["A", "B", "C"],
+  },
+  {
+    title: "Step 3: Player Turn",
+    text: "Let's let the player choose which attack to use. Which code correctly gets the player's choice?",
+    codeSnippets: [
+      'ASK PLAYER: "Which attack? (1, 2, or 3)"\n\nGET player\'s answer\nFIND that attack in Pikachu\'s attack list',
+      
+      'FIND attack number 4 in Pikachu\'s list',
+      
+      'ALWAYS use Thunder Shock'
+    ],
+    actualCode: [
+      'choice = int(input("Enter attack number (1-3): ")) - 1\nattack = pikachu["attacks"][choice]'
+    ],
+    correctLetter: "A",
+    options: ["A", "B", "C"],
+  },
+  {
+    title: "Step 4: Calculate Damage",
+    text: "Now we need to apply damage to the opponent. Which code correctly reduces Charmander's health when hit?",
+    codeSnippets: [
+      'SUBTRACT attack damage FROM Charmander\'s health',
+      
+      'ADD attack damage TO Charmander\'s health',
+      
+      'SUBTRACT attack damage FROM Pikachu\'s health'
+    ],
+    actualCode: [
+      'charmander["hp"] -= attack["damage"]'
+    ],
+    correctLetter: "A",
+    options: ["A", "B", "C"],
+  },
+  {
+    title: "Step 5: Check for Winner",
+    text: "Finally, let's check if there's a winner. Which code correctly checks if Pikachu won the battle?",
+    codeSnippets: [
+      'IF Charmander\'s health is 0 or less THEN\n    ANNOUNCE: "Pikachu wins!"',
+      
+      'IF Charmander\'s health is GREATER than 0 THEN\n    ANNOUNCE: "Pikachu wins!"',
+      
+      'IF Pikachu\'s health is 0 or less THEN\n    ANNOUNCE: "Pikachu wins!"'
+    ],
+    actualCode: [
+      'if charmander["hp"] <= 0: print(f"{pikachu[\'name\']} wins!")'
+    ],
+    correctLetter: "A",
+    options: ["A", "B", "C"],
+  },
+  {
+    title: "Congratulations!",
+    text: (
+      <div>
+        <p className="text-lg font-bold text-green-600 mb-2">🎉 You've successfully built a Pokémon Battle game! 🎉</p>
+        <p>You've created a fully functional Python game with:</p>
+        <ul className="list-disc pl-6 mt-2">
+          <li>Pokémon objects with properties</li>
+          <li>Attack selection and damage calculation</li>
+          <li>Battle turn management</li>
+          <li>Win condition checking</li>
+        </ul>
+        <p className="mt-3">Feel free to enhance the game by adding more Pokémon, attacks, or special effects!</p>
+      </div>
+    ),
+    options: [],
+    correctAnswer: [],
+  }
+];
 
 // Define the content for empty modals
 const emptyModalContent = [
-    {
-      title: "Great start!",
-      description:
-        "You've set up the game board and initialized the basics. Let's keep going!",
-      image: step1,
-    },
-    {
-      title: "Now it's getting interesting!",
-      description:
-        "Time to add events to cells!",
-      image: step2,
-    },
-    {
-      title: "Big step!",
-      description:
-        "Let's create a function to handle the moves!",
-      image: step3,
-    },
-    {
-      title: "Looking good!",
-      description:
-        "Your Tic-Tac-Toe game is coming together. Let's add player turns and display updates.",
-      image: step4,
-    },
-    {
-      title: "Getting close to the finish line!",
-      description:
-        "Let's add now logic to check for a winner! ",
-      image: step5,
-    },
-    {
-      title: "Final steps!",
-      description: "You're about to complete your Tic-Tac-Toe game! Let's display the winner.",
-      image: step6,
-    },
-    {
-      title: "Getting close to the finish line!",
-      description:
-        "Now it's time to add a reset button and handle game restarts.",
-      image: step7,
-    }
-  ];
-  
+  {
+    title: "Great start! 1",
+    description:
+      "You've created the Pokémon objects! Now you can see their properties and attacks.",
+    image: step1,
+  },
+  {
+    title: "Now it's getting interesting! 2",
+    description:
+      "You've displayed the Pokémon stats. Let's set up the player's turn next.",
+    image: step2,
+  },
+  {
+    title: "Almost there! 3 ",
+    description:
+      "You've implemented the attack selection. Time to calculate damage!",
+    image: step3,
+  },
+  {
+    title: "Looking good! 4",
+    description:
+      "You've added damage calculation. Just need to check for a winner now!",
+    image: step4,
+  },
+  {
+    title: "Getting close to the finish line!5 ",
+    description:
+      "You've implemented the winner check. Let's put it all together!",
+    image: step5,
+  },
+  {
+    title: "Final steps! 6",
+    description: "You're about to complete your Pokémon Battle game!",
+    image: step6,
+  },
+];
 
-// Create new array with empty steps after every 2nd question
 const questions = baseQuestions.reduce((acc, question, index) => {
   // Add the regular question
   acc.push(question);
 
-  // Add empty step after every 2nd question (but not after the last question)
-  // Also, don't add an empty step if the next question is the congratulation step
-  if ((index + 1) % 2 === 0 && index < baseQuestions.length - 1) {
-    // Check if the next question is the congratulation step
+  // Add an empty step after each question (except the last one)
+  if (index < baseQuestions.length - 1) {
     const nextQuestion = baseQuestions[index + 1];
     if (nextQuestion && nextQuestion.title !== "Congratulations!") {
       acc.push({
         isEmptyStep: true,
         continueToStep: acc.length + 2,
-        content: emptyModalContent[Math.floor(index / 2)] || {
+        content: emptyModalContent[index] || {
           title: "Keep going!",
           description: "You're making great progress.",
           image: null,
@@ -280,7 +183,9 @@ const questions = baseQuestions.reduce((acc, question, index) => {
   return acc;
 }, []);
 
-const Modal = ({ onCodeSelect }) => {
+console.log(questions);
+
+const ModalPokemon = ({ onCodeSelect }) => {
   //  // console.log("Modal component rendering");
   const [isOpen, setIsOpen] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false); // Track minimized state
@@ -400,7 +305,6 @@ const Modal = ({ onCodeSelect }) => {
       setSearchParams({ step: currentQuestion });
     }
   };
-
   // Toggle minimized state
   const toggleMinimize = () => {
     setIsMinimized(!isMinimized);
@@ -698,7 +602,6 @@ const Modal = ({ onCodeSelect }) => {
                   )}
                 </div>
                 <div className="flex space-x-4">
-                  
                   {questions[currentQuestion].options.length > 0 && (
                     <button
                       type="button"
@@ -784,4 +687,4 @@ const Modal = ({ onCodeSelect }) => {
   );
 };
 
-export default Modal;
+export default ModalPokemon;

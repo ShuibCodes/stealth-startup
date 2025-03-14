@@ -307,7 +307,6 @@ const Modal = ({ onCodeSelect }) => {
   const [showError, setShowError] = useState(false);
   const [incorrectSelection, setIncorrectSelection] = useState(null); // Track incorrect selection
   const [errorMessage, setErrorMessage] = useState(""); // Custom error message
-  const [showHint, setShowHint] = useState(false); // State for showing hints
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const stepParam = searchParams.get("step");
@@ -409,15 +408,6 @@ const Modal = ({ onCodeSelect }) => {
       setCurrentQuestion(currentQuestion - 1);
       setSearchParams({ step: currentQuestion });
     }
-  };
-
-  // Function to provide a hint based on the current question
-  const handleShowHint = () => {
-    setShowHint(true);
-    // Hide hint after 5 seconds
-    setTimeout(() => {
-      setShowHint(false);
-    }, 7000);
   };
 
   // Let's also verify the questions array
@@ -533,7 +523,6 @@ const Modal = ({ onCodeSelect }) => {
     // Hide any error or hint when minimizing
     if (!isMinimized) {
       setShowError(false);
-      setShowHint(false);
     }
   };
 
@@ -550,7 +539,6 @@ const Modal = ({ onCodeSelect }) => {
     setSelectedButtonIndex(null);
     setShowError(false);
     setIncorrectSelection(null);
-    setShowHint(false);
     
     // Reset the code in the parent component by sending a special reset command
     // Use the game config's initial JS as the reset value to properly trigger the handler
@@ -722,17 +710,6 @@ const Modal = ({ onCodeSelect }) => {
                   )}
                 </div>
                 <div className="flex space-x-4">
-                  {/* Add hint button */}
-                  {questions[currentQuestion].options.length > 0 && (
-                    <button
-                      type="button"
-                      onClick={handleShowHint}
-                      className="bg-amber-100 text-amber-800 rounded-xl px-4 py-2 text-sm font-medium shadow border border-amber-200 hover:bg-amber-200 transition-all duration-200"
-                    >
-                      <span className="mr-1">💡</span> Hint
-                    </button>
-                  )}
-                  
                   {questions[currentQuestion].options.length > 0 && (
                     <button
                       type="button"
@@ -811,25 +788,6 @@ const Modal = ({ onCodeSelect }) => {
         <div className="fixed bottom-4 left-0 right-0 mx-auto w-fit bg-pink-50 border-2 border-pink-300 text-pink-700 px-5 py-3 rounded-xl flex items-center shadow-lg animate-pulse" style={{ zIndex: 60 }}>
           <span className="text-xl mr-3">🤔</span>
           <span className="font-bold">{errorMessage}</span>
-        </div>
-      )}
-      
-      {/* Hint tooltip */}
-      {showHint && (
-        <div className="fixed top-4 left-0 right-0 mx-auto w-fit max-w-md bg-amber-50 border-2 border-amber-300 text-amber-800 px-5 py-3 rounded-xl flex items-start shadow-lg" style={{ zIndex: 60 }}>
-          <span className="text-xl mr-3 mt-1">💡</span>
-          <div>
-            <span className="font-bold block mb-1">Hint:</span>
-            <span className="block">
-              {questions[currentQuestion].title.includes("board") 
-                ? "Look for code that initializes variables for the game board and player." 
-                : questions[currentQuestion].title.includes("function") 
-                  ? "The correct option should define a proper JavaScript function with the right parameters."
-                  : questions[currentQuestion].title.includes("elements") 
-                    ? "Look for code that correctly selects elements using document methods."
-                    : "Read the requirements carefully and choose the option that best matches what's needed."}
-            </span>
-          </div>
         </div>
       )}
     </>

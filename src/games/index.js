@@ -1,6 +1,7 @@
 // Import game configurations
 import rockPaperScissors from './rock-paper-scissors';
 import ticTacToe from './tic-tac-toe';
+import pokemonBattle from './pokemon-battle';
 
 /**
  * Get game configuration based on the game type
@@ -13,6 +14,7 @@ export const getGameConfig = (gameType) => {
   const configs = {
     'rock-paper-scissors': rockPaperScissors,
     'tic-tac-toe': ticTacToe,
+    'pokemon-battle': pokemonBattle,
     // Add more games here as they are created
   };
 

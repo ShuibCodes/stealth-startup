@@ -4,6 +4,7 @@ import AIChatSidebar2 from "./AIChatSidebar2";
 import "../App.css";
 import Modal from "./Modal";
 import ModalTicTacToe from "./ModalTicTacToe";
+import ModalPokemon from "./ModalPokemon"; 
 import { getGameConfig } from "../games";
 
 const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
@@ -102,17 +103,31 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
 
   return (
     <div className="App">
-      {gameType === "tic-tac-toe" ? (
-        <ModalTicTacToe
-          onCodeSelect={handleCodeSelect}
-          currentStepIndex={currentStepIndex}
-        />
-      ) : (
-        <Modal
-          onCodeSelect={handleCodeSelect}
-          currentStepIndex={currentStepIndex}
-        />
-      )}
+      {(() => {
+        switch (gameType) {
+          case "pokemon-battle":
+            return (
+              <ModalPokemon
+                onCodeSelect={handleCodeSelect}
+                currentStepIndex={currentStepIndex}
+              />
+            );
+          case "tic-tac-toe":
+            return (
+              <ModalTicTacToe
+                onCodeSelect={handleCodeSelect}
+                currentStepIndex={currentStepIndex}
+              />
+            );
+          default:
+            return (
+              <Modal
+                onCodeSelect={handleCodeSelect}
+                currentStepIndex={currentStepIndex}
+              />
+            );
+        }
+      })()}
       <div className="chat-pane">
         <AIChatSidebar2
           html={html}
@@ -148,9 +163,7 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
             CSS
           </button>
           <button
-            className={`tab-button ${
-              activeTab === "javascript" ? "active" : ""
-            }`}
+            className={`tab-button ${activeTab === "javascript" ? "active" : ""}`}
             onClick={() => setActiveTab("javascript")}
           >
             JavaScript

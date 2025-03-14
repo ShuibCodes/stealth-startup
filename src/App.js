@@ -121,6 +121,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
+          <Route
+              path="/new-project/pokemon-battle"
+              element={
+                <ProtectedRoute>
+                  <NewProjectApp gameType="pokemon-battle" />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </div>
       </BrowserRouter>
