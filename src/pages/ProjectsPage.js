@@ -6,7 +6,7 @@ export default function ProjectsPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Link to="/new-project">
+        <Link to="/new-project/rock-paper-scissors">
           <Card>
             <div className="h-[400px] flex items-center justify-center flex-col gap-5">
               <span className="flex gap-5 ">
@@ -18,7 +18,7 @@ export default function ProjectsPage() {
             </div>
           </Card>
         </Link>
-        <Link to="/new-project">
+        <Link to="/new-project/tic-tac-toe">
           <Card>
             <div className="h-[400px] flex items-center justify-center flex-col gap-5">
               <span className="flex gap-5 ">
