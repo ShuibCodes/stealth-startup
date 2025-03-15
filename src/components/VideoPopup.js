@@ -54,28 +54,4 @@ const VideoPopup = ({ onClose }) => {
   );
 };
 
-const styles = {
-  overlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.8)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  popup: {
-    background: "#fff",
-    padding: "20px",
-    borderRadius: "8px",
-    width: "600px",
-    textAlign: "center",
-  },
-  buttons: {
-    marginTop: "10px",
-  },
-};
-
 export default VideoPopup;
