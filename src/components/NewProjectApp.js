@@ -5,6 +5,7 @@ import "../App.css";
 import Modal from "./Modal";
 import ModalTicTacToe from "./ModalTicTacToe";
 import { getGameConfig } from "../games";
+import VideoPopup from "./VideoPopup";
 
 const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
   // Get the appropriate game configuration based on the gameType
@@ -16,6 +17,7 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("html");
   const [srcDoc, setSrcDoc] = useState("");
+  const [videoOpen, setVideoOpen] = useState(true);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -95,24 +97,32 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
 
     // Use the game-specific handler from the config
     setJs((prevJs) => gameConfig.handleCodeSelect(option, prevJs));
-    
+
     setActiveTab("javascript");
     scrollToEditor();
   };
-
   return (
     <div className="App">
-      {gameType === "tic-tac-toe" ? (
+      {videoOpen && (
+        <VideoPopup
+          onClose={() => {
+            setVideoOpen(false);
+          }}
+        />
+      )}
+      {gameType === "tic-tac-toe" && !videoOpen && (
         <ModalTicTacToe
           onCodeSelect={handleCodeSelect}
           currentStepIndex={currentStepIndex}
         />
-      ) : (
+      )}
+      {gameType === "rock-paper-scissors" && !videoOpen && (
         <Modal
           onCodeSelect={handleCodeSelect}
           currentStepIndex={currentStepIndex}
         />
       )}
+
       <div className="chat-pane">
         <AIChatSidebar2
           html={html}

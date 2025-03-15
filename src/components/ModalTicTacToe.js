@@ -15,119 +15,123 @@ import wizard from "../images/wizard.png";
 import Confetti from "react-confetti";
 
 const baseQuestions = [
-    {
-      title: "Step 1: Set up the game board",
-      text: "Let's start by creating a 3x3 grid to represent our Tic-Tac-Toe board.",
-      codeSnippets: [
-        'SET board TO an array with 9 empty strings ["", "", "", "", "", "", "", "", ""]',
-        "var board = [null, null, null, null, null, null, null, null, null];",
-        "let board = Array(9).fill(null);",
-      ],
-      actualCode: [
-        'var board = ["", "", "", "", "", "", "", "", ""];',
-      ],
-      correctLetter: "A",
-      options: ["A", "B", "C"],
-    },
-    {
-      title: "Step 2: Find the game board and status display elements",
-      text: (
-        <div>
-          We want to find:
-          <ul className="list-disc pl-6 mt-2">
-            <li>The <code>&lt;div&gt;</code> elements representing each cell in the grid.</li>
-            <li>The <code>&lt;div&gt;</code> where we'll display the game status (e.g., whose turn it is or who won).</li>
-          </ul>
-        </div>
-      ),
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which lines of code correctly select these elements?",
-      codeSnippets: [
-        'var cells = document.querySelectorAll(".cell");\nvar statusDiv = document.getElementById("status");',
-        'var cells = "some cells";\nvar statusDiv = "status bar";',
-        'var board = document.createElement("div");\nvar statusDiv = document.createElement("div");',
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "A",
-    },
-    {
-      title: "Step 3: Adding Click Events",
-      text: "We need to detect when a player clicks on a cell to make a move.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which code snippet correctly adds a click event to each cell?",
-      codeSnippets: [
-        "IF user clicks on a cell:\n    place 'X' or 'O'\nELSE:\n    do nothing",
-        "FOR each cell in cells:\n    WHEN cell is clicked:\n        do something",
-        'cells = "Not a real array!"',
-      ],
-      actualCode: [
-        null,
-        `cells.forEach((cell, index) => {
+  {
+    title: "Step 1: Set up the game board",
+    text: "Let's start by creating a 3x3 grid to represent our Tic-Tac-Toe board.",
+    codeSnippets: [
+      'SET board TO an array with 9 empty strings ["", "", "", "", "", "", "", "", ""]',
+      "var board = [null, null, null, null, null, null, null, null, null];",
+      "let board = Array(9).fill(null);",
+    ],
+    actualCode: ['var board = ["", "", "", "", "", "", "", "", ""];'],
+    correctLetter: "A",
+    options: ["A", "B", "C"],
+  },
+  {
+    title: "Step 2: Find the game board and status display elements",
+    text: (
+      <div>
+        We want to find:
+        <ul className="list-disc pl-6 mt-2">
+          <li>
+            The <code>&lt;div&gt;</code> elements representing each cell in the
+            grid.
+          </li>
+          <li>
+            The <code>&lt;div&gt;</code> where we'll display the game status
+            (e.g., whose turn it is or who won).
+          </li>
+        </ul>
+      </div>
+    ),
+    options: [],
+    correctAnswer: [],
+  },
+  {
+    title: "Which lines of code correctly select these elements?",
+    codeSnippets: [
+      'var cells = document.querySelectorAll(".cell");\nvar statusDiv = document.getElementById("status");',
+      'var cells = "some cells";\nvar statusDiv = "status bar";',
+      'var board = document.createElement("div");\nvar statusDiv = document.createElement("div");',
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "A",
+  },
+  {
+    title: "Step 3: Adding Click Events",
+    text: "We need to detect when a player clicks on a cell to make a move.",
+    options: [],
+    correctAnswer: [],
+  },
+  {
+    title: "Which code snippet correctly adds a click event to each cell?",
+    codeSnippets: [
+      "IF user clicks on a cell:\n    place 'X' or 'O'\nELSE:\n    do nothing",
+      "FOR each cell in cells:\n    WHEN cell is clicked:\n        do something",
+      'cells = "Not a real array!"',
+    ],
+    actualCode: [
+      null,
+      `cells.forEach((cell, index) => {
     cell.addEventListener("click", () => handleMove(index));
   });`,
-        null,
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "B",
-    },
-    {
-      title: "Step 4: Handling a player's move",
-      text: "We need a function that handles when a player clicks on a cell, places their mark, and checks if the game is over.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet correctly sets up the function signature?",
-      codeSnippets: [
-        'var handleMove = "moveFunction";',
-        "handleMove = index {\n  // function logic\n}",
-        "function handleMove(index) {\n  // function logic\n}",
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "C",
-    },
-    {
-      title: "Step 5: Alternating turns between players",
-      text: "We need to track whose turn it is and alternate between 'X' and 'O'.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet correctly switches turns?",
-      codeSnippets: [
-        'IF currentPlayer == "X":\n    currentPlayer = "O"\nELSE:\n    currentPlayer = "X"',
-        'SET currentPlayer = "Always X";',
-        "console.log('Turns not needed');",
-      ],
-      options: ["A", "B", "C"],
-      actualCode: [
-        `currentPlayer = currentPlayer === "X" ? "O" : "X";`,
-        null,
-        null,
-      ],
-      correctLetter: "A",
-    },
-    {
-      title: "Step 6: Checking for a winner",
-      text: "We need to determine if the current player has won the game.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet correctly checks for a winning condition?",
-      codeSnippets: [
-        'var winningCombos = [\n  [0, 1, 2], [3, 4, 5], [6, 7, 8],\n  [0, 3, 6], [1, 4, 7], [2, 5, 8],\n  [0, 4, 8], [2, 4, 6]\n];\nFOR each combo in winningCombos:\n    IF board[combo[0]] == board[combo[1]] == board[combo[2]] AND board[combo[0]] is not empty:\n        return true',
-        'console.log("Everyone wins!");',
-        'winningMove = "Just guess";',
-      ],
-      actualCode: [
-        `const winningCombos = [
+      null,
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "B",
+  },
+  {
+    title: "Step 4: Handling a player's move",
+    text: "We need a function that handles when a player clicks on a cell, places their mark, and checks if the game is over.",
+    options: [],
+    correctAnswer: [],
+  },
+  {
+    title: "Which snippet correctly sets up the function signature?",
+    codeSnippets: [
+      'var handleMove = "moveFunction";',
+      "handleMove = index {\n  // function logic\n}",
+      "function handleMove(index) {\n  // function logic\n}",
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "C",
+  },
+  {
+    title: "Step 5: Alternating turns between players",
+    text: "We need to track whose turn it is and alternate between 'X' and 'O'.",
+    options: [],
+    correctAnswer: [],
+  },
+  {
+    title: "Which snippet correctly switches turns?",
+    codeSnippets: [
+      'IF currentPlayer == "X":\n    currentPlayer = "O"\nELSE:\n    currentPlayer = "X"',
+      'SET currentPlayer = "Always X";',
+      "console.log('Turns not needed');",
+    ],
+    options: ["A", "B", "C"],
+    actualCode: [
+      `currentPlayer = currentPlayer === "X" ? "O" : "X";`,
+      null,
+      null,
+    ],
+    correctLetter: "A",
+  },
+  {
+    title: "Step 6: Checking for a winner",
+    text: "We need to determine if the current player has won the game.",
+    options: [],
+    correctAnswer: [],
+  },
+  {
+    title: "Which snippet correctly checks for a winning condition?",
+    codeSnippets: [
+      "var winningCombos = [\n  [0, 1, 2], [3, 4, 5], [6, 7, 8],\n  [0, 3, 6], [1, 4, 7], [2, 5, 8],\n  [0, 4, 8], [2, 4, 6]\n];\nFOR each combo in winningCombos:\n    IF board[combo[0]] == board[combo[1]] == board[combo[2]] AND board[combo[0]] is not empty:\n        return true",
+      'console.log("Everyone wins!");',
+      'winningMove = "Just guess";',
+    ],
+    actualCode: [
+      `const winningCombos = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8],
     [0, 3, 6], [1, 4, 7], [2, 5, 8],
     [0, 4, 8], [2, 4, 6]
@@ -140,120 +144,120 @@ const baseQuestions = [
       board[combo[0]] === board[combo[2]]
     );
   }`,
-        null,
-        null,
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "A",
-    },
-    {
-      title: "Step 7: Displaying the result",
-      text: "Once a winner is found or the game ends in a tie, we need to update the status message.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet updates the game status?",
-      codeSnippets: [
-        'statusDiv.textContent = "Winner: " + currentPlayer;',
-        "prompt('Game Over!');",
-        'alert("Done!");',
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "A",
-    },
-    {
-      title: "Step 8: Resetting the game",
-      text: "We need a function to reset the game and start a new round.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet correctly resets the game?",
-      codeSnippets: [
-        'FOR each cell in cells:\n    set cell text to ""\nRESET board\nRESET currentPlayer to "X"',
-        "window.location.reload();",
-        'alert("Restarting!");',
-      ],
-      actualCode: [
-        `function resetGame() {
+      null,
+      null,
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "A",
+  },
+  {
+    title: "Step 7: Displaying the result",
+    text: "Once a winner is found or the game ends in a tie, we need to update the status message.",
+    options: [],
+    correctAnswer: [],
+  },
+  {
+    title: "Which snippet updates the game status?",
+    codeSnippets: [
+      'statusDiv.textContent = "Winner: " + currentPlayer;',
+      "prompt('Game Over!');",
+      'alert("Done!");',
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "A",
+  },
+  {
+    title: "Step 8: Resetting the game",
+    text: "We need a function to reset the game and start a new round.",
+    options: [],
+    correctAnswer: [],
+  },
+  {
+    title: "Which snippet correctly resets the game?",
+    codeSnippets: [
+      'FOR each cell in cells:\n    set cell text to ""\nRESET board\nRESET currentPlayer to "X"',
+      "window.location.reload();",
+      'alert("Restarting!");',
+    ],
+    actualCode: [
+      `function resetGame() {
     board.fill("");
     cells.forEach(cell => cell.textContent = "");
     currentPlayer = "X";
     statusDiv.textContent = "Player X's turn";
   }`,
-        null,
-        null,
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "A",
-    },
-    {
-      title: "Congratulations!",
-      text: (
-        <div>
-          <p className="text-lg font-bold text-green-600 mb-2">🎉 You've successfully built a Tic Tac Toe game! 🎉</p>
-          <p>You've created a fully functional game with:</p>
-          <ul className="list-disc pl-6 mt-2">
-            <li>Game board setup</li>
-            <li>Player turn tracking</li>
-            <li>Win condition checking</li>
-            <li>Game reset functionality</li>
-          </ul>
-          <p className="mt-3">Feel free to play the game and challenge a friend!</p>
-        </div>
-      ),
-      options: [],
-      correctAnswer: [],
-    }
-  ];
-  
+      null,
+      null,
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "A",
+  },
+  {
+    title: "Congratulations!",
+    text: (
+      <div>
+        <p className="text-lg font-bold text-green-600 mb-2">
+          🎉 You've successfully built a Tic Tac Toe game! 🎉
+        </p>
+        <p>You've created a fully functional game with:</p>
+        <ul className="list-disc pl-6 mt-2">
+          <li>Game board setup</li>
+          <li>Player turn tracking</li>
+          <li>Win condition checking</li>
+          <li>Game reset functionality</li>
+        </ul>
+        <p className="mt-3">
+          Feel free to play the game and challenge a friend!
+        </p>
+      </div>
+    ),
+    options: [],
+    correctAnswer: [],
+  },
+];
 
 // Define the content for empty modals
 const emptyModalContent = [
-    {
-      title: "Great start!",
-      description:
-        "You've set up the game board and initialized the basics. Let's keep going!",
-      image: step1,
-    },
-    {
-      title: "Now it's getting interesting!",
-      description:
-        "Time to add events to cells!",
-      image: step2,
-    },
-    {
-      title: "Big step!",
-      description:
-        "Let's create a function to handle the moves!",
-      image: step3,
-    },
-    {
-      title: "Looking good!",
-      description:
-        "Your Tic-Tac-Toe game is coming together. Let's add player turns and display updates.",
-      image: step4,
-    },
-    {
-      title: "Getting close to the finish line!",
-      description:
-        "Let's add now logic to check for a winner! ",
-      image: step5,
-    },
-    {
-      title: "Final steps!",
-      description: "You're about to complete your Tic-Tac-Toe game! Let's display the winner.",
-      image: step6,
-    },
-    {
-      title: "Getting close to the finish line!",
-      description:
-        "Now it's time to add a reset button and handle game restarts.",
-      image: step7,
-    }
-  ];
-  
+  {
+    title: "Great start!",
+    description:
+      "You've set up the game board and initialized the basics. Let's keep going!",
+    image: step1,
+  },
+  {
+    title: "Now it's getting interesting!",
+    description: "Time to add events to cells!",
+    image: step2,
+  },
+  {
+    title: "Big step!",
+    description: "Let's create a function to handle the moves!",
+    image: step3,
+  },
+  {
+    title: "Looking good!",
+    description:
+      "Your Tic-Tac-Toe game is coming together. Let's add player turns and display updates.",
+    image: step4,
+  },
+  {
+    title: "Getting close to the finish line!",
+    description: "Let's add now logic to check for a winner! ",
+    image: step5,
+  },
+  {
+    title: "Final steps!",
+    description:
+      "You're about to complete your Tic-Tac-Toe game! Let's display the winner.",
+    image: step6,
+  },
+  {
+    title: "Getting close to the finish line!",
+    description:
+      "Now it's time to add a reset button and handle game restarts.",
+    image: step7,
+  },
+];
 
 // Create new array with empty steps after every 2nd question
 const questions = baseQuestions.reduce((acc, question, index) => {
@@ -298,7 +302,7 @@ const Modal = ({ onCodeSelect }) => {
   const stepParam = searchParams.get("step");
   const [windowDimensions, setWindowDimensions] = useState({
     width: window.innerWidth,
-    height: window.innerHeight
+    height: window.innerHeight,
   });
 
   // Update window dimensions when window resizes
@@ -306,12 +310,12 @@ const Modal = ({ onCodeSelect }) => {
     const handleResize = () => {
       setWindowDimensions({
         width: window.innerWidth,
-        height: window.innerHeight
+        height: window.innerHeight,
       });
     };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const buttonColor = () => {
@@ -349,12 +353,12 @@ const Modal = ({ onCodeSelect }) => {
 
   const handleOptionClick = (option, index) => {
     const currentQ = questions[currentQuestion];
-    
+
     // Skip processing if it's an empty step or missing required properties
     if (!currentQ || currentQ.isEmptyStep || !currentQ.codeSnippets) {
       return;
     }
-    
+
     const selectedCode =
       currentQ.actualCode?.[index] || currentQ.codeSnippets[index];
 
@@ -367,13 +371,13 @@ const Modal = ({ onCodeSelect }) => {
       setShowError(true);
       setIncorrectSelection(index); // Store the incorrect selection for highlighting
       setSelectedButtonIndex(null); // Ensure no "correct" indicator is shown
-      
+
       // Generate a more helpful error message based on the current question
       const messages = [
         "Hmm, that's not quite right. Look closer at what the code needs to do!",
         "Not quite! Review the requirements and try again.",
         "That option doesn't match what we need. Try another approach!",
-        "Close, but not correct. Think about what the code should accomplish."
+        "Close, but not correct. Think about what the code should accomplish.",
       ];
       setErrorMessage(messages[Math.floor(Math.random() * messages.length)]);
     }
@@ -425,26 +429,26 @@ const Modal = ({ onCodeSelect }) => {
   const handleRestart = () => {
     // Force reopen the modal if it was about to close
     setIsOpen(true);
-    
+
     // Reset to the first question
     setCurrentQuestion(0);
-    
+
     // Clear all selections and states
     setSelectedOption(null);
     setSelectedButtonIndex(null);
     setShowError(false);
     setIncorrectSelection(null);
     setShowHint(false);
-    
+
     // Reset the code in the parent component by sending a special reset command
     // Use the game config's initial JS as the reset value to properly trigger the handler
     onCodeSelect?.("RESET_CODE_TO_INITIAL");
-    
+
     // Reset URL parameter if using them
     if (location.pathname.includes("/new-project")) {
       setSearchParams({ step: 1 });
     }
-    
+
     // If we're using confetti, wait a moment for it to clear
     setTimeout(() => {
       // Ensure modal is fully reset and visible
@@ -460,7 +464,7 @@ const Modal = ({ onCodeSelect }) => {
           {/* Background decorative elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-purple-100 rounded-full -mr-32 -mt-32 opacity-50"></div>
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-100 rounded-full -ml-40 -mb-40 opacity-50"></div>
-          
+
           {/* Wizard image with enhanced styling */}
           <div className="absolute top-4 left-16 w-36 h-36 rounded-full bg-purple-100 p-2 shadow-lg transform hover:scale-105 transition-transform duration-300">
             <img
@@ -530,21 +534,36 @@ const Modal = ({ onCodeSelect }) => {
             className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-6 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 absolute bottom-8 right-8 shadow-lg font-semibold flex items-center group"
           >
             <span>
-              {currentQuestion + 1 < questions.length && 
-              questions[currentQuestion + 1].title === "Congratulations!" ? "Finish" : "Continue"}
+              {currentQuestion + 1 < questions.length &&
+              questions[currentQuestion + 1].title === "Congratulations!"
+                ? "Finish"
+                : "Continue"}
             </span>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 ml-2 transform group-hover:translate-x-1 transition-transform"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              />
             </svg>
           </button>
-          
+
           {/* Progress indicator */}
           <div className="absolute bottom-8 left-8 flex items-center">
             <div className="text-sm text-gray-500 mr-2">Progress:</div>
             <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
-              <div 
+              <div
                 className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 transition-all duration-500"
-                style={{ width: `${(currentQuestion / (questions.length - 1)) * 100}%` }}
+                style={{
+                  width: `${(currentQuestion / (questions.length - 1)) * 100}%`,
+                }}
               ></div>
             </div>
           </div>
@@ -554,13 +573,17 @@ const Modal = ({ onCodeSelect }) => {
   }
 
   // Check if this is the congratulation step
-  const isCongratulationStep = questions[currentQuestion]?.title === "Congratulations!";
+  const isCongratulationStep =
+    questions[currentQuestion]?.title === "Congratulations!";
 
   return (
     <>
       {/* Show confetti when on the congratulation step - positioned behind modal but above backdrop */}
       {isCongratulationStep && (
-        <div className="fixed inset-0" style={{ zIndex: 45, pointerEvents: 'none' }}>
+        <div
+          className="fixed inset-0"
+          style={{ zIndex: 45, pointerEvents: "none" }}
+        >
           <Confetti
             width={windowDimensions.width}
             height={windowDimensions.height}
@@ -573,7 +596,7 @@ const Modal = ({ onCodeSelect }) => {
 
       {/* Minimized floating button */}
       {isMinimized && (
-        <div 
+        <div
           className="fixed bottom-6 right-6 bg-blue-500 text-white py-3 px-4 rounded-full shadow-lg cursor-pointer flex items-center z-50 hover:bg-blue-600 transition-all duration-200"
           onClick={toggleMinimize}
         >
@@ -584,7 +607,7 @@ const Modal = ({ onCodeSelect }) => {
 
       {/* Restart quiz button - only shown when completed and not minimized */}
       {isCongratulationStep && !isMinimized && (
-        <div 
+        <div
           className="fixed bottom-6 right-6 bg-green-500 text-white py-3 px-4 rounded-full shadow-lg cursor-pointer flex items-center z-50 hover:bg-green-600 transition-all duration-200"
           onClick={handleRestart}
         >
@@ -594,7 +617,7 @@ const Modal = ({ onCodeSelect }) => {
       )}
 
       <Dialog
-        open={(isOpen && !showBlankModal && !isMinimized)}
+        open={isOpen && !showBlankModal && !isMinimized}
         onClose={() => {
           // Do nothing when clicking outside - this prevents accidental closing
           // Only allow closing through explicit buttons
@@ -609,68 +632,83 @@ const Modal = ({ onCodeSelect }) => {
         />
 
         {/* Full-screen container to center the panel */}
-        <div className="fixed inset-0 flex items-center justify-center p-4" style={{ zIndex: 50 }}>
+        <div
+          className="fixed inset-0 flex items-center justify-center p-4"
+          style={{ zIndex: 50 }}
+        >
           <Dialog.Panel className="w-[screen] h-[screen] max-w-3xl transform overflow-hidden rounded-2xl bg-white shadow-xl border-2 border-blue-200">
             {/* Fun header with decorative elements but toned down */}
             <div className="bg-blue-500 py-4 px-6 flex items-center justify-center relative">
               <h2 className="text-2xl font-bold text-white drop-shadow-md">
                 {questions[currentQuestion].title}
               </h2>
-              
+
               {/* Decorative element on right side */}
               <div className="absolute right-4">
                 <div className="text-xl">✨</div>
               </div>
-              
+
               {/* Minimize button - original left position */}
-              <button 
+              <button
                 className="absolute left-4 bg-blue-400 hover:bg-blue-600 text-white p-1.5 rounded-lg transition-all duration-200"
                 onClick={toggleMinimize}
                 aria-label="Minimize quiz"
                 title="Minimize quiz"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 12H6" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M18 12H6"
+                  />
                 </svg>
               </button>
             </div>
-            
+
             <div className="bg-white px-4 pb-4 pt-5 sm:p-6 rounded-b-2xl">
               <div className="h-[300px] overflow-auto p-4">
                 <div className="text-center sm:text-left w-full">
                   <div className="text-lg text-slate-700 mb-6 font-medium bg-slate-50 p-4 rounded-xl border border-slate-200">
                     {questions[currentQuestion].text}
                   </div>
-                  
+
                   {/* Keep the fun code option styling */}
                   {questions[currentQuestion].codeSnippets?.map(
                     (snippet, index) => (
-                      <div 
-                        key={index} 
+                      <div
+                        key={index}
                         className={`mb-6 rounded-xl transition-all duration-200 transform hover:scale-[1.01] ${
-                          selectedButtonIndex === index 
-                            ? "bg-green-50 border-2 border-green-300 shadow-md" 
+                          selectedButtonIndex === index
+                            ? "bg-green-50 border-2 border-green-300 shadow-md"
                             : incorrectSelection === index
-                              ? "bg-red-50 border-2 border-red-300 shadow-md" 
-                              : "bg-blue-50 border-2 border-blue-200 shadow"
+                            ? "bg-red-50 border-2 border-red-300 shadow-md"
+                            : "bg-blue-50 border-2 border-blue-200 shadow"
                         }`}
                         onClick={() => {
-                          handleOptionClick(questions[currentQuestion].options[index], index);
+                          handleOptionClick(
+                            questions[currentQuestion].options[index],
+                            index
+                          );
                         }}
                       >
                         {/* Keep fun option badge but tone it down */}
                         <div className="absolute -top-2 -right-2 bg-blue-100 text-blue-800 font-bold py-1 px-4 rounded-full text-sm shadow border border-blue-200">
                           Option {questions[currentQuestion].options[index]}
                         </div>
-                        
+
                         <div className="pt-6 pb-2 px-5 rounded-t-xl relative">
-                          <pre
-                            className="p-4 rounded-xl font-mono text-md overflow-auto bg-white shadow-inner"
-                          >
+                          <pre className="p-4 rounded-xl font-mono text-md overflow-auto bg-white shadow-inner">
                             <code>{snippet}</code>
                           </pre>
                         </div>
-                        
+
                         {/* Keep fun indicators for selection */}
                         {selectedButtonIndex === index && (
                           <div className="flex justify-center pb-2">
@@ -679,7 +717,7 @@ const Modal = ({ onCodeSelect }) => {
                             </div>
                           </div>
                         )}
-                        
+
                         {/* Add indicator for incorrect selection */}
                         {incorrectSelection === index && (
                           <div className="flex justify-center pb-2">
@@ -694,14 +732,16 @@ const Modal = ({ onCodeSelect }) => {
                 </div>
               </div>
             </div>
-            
+
             {/* Footer with toned down styling */}
             <div className="bg-slate-50 px-6 py-4 border-t border-slate-200 sticky bottom-0">
               <div className="flex justify-between items-center">
                 <div className="text-md font-semibold text-slate-700">
                   {selectedButtonIndex !== null ? (
                     <span className="flex items-center">
-                      <span className="mr-2">🎯</span> Option {questions[currentQuestion].options[selectedButtonIndex]} selected
+                      <span className="mr-2">🎯</span> Option{" "}
+                      {questions[currentQuestion].options[selectedButtonIndex]}{" "}
+                      selected
                     </span>
                   ) : (
                     <span className="flex items-center">
@@ -720,7 +760,7 @@ const Modal = ({ onCodeSelect }) => {
                       <span className="mr-1">💡</span> Hint
                     </button>
                   )}
-                  
+
                   {questions[currentQuestion].options.length > 0 && (
                     <button
                       type="button"
@@ -754,7 +794,10 @@ const Modal = ({ onCodeSelect }) => {
                       type="button"
                       onClick={() => {
                         // If it's the congratulation step, just close the modal
-                        if (questions[currentQuestion].title === "Congratulations!") {
+                        if (
+                          questions[currentQuestion].title ===
+                          "Congratulations!"
+                        ) {
                           setIsOpen(false);
                         } else {
                           handleNext();
@@ -762,7 +805,8 @@ const Modal = ({ onCodeSelect }) => {
                       }}
                       className="bg-blue-500 text-white rounded-xl px-6 py-2 text-md font-bold shadow-md hover:bg-blue-600 transition-all duration-200"
                     >
-                      {questions[currentQuestion].title === "Congratulations!" ? (
+                      {questions[currentQuestion].title ===
+                      "Congratulations!" ? (
                         <>
                           <span className="mr-2">🎉 Finish</span>
                         </>
@@ -773,7 +817,7 @@ const Modal = ({ onCodeSelect }) => {
                       )}
                     </button>
                   )}
-                  
+
                   {/* Add restart button inside modal when on congratulation step */}
                   {questions[currentQuestion].title === "Congratulations!" && (
                     <button
@@ -796,26 +840,32 @@ const Modal = ({ onCodeSelect }) => {
 
       {/* Customized error message */}
       {showError && (
-        <div className="fixed bottom-4 left-0 right-0 mx-auto w-fit bg-pink-50 border-2 border-pink-300 text-pink-700 px-5 py-3 rounded-xl flex items-center shadow-lg animate-pulse" style={{ zIndex: 60 }}>
+        <div
+          className="fixed bottom-4 left-0 right-0 mx-auto w-fit bg-pink-50 border-2 border-pink-300 text-pink-700 px-5 py-3 rounded-xl flex items-center shadow-lg animate-pulse"
+          style={{ zIndex: 60 }}
+        >
           <span className="text-xl mr-3">🤔</span>
           <span className="font-bold">{errorMessage}</span>
         </div>
       )}
-      
+
       {/* Hint tooltip */}
       {showHint && (
-        <div className="fixed top-4 left-0 right-0 mx-auto w-fit max-w-md bg-amber-50 border-2 border-amber-300 text-amber-800 px-5 py-3 rounded-xl flex items-start shadow-lg" style={{ zIndex: 60 }}>
+        <div
+          className="fixed top-4 left-0 right-0 mx-auto w-fit max-w-md bg-amber-50 border-2 border-amber-300 text-amber-800 px-5 py-3 rounded-xl flex items-start shadow-lg"
+          style={{ zIndex: 60 }}
+        >
           <span className="text-xl mr-3 mt-1">💡</span>
           <div>
             <span className="font-bold block mb-1">Hint:</span>
             <span className="block">
-              {questions[currentQuestion].title.includes("board") 
-                ? "Look for code that initializes variables for the game board and player." 
-                : questions[currentQuestion].title.includes("function") 
-                  ? "The correct option should define a proper JavaScript function with the right parameters."
-                  : questions[currentQuestion].title.includes("elements") 
-                    ? "Look for code that correctly selects elements using document methods."
-                    : "Read the requirements carefully and choose the option that best matches what's needed."}
+              {questions[currentQuestion].title.includes("board")
+                ? "Look for code that initializes variables for the game board and player."
+                : questions[currentQuestion].title.includes("function")
+                ? "The correct option should define a proper JavaScript function with the right parameters."
+                : questions[currentQuestion].title.includes("elements")
+                ? "Look for code that correctly selects elements using document methods."
+                : "Read the requirements carefully and choose the option that best matches what's needed."}
             </span>
           </div>
         </div>
