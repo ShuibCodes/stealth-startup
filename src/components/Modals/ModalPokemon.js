@@ -4,12 +4,14 @@ import React, { useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
 import ContextModal from "./ContextModal";
 import { useSearchParams, useLocation } from "react-router-dom";
-import step1 from "../../images/step-1.png"; 
-import step2 from "../../images/step-2.png";
-import step3 from "../../images/step-3.png";
-import step4 from "../../images/step-4.png";
-import step5 from "../../images/step-5.png";
-import step6 from "../../images/step-6.png";
+import step1 from "../../images/pokemon-step-1.png"; 
+import step2 from "../../images/pokemon-step-2.png";
+import step3 from "../../images/pokemon-step-3.png";
+import step4 from "../../images/pokemon-step-4.png";
+import step5 from "../../images/pokemon-step-5.png";
+import step6 from "../../images/pokemon-step-6.png";
+import step7 from "../../images/pokemon-step-7.png";
+import step8 from "../../images/pokemon-step-8.png";
 import wizard from "../../images/wizard.png";
 import Confetti from "react-confetti";
 
@@ -28,7 +30,12 @@ const baseQuestions = [
       `CREATE Pikachu!
   name = "Pikachu"
   health = 100
-  attacks = [ Thunder Shock, Quick Attack, Thunderbolt ]`,
+  attacks = [ Thunder Shock, Quick Attack, Thunderbolt ]
+
+CREATE Charmander!
+  name = "Charmander"
+  health = 120
+  attacks = [ Ember, Scratch, Flamethrower ]`,
       `SET Pikachu to a simple string`
     ],
     actualCode: [
@@ -304,8 +311,8 @@ const emptyModalContent = [
   { title: "Making progress!", description: "You added input validation to get the player's attack choice!", image: step4 },
   { title: "Well done!", description: "You implemented the player's attack function with damage calculation!", image: step5 },
   { title: "Excellent work!", description: "You added the opponent's random attack functionality!", image: step6 },
-  { title: "Almost there!", description: "You created the main battle loop to alternate between turns!", image: step6 },
-  { title: "You did it!", description: "You finished with reset and main functions to complete the game!", image: step1 },
+  { title: "Almost there!", description: "You created the main battle loop to alternate between turns!", image: step7 },
+  { title: "You did it!", description: "You finished with reset and main functions to complete the game!", image: step8 },
 ];
 
 const questions = baseQuestions.reduce((acc, question, index) => {
