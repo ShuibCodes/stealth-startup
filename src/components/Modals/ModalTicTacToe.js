@@ -4,271 +4,259 @@ import React, { useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
 import ContextModal from "./ContextModal";
 import { useSearchParams, useLocation } from "react-router-dom";
-import step1 from "../images/step-1.png";
-import step2 from "../images/step-2.png";
-import step3 from "../images/step-3.png";
-import step4 from "../images/step-4.png";
-import step5 from "../images/step-5.png";
-import step6 from "../images/step-6.png";
-import wizard from "../images/wizard.png";
+import step1 from "../../images/step-1-tic-tac-toe.png";
+import step2 from "../../images/step-2-tic-tac-toe.png";
+import step3 from "../../images/step-3-tic-tac-toe.png";
+import step4 from "../../images/step-4-tic-tac-toe.png";
+import step5 from "../../images/step-5-tic-tac-toe.png";
+import step6 from "../../images/step-6-tic-tac-toe.png";
+import step7 from "../../images/step-7-tic-tac-toe.png";
+import wizard from "../../images/wizard.png";
 import Confetti from "react-confetti";
 
 const baseQuestions = [
   {
-    title: "Step 1: Set up score tracking",
-    text: "Let's start by setting up our score variables and getting references to the score display elements.",
+    title: "Step 1: Set up the game board",
+    text: "Let's start by creating a 3x3 grid to represent our Tic-Tac-Toe board.",
     codeSnippets: [
-      'SET playerScoreDisplay TO the element with id "playerScore"\nSET computerScoreDisplay TO the element with id "computerScore"\nSET playerScore TO 0\nSET computerScore TO 0',
-      "var pScore = 0;\nvar cScore = 0;",
-      "let scores = { player: 0, computer: 0 };",
+      "var board = [null, null, null, null, null, null, null, null, null];",
+      'SET board TO an array with 9 empty strings ["", "", "", "", "", "", "", "", ""]',
+      "let board = Array(9).fill(null);"
     ],
     actualCode: [
-      'var playerScoreDisplay = document.getElementById("playerScore");\nvar computerScoreDisplay = document.getElementById("computerScore");\nvar playerScore = 0;\nvar computerScore = 0;',
+      'var board = ["", "", "", "", "", "", "", "", ""];',
+      'var board = ["", "", "", "", "", "", "", "", ""];',
+      'var board = ["", "", "", "", "", "", "", "", ""];'
     ],
-    correctLetter: "A",
-    options: ["A", "B", "C"],
+    correctLetter: "B",
+    options: ["A", "B", "C"]
   },
-
   {
-    title:
-      "Step 1: Find the Rock, Paper, Scissors buttons and the result display",
+    title: "Step 2: Find the game board and status display elements",
     text: (
       <div>
         We want to find:
         <ul className="list-disc pl-6 mt-2">
-          <li>
-            All the <strong>Rock, Paper, Scissors</strong> buttons (they have a
-            class <code>.choice-btn</code>).
-          </li>
-          <li>
-            The <code>&lt;div&gt;</code> where we'll display the game result.
-          </li>
+          <li>The <code>&lt;div&gt;</code> elements representing each cell in the grid.</li>
+          <li>The <code>&lt;div&gt;</code> where we'll display the game status (e.g., whose turn it is or who won).</li>
         </ul>
       </div>
     ),
     options: [],
-    correctAnswer: [],
+    correctAnswer: []
   },
   {
     title: "Which lines of code correctly select these elements?",
     codeSnippets: [
-      ';\nvar buttons = document.querySelectorAll(".choice-btn");\nvar resultDiv = document.getElementById("result");',
-      'var buttons = "some buttons";\nvar resultDiv = "some result place";',
-      'var button = document.createElement("button");\nvar resultDiv = document.createElement("div");',
+      'var board = document.createElement("div");\nvar statusDiv = document.createElement("div");',
+      'var cells = document.querySelectorAll(".cell");\nvar statusDiv = document.getElementById("status");',
+      'var cells = "some cells";\nvar statusDiv = "status bar";'
     ],
     options: ["A", "B", "C"],
-    correctLetter: "A",
+    correctLetter: "B"
   },
   {
-    title: "Step 2: Adding Click Events ",
-    text: "We have an array of buttons called buttons and want each button to respond when clicked.",
+    title: "Step 3: Adding Click Events",
+    text: "We need to detect when a player clicks on a cell to make a move.",
     options: [],
-    correctAnswer: [],
+    correctAnswer: []
   },
   {
-    title: "Which code snippet correctly adds a click event to each button?",
+    title: "Which code snippet correctly adds a click event to each cell?",
     codeSnippets: [
-      'IF user clicks one button:\n    check only "Rock"\nELSE:\n    do nothing',
-      "FOR each button in buttons:\n    WHEN button is clicked:\n        do something",
-      'buttons = "I\'m just a string now!"',
+      "FOR each cell in cells:\n    WHEN cell is clicked:\n        do something",
+      'cells = "Not a real array!"',
+      "IF user clicks on a cell:\n    place 'X' or 'O'\nELSE:\n    do nothing"
+    ],
+    actualCode: [
+      `cells.forEach((cell, index) => {
+    cell.addEventListener("click", () => handleMove(index));
+  });`,
+      null,
+      null
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "A"
+  },
+  {
+    title: "Step 4: Handling a player's move",
+    text: "We need a function that handles when a player clicks on a cell, places their mark, and checks if the game is over.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which snippet correctly sets up the function signature?",
+    codeSnippets: [
+      "handleMove = index {\n  // function logic\n}",
+      "function handleMove(index) {\n  // function logic\n}",
+      'var handleMove = "moveFunction";'
+    ],
+    options: ["A", "B", "C"],
+    correctLetter: "B"
+  },
+  {
+    title: "Step 5: Alternating turns between players",
+    text: "We need to track whose turn it is and alternate between 'X' and 'O'.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which snippet correctly switches turns?",
+    codeSnippets: [
+      "console.log('Turns not needed');",
+      'IF currentPlayer == "X":\n    currentPlayer = "O"\nELSE:\n    currentPlayer = "X"',
+      'SET currentPlayer = "Always X";'
     ],
     actualCode: [
       null,
-      `for (var i = 0; i < buttons.length; i++) {
-  buttons[i].addEventListener("click", function() {
-    var userChoice = this.getAttribute("data-choice");
-    playGame(userChoice);
-  });
-}`,
-      null,
+      `currentPlayer = currentPlayer === "X" ? "O" : "X";`,
+      null
     ],
     options: ["A", "B", "C"],
-    correctLetter: "B",
+    correctLetter: "B"
   },
   {
-    title: "Step 3: Defining the playGame function. Its getting serious now!",
-    text: "We need a function that accepts the user's selection (e.g., Rock, Paper, or Scissors) and determines the outcome.",
+    title: "Step 6: Checking for a winner",
+    text: "We need to determine if the current player has won the game.",
     options: [],
-    correctAnswer: [],
+    correctAnswer: []
   },
   {
-    title: "Which snippet sets up the function signature?",
+    title: "Which snippet correctly checks for a winning condition?",
     codeSnippets: [
-      'var userChoice = "playGame";',
-      "playGame = userChoice {\n  // function logic\n}",
-      "function playGame(userChoice) {\n  // function logic\n}",
-    ],
-    options: ["A", "B", "C"],
-    correctLetter: "C",
-  },
-
-  {
-    title: "Step 4: Inside playGame: Determining the Computer's Move",
-    text: (
-      <div>
-        <p>
-          Inside the <code>playGame</code> function, we want:
-        </p>
-        <ol className="list-decimal pl-6 mt-2">
-          <li>
-            Make a short list of the three moves: Rock, Paper, and Scissors.
-          </li>
-          <li>Pick a random number that can be 0, 1, or 2.</li>
-          <li>
-            Use that random number to choose one move from the list—this becomes
-            the computer's choice.
-          </li>
-        </ol>
-      </div>
-    ),
-    options: [],
-    correctAnswer: [],
-  },
-
-  {
-    title: "Which snippet correctly determines the computer's move?",
-    codeSnippets: [
-      'var choices = ["Rock", "Paper", "Scissors"];\nvar randomIndex = Math.floor(Math.random() * 3);\nvar computerChoice = choices[randomIndex];\n// next step here',
-      'var computerChoice = "RockPaperScissors";\nvar randomIndex = 3;',
-      'alert("Computers always pick Rock!");',
-    ],
-    options: ["A", "B", "C"],
-    correctLetter: "A",
-  },
-  {
-    title: "Step 5: Determine the winner",
-    text: "Let's add the logic to determine the winner and update the scores.",
-    codeSnippets: [
-      'IF userChoice == computerChoice:\n    say "Tie!"\nELSE IF userChoice beats computerChoice:\n    say "You win!"\nELSE:\n    say "Computer wins!"',
-      'FOR each round:\n    show "Computer always wins!"',
-      'resultMessage = "Game Over."',
+      'winningMove = "Just guess";',
+      'var winningCombos = [\n  [0, 1, 2], [3, 4, 5], [6, 7, 8],\n  [0, 3, 6], [1, 4, 7], [2, 5, 8],\n  [0, 4, 8], [2, 4, 6]\n];\nFOR each combo in winningCombos:\n    IF board[combo[0]] == board[combo[1]] == board[combo[2]] AND board[combo[0]] is not empty:\n        return true',
+      'console.log("Everyone wins!");'
     ],
     actualCode: [
-      `  var resultMessage = "";
-
-  if (userChoice === computerChoice) {
-    resultMessage = "👑 It's a tie! 👑";
-  } else if (
-    (userChoice === "Rock" && computerChoice === "Scissors") ||
-    (userChoice === "Scissors" && computerChoice === "Paper") ||
-    (userChoice === "Paper" && computerChoice === "Rock")
-  ) {
-    playerScore++;
-    playerScoreDisplay.textContent = playerScore;
-    resultMessage = "👑 You win! 👑";
-  } else {
-    computerScore++;
-    computerScoreDisplay.textContent = computerScore;
-    resultMessage = "👑 Computer wins! 👑";
+      null,
+      `const winningCombos = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    [0, 4, 8], [2, 4, 6]
+  ];
+  
+  function checkWinner() {
+    return winningCombos.some(combo => 
+      board[combo[0]] && 
+      board[combo[0]] === board[combo[1]] && 
+      board[combo[0]] === board[combo[2]]
+    );
   }`,
-      null,
-      null,
+      null
     ],
     options: ["A", "B", "C"],
-    correctLetter: "A",
+    correctLetter: "B"
   },
   {
-    title: "Step 6: Finally, its time to display the result",
-    text: "We want to display the result in the <code>resultDiv</code>.",
+    title: "Step 7: Displaying the result",
+    text: "Once a winner is found or the game ends in a tie, we need to update the status message.",
     options: [],
-    correctAnswer: [],
+    correctAnswer: []
   },
   {
-    title: "Which snippet inserts resultMessage into resultDiv?",
-    text: "We want to display the result in the <code>resultDiv</code>.",
+    title: "Which snippet updates the game status?",
     codeSnippets: [
-      "prompt(resultMessage);",
-      "resultDiv.textContent = resultMessage;",
-      'alert("Done!");',
+      "prompt('Game Over!');",
+      'statusDiv.textContent = "Winner: " + currentPlayer;',
+      'alert("Done!");'
     ],
     options: ["A", "B", "C"],
-    correctLetter: "B",
+    correctLetter: "B"
   },
   {
-    title: "Step 7: Show the user's and computer's choices",
-    text: "We want to display what the user and the computer picked. This helps players see what happened in the round.",
+    title: "Step 8: Resetting the game",
+    text: "We need a function to reset the game and start a new round.",
     options: [],
-    correctAnswer: [],
+    correctAnswer: []
   },
   {
-    title: "Which snippet inserts the choices into its elemnts?",
-    text: "We want to display what the user and the computer picked.",
+    title: "Which snippet correctly resets the game?",
     codeSnippets: [
-      'SET playerChoiceDisplay TO the element with id "playerChoice"\nSET computerChoiceDisplay TO the element with id "computerChoice"',
-      'document.getElementById("userChoice").textContent = playerChoice;\ndocument.getElementById("computerChoice").textContent = computerChoice;',
-      "playerChoiceDisplay.innerText = playerChoice;\ncomputerChoiceDisplay.innerText = computerChoice;",
+      "window.location.reload();",
+      'FOR each cell in cells:\n    set cell text to ""\nRESET board\nRESET currentPlayer to "X"',
+      'alert("Restarting!");'
     ],
-    options: ["A", "B", "C"],
     actualCode: [
-      "",
-      `// Get the elements where we will show the choices
-var playerChoiceDisplay = document.getElementById("playerChoice");
-var computerChoiceDisplay = document.getElementById("computerChoice");
-
-// Update the choice displays
-playerChoiceDisplay.textContent = userChoice;
-computerChoiceDisplay.textContent = computerChoice;`,
-      "",
+      null,
+      `function resetGame() {
+    board.fill("");
+    cells.forEach(cell => cell.textContent = "");
+    currentPlayer = "X";
+    statusDiv.textContent = "Player X's turn";
+  }`,
+      null
     ],
-    correctLetter: "B",
+    options: ["A", "B", "C"],
+    correctLetter: "B"
   },
   {
     title: "Congratulations!",
     text: (
       <div>
-        <p className="text-lg font-bold text-green-600 mb-2">🎉 You've successfully built a Rock Paper Scissors game! 🎉</p>
+        <p className="text-lg font-bold text-green-600 mb-2">🎉 You've successfully built a Tic Tac Toe game! 🎉</p>
         <p>You've created a fully functional game with:</p>
         <ul className="list-disc pl-6 mt-2">
-          <li>Score tracking</li>
-          <li>Player and computer choices</li>
-          <li>Winner determination</li>
-          <li>Visual feedback</li>
+          <li>Game board setup</li>
+          <li>Player turn tracking</li>
+          <li>Win condition checking</li>
+          <li>Game reset functionality</li>
         </ul>
-        <p className="mt-3">Feel free to play the game and enjoy your creation!</p>
+        <p className="mt-3">Feel free to play the game and challenge a friend!</p>
       </div>
     ),
     options: [],
-    correctAnswer: [],
+    correctAnswer: []
   }
 ];
 
+  
+
 // Define the content for empty modals
 const emptyModalContent = [
-  {
-    title: "Great job on the first steps!",
-    description:
-      "You've set up the basic structure. Let's continue building our game.",
-    image: step1,
-  },
-  {
-    title: "Now we're getting somewhere!",
-    description:
-      "The game is starting to take shape. Ready for the next challenge?",
-    image: step2,
-  },
-  {
-    title: "Almost there!",
-    description:
-      "Just a few more steps to complete your Rock, Paper, Scissors game.",
-    image: step3,
-  },
-  {
-    title: "Looking good!",
-    description:
-      "Your game is coming together nicely. Let's add more functionality.",
-    image: step4,
-  },
-  {
-    title: "Getting close to the finish line!",
-    description: "Just a few more touches to make your game perfect.",
-    image: step5,
-  },
-  {
-    title: "Final steps!",
-    description: "You're about to complete your Rock, Paper, Scissors game!",
-    image: step6,
-  },
-];
+    {
+      title: "Great start!",
+      description:
+        "You've set up the game board and initialized the basics. Let's keep going!",
+      image: step1,
+    },
+    {
+      title: "Now it's getting interesting!",
+      description:
+        "Time to add events to cells!",
+      image: step2,
+    },
+    {
+      title: "Big step!",
+      description:
+        "Let's create a function to handle the moves!",
+      image: step3,
+    },
+    {
+      title: "Looking good!",
+      description:
+        "Your Tic-Tac-Toe game is coming together. Let's add player turns and display updates.",
+      image: step4,
+    },
+    {
+      title: "Getting close to the finish line!",
+      description:
+        "Let's add now logic to check for a winner! ",
+      image: step5,
+    },
+    {
+      title: "Final steps!",
+      description: "You're about to complete your Tic-Tac-Toe game! Let's display the winner.",
+      image: step6,
+    },
+    {
+      title: "Getting close to the finish line!",
+      description:
+        "Now it's time to add a reset button and handle game restarts.",
+      image: step7,
+    }
+  ];
+  
 
 // Create new array with empty steps after every 2nd question
 const questions = baseQuestions.reduce((acc, question, index) => {
@@ -307,7 +295,6 @@ const Modal = ({ onCodeSelect }) => {
   const [showError, setShowError] = useState(false);
   const [incorrectSelection, setIncorrectSelection] = useState(null); // Track incorrect selection
   const [errorMessage, setErrorMessage] = useState(""); // Custom error message
-  const [showHint, setShowHint] = useState(false); // State for showing hints
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const stepParam = searchParams.get("step");
@@ -353,10 +340,10 @@ const Modal = ({ onCodeSelect }) => {
   }, [selectedOption, onCodeSelect, currentQuestion]);
 
   useEffect(() => {
-    // Only handle step parameter if we're on the new-project/rock-paper-scissors path
-    if (location.pathname === "/new-project/rock-paper-scissors" && stepParam) {
+    // Only handle step parameter if we're on the new-project/tic-tac-toe path
+    if (location.pathname === "/new-project/tic-tac-toe" && stepParam) {
       const stepNumber = parseInt(stepParam);
-      if (stepNumber >= 1 && stepNumber <= questions.length) {
+      if (stepNumber >= 1 && stepNumber <= baseQuestions.length) {
         setCurrentQuestion(stepNumber - 1);
       }
     }
@@ -364,6 +351,12 @@ const Modal = ({ onCodeSelect }) => {
 
   const handleOptionClick = (option, index) => {
     const currentQ = questions[currentQuestion];
+    
+    // Skip processing if it's an empty step or missing required properties
+    if (!currentQ || currentQ.isEmptyStep || !currentQ.codeSnippets) {
+      return;
+    }
+    
     const selectedCode =
       currentQ.actualCode?.[index] || currentQ.codeSnippets[index];
 
@@ -411,17 +404,44 @@ const Modal = ({ onCodeSelect }) => {
     }
   };
 
-  // Function to provide a hint based on the current question
-  const handleShowHint = () => {
-    setShowHint(true);
-    // Hide hint after 5 seconds
-    setTimeout(() => {
-      setShowHint(false);
-    }, 7000);
+  // Toggle minimized state
+  const toggleMinimize = () => {
+    setIsMinimized(!isMinimized);
+    // Hide any error or hint when minimizing
+    if (!isMinimized) {
+      setShowError(false);
+    }
   };
 
-  // Let's also verify the questions array
-  //  // console.log("Current question:", questions[currentQuestion]);
+  // Reset quiz to start over
+  const handleRestart = () => {
+    // Force reopen the modal if it was about to close
+    setIsOpen(true);
+    
+    // Reset to the first question
+    setCurrentQuestion(0);
+    
+    // Clear all selections and states
+    setSelectedOption(null);
+    setSelectedButtonIndex(null);
+    setShowError(false);
+    setIncorrectSelection(null);
+    
+    // Reset the code in the parent component by sending a special reset command
+    // Use the game config's initial JS as the reset value to properly trigger the handler
+    onCodeSelect?.("RESET_CODE_TO_INITIAL");
+    
+    // Reset URL parameter if using them
+    if (location.pathname.includes("/new-project")) {
+      setSearchParams({ step: 1 });
+    }
+    
+    // If we're using confetti, wait a moment for it to clear
+    setTimeout(() => {
+      // Ensure modal is fully reset and visible
+      setShowBlankModal(false);
+    }, 100);
+  };
 
   // Render empty step modal
   if (questions[currentQuestion]?.isEmptyStep) {
@@ -526,47 +546,6 @@ const Modal = ({ onCodeSelect }) => {
 
   // Check if this is the congratulation step
   const isCongratulationStep = questions[currentQuestion]?.title === "Congratulations!";
-
-  // Toggle minimized state
-  const toggleMinimize = () => {
-    setIsMinimized(!isMinimized);
-    // Hide any error or hint when minimizing
-    if (!isMinimized) {
-      setShowError(false);
-      setShowHint(false);
-    }
-  };
-
-  // Reset quiz to start over
-  const handleRestart = () => {
-    // Force reopen the modal if it was about to close
-    setIsOpen(true);
-    
-    // Reset to the first question
-    setCurrentQuestion(0);
-    
-    // Clear all selections and states
-    setSelectedOption(null);
-    setSelectedButtonIndex(null);
-    setShowError(false);
-    setIncorrectSelection(null);
-    setShowHint(false);
-    
-    // Reset the code in the parent component by sending a special reset command
-    // Use the game config's initial JS as the reset value to properly trigger the handler
-    onCodeSelect?.("RESET_CODE_TO_INITIAL");
-    
-    // Reset URL parameter if using them
-    if (location.pathname.includes("/new-project")) {
-      setSearchParams({ step: 1 });
-    }
-    
-    // If we're using confetti, wait a moment for it to clear
-    setTimeout(() => {
-      // Ensure modal is fully reset and visible
-      setShowBlankModal(false);
-    }, 100);
-  };
 
   return (
     <>
@@ -722,16 +701,6 @@ const Modal = ({ onCodeSelect }) => {
                   )}
                 </div>
                 <div className="flex space-x-4">
-                  {/* Add hint button */}
-                  {questions[currentQuestion].options.length > 0 && (
-                    <button
-                      type="button"
-                      onClick={handleShowHint}
-                      className="bg-amber-100 text-amber-800 rounded-xl px-4 py-2 text-sm font-medium shadow border border-amber-200 hover:bg-amber-200 transition-all duration-200"
-                    >
-                      <span className="mr-1">💡</span> Hint
-                    </button>
-                  )}
                   
                   {questions[currentQuestion].options.length > 0 && (
                     <button
@@ -814,24 +783,6 @@ const Modal = ({ onCodeSelect }) => {
         </div>
       )}
       
-      {/* Hint tooltip */}
-      {showHint && (
-        <div className="fixed top-4 left-0 right-0 mx-auto w-fit max-w-md bg-amber-50 border-2 border-amber-300 text-amber-800 px-5 py-3 rounded-xl flex items-start shadow-lg" style={{ zIndex: 60 }}>
-          <span className="text-xl mr-3 mt-1">💡</span>
-          <div>
-            <span className="font-bold block mb-1">Hint:</span>
-            <span className="block">
-              {questions[currentQuestion].title.includes("board") 
-                ? "Look for code that initializes variables for the game board and player." 
-                : questions[currentQuestion].title.includes("function") 
-                  ? "The correct option should define a proper JavaScript function with the right parameters."
-                  : questions[currentQuestion].title.includes("elements") 
-                    ? "Look for code that correctly selects elements using document methods."
-                    : "Read the requirements carefully and choose the option that best matches what's needed."}
-            </span>
-          </div>
-        </div>
-      )}
     </>
   );
 };

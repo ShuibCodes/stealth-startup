@@ -4,283 +4,342 @@ import React, { useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
 import ContextModal from "./ContextModal";
 import { useSearchParams, useLocation } from "react-router-dom";
-import step1 from "../images/step-1-tic-tac-toe.png";
-import step2 from "../images/step-2-tic-tac-toe.png";
-import step3 from "../images/step-3-tic-tac-toe.png";
-import step4 from "../images/step-4-tic-tac-toe.png";
-import step5 from "../images/step-5-tic-tac-toe.png";
-import step6 from "../images/step-6-tic-tac-toe.png";
-import step7 from "../images/step-7-tic-tac-toe.png";
-import wizard from "../images/wizard.png";
+import step1 from "../../images/pokemon-step-1.png"; 
+import step2 from "../../images/pokemon-step-2.png";
+import step3 from "../../images/pokemon-step-3.png";
+import step4 from "../../images/pokemon-step-4.png";
+import step5 from "../../images/pokemon-step-5.png";
+import step6 from "../../images/pokemon-step-6.png";
+import step7 from "../../images/pokemon-step-7.png";
+import step8 from "../../images/pokemon-step-8.png";
+import wizard from "../../images/wizard.png";
 import Confetti from "react-confetti";
 
 const baseQuestions = [
-    {
-      title: "Step 1: Set up the game board",
-      text: "Let's start by creating a 3x3 grid to represent our Tic-Tac-Toe board.",
-      codeSnippets: [
-        'SET board TO an array with 9 empty strings ["", "", "", "", "", "", "", "", ""]',
-        "var board = [null, null, null, null, null, null, null, null, null];",
-        "let board = Array(9).fill(null);",
-      ],
-      actualCode: [
-        'var board = ["", "", "", "", "", "", "", "", ""];',
-      ],
-      correctLetter: "A",
-      options: ["A", "B", "C"],
-    },
-    {
-      title: "Step 2: Find the game board and status display elements",
-      text: (
-        <div>
-          We want to find:
-          <ul className="list-disc pl-6 mt-2">
-            <li>The <code>&lt;div&gt;</code> elements representing each cell in the grid.</li>
-            <li>The <code>&lt;div&gt;</code> where we'll display the game status (e.g., whose turn it is or who won).</li>
-          </ul>
-        </div>
-      ),
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which lines of code correctly select these elements?",
-      codeSnippets: [
-        'var cells = document.querySelectorAll(".cell");\nvar statusDiv = document.getElementById("status");',
-        'var cells = "some cells";\nvar statusDiv = "status bar";',
-        'var board = document.createElement("div");\nvar statusDiv = document.createElement("div");',
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "A",
-    },
-    {
-      title: "Step 3: Adding Click Events",
-      text: "We need to detect when a player clicks on a cell to make a move.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which code snippet correctly adds a click event to each cell?",
-      codeSnippets: [
-        "IF user clicks on a cell:\n    place 'X' or 'O'\nELSE:\n    do nothing",
-        "FOR each cell in cells:\n    WHEN cell is clicked:\n        do something",
-        'cells = "Not a real array!"',
-      ],
-      actualCode: [
-        null,
-        `cells.forEach((cell, index) => {
-    cell.addEventListener("click", () => handleMove(index));
-  });`,
-        null,
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "B",
-    },
-    {
-      title: "Step 4: Handling a player's move",
-      text: "We need a function that handles when a player clicks on a cell, places their mark, and checks if the game is over.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet correctly sets up the function signature?",
-      codeSnippets: [
-        'var handleMove = "moveFunction";',
-        "handleMove = index {\n  // function logic\n}",
-        "function handleMove(index) {\n  // function logic\n}",
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "C",
-    },
-    {
-      title: "Step 5: Alternating turns between players",
-      text: "We need to track whose turn it is and alternate between 'X' and 'O'.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet correctly switches turns?",
-      codeSnippets: [
-        'IF currentPlayer == "X":\n    currentPlayer = "O"\nELSE:\n    currentPlayer = "X"',
-        'SET currentPlayer = "Always X";',
-        "console.log('Turns not needed');",
-      ],
-      options: ["A", "B", "C"],
-      actualCode: [
-        `currentPlayer = currentPlayer === "X" ? "O" : "X";`,
-        null,
-        null,
-      ],
-      correctLetter: "A",
-    },
-    {
-      title: "Step 6: Checking for a winner",
-      text: "We need to determine if the current player has won the game.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet correctly checks for a winning condition?",
-      codeSnippets: [
-        'var winningCombos = [\n  [0, 1, 2], [3, 4, 5], [6, 7, 8],\n  [0, 3, 6], [1, 4, 7], [2, 5, 8],\n  [0, 4, 8], [2, 4, 6]\n];\nFOR each combo in winningCombos:\n    IF board[combo[0]] == board[combo[1]] == board[combo[2]] AND board[combo[0]] is not empty:\n        return true',
-        'console.log("Everyone wins!");',
-        'winningMove = "Just guess";',
-      ],
-      actualCode: [
-        `const winningCombos = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8],
-    [0, 3, 6], [1, 4, 7], [2, 5, 8],
-    [0, 4, 8], [2, 4, 6]
-  ];
-  
-  function checkWinner() {
-    return winningCombos.some(combo => 
-      board[combo[0]] && 
-      board[combo[0]] === board[combo[1]] && 
-      board[combo[0]] === board[combo[2]]
-    );
-  }`,
-        null,
-        null,
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "A",
-    },
-    {
-      title: "Step 7: Displaying the result",
-      text: "Once a winner is found or the game ends in a tie, we need to update the status message.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet updates the game status?",
-      codeSnippets: [
-        'statusDiv.textContent = "Winner: " + currentPlayer;',
-        "prompt('Game Over!');",
-        'alert("Done!");',
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "A",
-    },
-    {
-      title: "Step 8: Resetting the game",
-      text: "We need a function to reset the game and start a new round.",
-      options: [],
-      correctAnswer: [],
-    },
-    {
-      title: "Which snippet correctly resets the game?",
-      codeSnippets: [
-        'FOR each cell in cells:\n    set cell text to ""\nRESET board\nRESET currentPlayer to "X"',
-        "window.location.reload();",
-        'alert("Restarting!");',
-      ],
-      actualCode: [
-        `function resetGame() {
-    board.fill("");
-    cells.forEach(cell => cell.textContent = "");
-    currentPlayer = "X";
-    statusDiv.textContent = "Player X's turn";
-  }`,
-        null,
-        null,
-      ],
-      options: ["A", "B", "C"],
-      correctLetter: "A",
-    },
-    {
+  {
+    title: "Step 1: Create Pokémon Objects",
+    text: "Let's create our Pokémon characters with their stats and abilities.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which pseudocode correctly creates a Pikachu and its opponent?",
+    text: "Pick the best approach to define the Pokémon objects:",
+    codeSnippets: [
+      `MAKE a Pokémon with just a name`,
+      `CREATE Pikachu!
+  name = "Pikachu"
+  health = 100
+  attacks = [ Thunder Shock, Quick Attack, Thunderbolt ]
+
+CREATE Charmander!
+  name = "Charmander"
+  health = 120
+  attacks = [ Ember, Scratch, Flamethrower ]`,
+      `SET Pikachu to a simple string`
+    ],
+    actualCode: [
+      `import random
+
+pikachu = {
+    "name": "Pikachu", 
+    "health": 100,
+    "max_health": 100,
+    "attacks": ["Thunder Shock", "Quick Attack", "Thunderbolt"],
+    "damage": [20, 10, 30]
+}
+
+charmander = {
+    "name": "Charmander",
+    "health": 120,
+    "max_health": 120,
+    "attacks": ["Ember", "Scratch", "Flamethrower"],
+    "damage": [15, 10, 25]
+}`
+    ],
+    correctLetter: "B",
+    options: ["A", "B", "C"]
+  },
+  {
+    title: "Step 2: Display Pokémon Stats",
+    text: "We need to create a function to show both Pokémon's current health.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which pseudocode is best for displaying Pokémon stats?",
+    text: "Select the approach that will show both Pokémon's stats:",
+    codeSnippets: [
+      `PRINT only Pikachu stats to the console`,
+      `UPDATE a page element with text "Stats"`,
+      `CREATE a function that displays both Pokémon's health
+CALL this function to show initial stats`
+    ],
+    actualCode: [
+      `def show_stats():
+    print(f"\n{pikachu['name']} HP: {pikachu['health']}/{pikachu['max_health']}")
+    print(f"{charmander['name']} HP: {charmander['health']}/{charmander['max_health']}")
+    
+show_stats()`
+    ],
+    correctLetter: "C",
+    options: ["A", "B", "C"]
+  },
+  {
+    title: "Step 3: Build the Attack Menu",
+    text: "Players need to see what attacks are available and their damage values.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which pseudocode correctly displays available attacks?",
+    text: "Choose the approach that best shows the attack options:",
+    codeSnippets: [
+      `SET attack button attack names to each of Pikachu.attacks and display the corresponding damage`,
+      `LOG the attack list to the console`,
+      `ASSIGN the whole list of attacks to one button`
+    ],
+    actualCode: [
+      `def show_attack_menu():
+    print("\nChoose your attack:")
+    for i, attack in enumerate(pikachu["attacks"]):
+        print(f"{i+1}. {attack} (Damage: {pikachu['damage'][i]})")
+        
+show_attack_menu()`
+    ],
+    correctLetter: "A",
+    options: ["A", "B", "C"]
+  },
+  {
+    title: "Step 4: Get Player Input",
+    text: "The player needs to choose which attack to use for each turn.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which pseudocode correctly handles player input?",
+    text: "Select the best approach to get and validate the player's attack choice:",
+    codeSnippets: [
+      `WHEN attack button is clicked, check if it's a valid attack before proceeding`,
+      `WHEN attack button is clicked, get the attack index from the button's data attribute`,
+      `ALLOW any button click without validating which attack was chosen`
+    ],
+    actualCode: [
+      `def get_player_choice():
+    while True:
+        try:
+            choice = int(input("Enter attack number (1-3): ")) - 1
+            if (0 <= choice && choice < len(pikachu["attacks"])):
+                return choice
+            else:
+                print("Invalid choice. Please enter 1, 2, or 3.")
+        except ValueError:
+            print("Please enter a number.")`
+    ],
+    correctLetter: "A",
+    options: ["A", "B", "C"]
+  },
+  {
+    title: "Step 5: Implement the Player Attack Function",
+    text: "Now we need a function to handle what happens when the player attacks.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which pseudocode correctly implements the player's attack?",
+    text: "Choose the best approach for the player's attack function:",
+    codeSnippets: [
+      `DEFINE player_attack() that just prints "Attack executed"`,
+      `DEFINE player_attack():
+    CALL get_player_choice() to get an index,
+    GET the attack from Pikachu.attacks,
+    SHOW a message "Pikachu uses (attack)!" and subtract damage from Charmander's health`,
+      `DEFINE player_attack() that subtracts damage from Pikachu's health`
+    ],
+    actualCode: [
+      `def player_attack():
+    attack_index = get_player_choice()
+    attack = pikachu["attacks"][attack_index]
+    damage = pikachu["damage"][attack_index]
+    print(f"\n{pikachu['name']} uses {attack}!")
+    charmander["health"] -= damage
+    if (charmander["health"] < 0):
+        charmander["health"] = 0
+    show_stats()
+    return (charmander["health"] > 0)`
+    ],
+    correctLetter: "B",
+    options: ["A", "B", "C"]
+  },
+  {
+    title: "Step 6: Implement the Opponent's Turn",
+    text: "After the player attacks, the opponent should get a turn to attack back.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which pseudocode correctly implements the opponent's attack?",
+    text: "Choose the best approach for the opponent's attack function:",
+    codeSnippets: [
+      `DEFINE opponent_attack() that simply prints "Opponent attacks!"`,
+      `DEFINE opponent_attack():
+    RANDOMLY select an attack from Charmander.attacks,
+    SHOW "Charmander uses (attack)!" and subtract damage from Pikachu's health`,
+      `DEFINE opponent_attack() that always uses the first attack`
+    ],
+    actualCode: [
+      `def opponent_attack():
+    attack_index = random.randint(0, len(charmander["attacks"]) - 1)
+    attack = charmander["attacks"][attack_index]
+    damage = charmander["damage"][attack_index]
+    print(f"\n{charmander['name']} uses {attack}!")
+    pikachu["health"] -= damage
+    if (pikachu["health"] < 0):
+        pikachu["health"] = 0
+    show_stats()
+    return (pikachu["health"] > 0)`
+    ],
+    correctLetter: "B",
+    options: ["A", "B", "C"]
+  },
+  {
+    title: "Step 7: Create the Battle Loop",
+    text: "Let's create a main battle function that alternates between player and opponent turns.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which pseudocode correctly implements the battle loop?",
+    text: "Choose the best structure for the main battle function:",
+    codeSnippets: [
+      `SHOW "Pikachu wins!" unconditionally`,
+      `IF both have same health, SHOW "It's a tie!"`,
+      `WHILE both Pokémon have health > 0:
+    CALL player_attack()
+    IF opponent's health <= 0, SHOW "Pikachu wins!" and EXIT loop;
+    CALL opponent_attack()
+    IF player's health <= 0, SHOW "Charmander wins!" and EXIT loop;`
+    ],
+    actualCode: [
+      `def battle():
+    print("\n===== BATTLE START =====\n")
+    while True:
+        if (!player_attack()):
+            print(f"\n{pikachu['name']} wins!")
+            break
+        if (!opponent_attack()):
+            print(f"\n{charmander['name']} wins!")
+            break
+        show_attack_menu()`
+    ],
+    correctLetter: "C",
+    options: ["A", "B", "C"]
+  },
+  {
+    title: "Step 8: Create Game Setup and Main Functions",
+    text: "Finally, we need functions to reset the game and start the main game loop.",
+    options: [],
+    correctAnswer: []
+  },
+  {
+    title: "Which pseudocode correctly implements game setup?",
+    text: "Choose the best approach for creating the main and reset functions:",
+    codeSnippets: [
+      `DEFINE reset_game():
+    SET both Pokémon's health to full,
+    CALL the game initialization function,
+    SHOW updated stats and attack menu;
+DEFINE main():
+    PRINT game title,
+    CALL battle(),
+    ASK if player wants to play again,
+    IF yes, reset and restart battle;`,
+      `DEFINE reset_game() that just prints "Resetting game"`,
+      `DEFINE reset_game() that reloads the page`
+    ],
+    actualCode: [
+      `def reset_game():
+    pikachu["health"] = pikachu["max_health"]
+    charmander["health"] = charmander["max_health"]
+    print("\n===== GAME RESET =====\n")
+    show_stats()
+    show_attack_menu()
+
+def main():
+    print("===== POKEMON BATTLE =====")
+    print(f"{pikachu['name']} vs {charmander['name']}")
+    battle()
+    let play_again = input("\nPlay again? (y/n): ").toLowerCase()
+    if (play_again === 'y'):
+        reset_game()
+        battle()
+if (__name__ === "__main__") {
+    main()
+}`
+    ],
+    correctLetter: "A",
+    options: ["A", "B", "C"]
+  },
+  {
       title: "Congratulations!",
       text: (
         <div>
-          <p className="text-lg font-bold text-green-600 mb-2">🎉 You've successfully built a Tic Tac Toe game! 🎉</p>
-          <p>You've created a fully functional game with:</p>
+          <p className="text-lg font-bold text-green-600 mb-2">🎉 You've built the complete Pokémon Battle game! 🎉</p>
+          <p>Here's what you accomplished:</p>
           <ul className="list-disc pl-6 mt-2">
-            <li>Game board setup</li>
-            <li>Player turn tracking</li>
-            <li>Win condition checking</li>
-            <li>Game reset functionality</li>
+            <li>Created Pokémon characters with stats and abilities</li>
+            <li>Displayed Pokémon stats during battle</li>
+            <li>Set up the attack menu for player choices</li>
+            <li>Handled player and opponent turns</li>
+            <li>Determined the battle outcome</li>
+            <li>Reset the game for a new round</li>
           </ul>
-          <p className="mt-3">Feel free to play the game and challenge a friend!</p>
+          <p className="mt-3">Awesome job!</p>
         </div>
       ),
       options: [],
-      correctAnswer: [],
-    }
-  ];
-  
+      correctAnswer: []
+    }    
+];
 
-// Define the content for empty modals
+
+// Define empty modal content for friendly feedback between steps
 const emptyModalContent = [
-    {
-      title: "Great start!",
-      description:
-        "You've set up the game board and initialized the basics. Let's keep going!",
-      image: step1,
-    },
-    {
-      title: "Now it's getting interesting!",
-      description:
-        "Time to add events to cells!",
-      image: step2,
-    },
-    {
-      title: "Big step!",
-      description:
-        "Let's create a function to handle the moves!",
-      image: step3,
-    },
-    {
-      title: "Looking good!",
-      description:
-        "Your Tic-Tac-Toe game is coming together. Let's add player turns and display updates.",
-      image: step4,
-    },
-    {
-      title: "Getting close to the finish line!",
-      description:
-        "Let's add now logic to check for a winner! ",
-      image: step5,
-    },
-    {
-      title: "Final steps!",
-      description: "You're about to complete your Tic-Tac-Toe game! Let's display the winner.",
-      image: step6,
-    },
-    {
-      title: "Getting close to the finish line!",
-      description:
-        "Now it's time to add a reset button and handle game restarts.",
-      image: step7,
-    }
-  ];
-  
+  { title: "Great start!", description: "You've created the Pokémon objects with their stats and attacks!", image: step1 },
+  { title: "Nice job!", description: "You implemented a function to display both Pokémon's stats!", image: step2 },
+  { title: "Keep going!", description: "You created a function to display the attack menu with damage values!", image: step3 },
+  { title: "Making progress!", description: "You added input validation to get the player's attack choice!", image: step4 },
+  { title: "Well done!", description: "You implemented the player's attack function with damage calculation!", image: step5 },
+  { title: "Excellent work!", description: "You added the opponent's random attack functionality!", image: step6 },
+  { title: "Almost there!", description: "You created the main battle loop to alternate between turns!", image: step7 },
+  { title: "You did it!", description: "You finished with reset and main functions to complete the game!", image: step8 },
+];
 
-// Create new array with empty steps after every 2nd question
 const questions = baseQuestions.reduce((acc, question, index) => {
-  // Add the regular question
   acc.push(question);
-
-  // Add empty step after every 2nd question (but not after the last question)
-  // Also, don't add an empty step if the next question is the congratulation step
-  if ((index + 1) % 2 === 0 && index < baseQuestions.length - 1) {
-    // Check if the next question is the congratulation step
-    const nextQuestion = baseQuestions[index + 1];
-    if (nextQuestion && nextQuestion.title !== "Congratulations!") {
-      acc.push({
-        isEmptyStep: true,
-        continueToStep: acc.length + 2,
-        content: emptyModalContent[Math.floor(index / 2)] || {
-          title: "Keep going!",
-          description: "You're making great progress.",
-          image: null,
-        },
-      });
-    }
+  
+    if (
+    index < baseQuestions.length - 1 && 
+    baseQuestions[index + 1].title !== "Congratulations!" &&
+    question.options && 
+    question.options.length > 0
+  ) {
+     const stepNumber = Math.floor(index / 2);
+    
+    acc.push({
+      isEmptyStep: true,
+      continueToStep: acc.length + 2,
+      content: emptyModalContent[stepNumber] || { title: "Keep going!", description: "You're making great progress.", image: null }
+    });
   }
+  
   return acc;
 }, []);
 
-const Modal = ({ onCodeSelect }) => {
+
+console.log(questions);
+
+const ModalPokemon = ({ onCodeSelect }) => {
   //  // console.log("Modal component rendering");
   const [isOpen, setIsOpen] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false); // Track minimized state
@@ -292,7 +351,6 @@ const Modal = ({ onCodeSelect }) => {
   const [showError, setShowError] = useState(false);
   const [incorrectSelection, setIncorrectSelection] = useState(null); // Track incorrect selection
   const [errorMessage, setErrorMessage] = useState(""); // Custom error message
-  const [showHint, setShowHint] = useState(false); // State for showing hints
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const stepParam = searchParams.get("step");
@@ -329,7 +387,7 @@ const Modal = ({ onCodeSelect }) => {
           setIsOpen(true);
           setSelectedButtonIndex(null); // Reset selected button
           setShowError(false); // Reset error state
-        }, 2000);
+        }, 1000);
       }
     };
 
@@ -401,23 +459,12 @@ const Modal = ({ onCodeSelect }) => {
       setSearchParams({ step: currentQuestion });
     }
   };
-
-  // Function to provide a hint based on the current question
-  const handleShowHint = () => {
-    setShowHint(true);
-    // Hide hint after 5 seconds
-    setTimeout(() => {
-      setShowHint(false);
-    }, 7000);
-  };
-
   // Toggle minimized state
   const toggleMinimize = () => {
     setIsMinimized(!isMinimized);
     // Hide any error or hint when minimizing
     if (!isMinimized) {
       setShowError(false);
-      setShowHint(false);
     }
   };
 
@@ -434,7 +481,6 @@ const Modal = ({ onCodeSelect }) => {
     setSelectedButtonIndex(null);
     setShowError(false);
     setIncorrectSelection(null);
-    setShowHint(false);
     
     // Reset the code in the parent component by sending a special reset command
     // Use the game config's initial JS as the reset value to properly trigger the handler
@@ -710,17 +756,6 @@ const Modal = ({ onCodeSelect }) => {
                   )}
                 </div>
                 <div className="flex space-x-4">
-                  {/* Add hint button */}
-                  {questions[currentQuestion].options.length > 0 && (
-                    <button
-                      type="button"
-                      onClick={handleShowHint}
-                      className="bg-amber-100 text-amber-800 rounded-xl px-4 py-2 text-sm font-medium shadow border border-amber-200 hover:bg-amber-200 transition-all duration-200"
-                    >
-                      <span className="mr-1">💡</span> Hint
-                    </button>
-                  )}
-                  
                   {questions[currentQuestion].options.length > 0 && (
                     <button
                       type="button"
@@ -802,26 +837,8 @@ const Modal = ({ onCodeSelect }) => {
         </div>
       )}
       
-      {/* Hint tooltip */}
-      {showHint && (
-        <div className="fixed top-4 left-0 right-0 mx-auto w-fit max-w-md bg-amber-50 border-2 border-amber-300 text-amber-800 px-5 py-3 rounded-xl flex items-start shadow-lg" style={{ zIndex: 60 }}>
-          <span className="text-xl mr-3 mt-1">💡</span>
-          <div>
-            <span className="font-bold block mb-1">Hint:</span>
-            <span className="block">
-              {questions[currentQuestion].title.includes("board") 
-                ? "Look for code that initializes variables for the game board and player." 
-                : questions[currentQuestion].title.includes("function") 
-                  ? "The correct option should define a proper JavaScript function with the right parameters."
-                  : questions[currentQuestion].title.includes("elements") 
-                    ? "Look for code that correctly selects elements using document methods."
-                    : "Read the requirements carefully and choose the option that best matches what's needed."}
-            </span>
-          </div>
-        </div>
-      )}
     </>
   );
 };
 
-export default Modal;
+export default ModalPokemon;
