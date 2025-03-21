@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import CodepenApp from "./components/CodepenApp";
 import NewProjectApp from "./components/NewProjectApp";
@@ -105,6 +105,15 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            {/* Game routes */}
+            <Route
+              path="/new-project/js/tic-tac-toe"
+              element={
+                <ProtectedRoute>
+                  <NewProjectApp gameType="tic-tac-toe" />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/new-project/js/rock-paper-scissors"
               element={
@@ -114,18 +123,19 @@ function App() {
               }
             />
             <Route
-              path="/new-project/js/tic-tac-toe"
-              element={
-                <ProtectedRoute>
-                  <NewProjectApp gameType="tic-tac-toe" />
-                </ProtectedRoute>
-              }
-            />
-          <Route
               path="/new-project/py/pokemon-battle"
               element={
                 <ProtectedRoute>
                   <NewProjectApp gameType="pokemon-battle" />
+                </ProtectedRoute>
+              }
+            />
+            {/* Catch-all redirect for old URLs */}
+            <Route
+              path="/new-project/:game"
+              element={
+                <ProtectedRoute>
+                  <Navigate to="/new-project/js/:game" replace />
                 </ProtectedRoute>
               }
             />

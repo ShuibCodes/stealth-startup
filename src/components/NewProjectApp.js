@@ -6,17 +6,20 @@ import Modal from "./Modals/Modal";
 import ModalTicTacToe from "./Modals/ModalTicTacToe";
 import ModalPokemon from "./Modals/ModalPokemon";
 import { getGameConfig } from "../games";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
-  // Get the appropriate game configuration based on the gameType
-  const gameConfig = getGameConfig(gameType);
   const location = useLocation();
-
-  // Check if the URL indicates Python mode (e.g., /py/pokemon-battle)
+  const navigate = useNavigate();
+  
+  // Determine if we're in Python mode and get the correct path
   const isPython = location.pathname.includes("/py/");
-
-  // For JS-based games we use the js state; for Python games, we use the python state.
+  const isJavaScript = location.pathname.includes("/js/");
+  
+  // Get the appropriate game configuration
+  const gameConfig = getGameConfig(gameType);
+  
+  // Initialize all hooks first
   const [html, setHtml] = useState(gameConfig.getInitialHtml());
   const [css, setCss] = useState(gameConfig.getInitialCss());
   const [js, setJs] = useState(gameConfig.getInitialJs());
@@ -24,9 +27,19 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
     isPython && gameConfig.getInitialPy ? gameConfig.getInitialPy() : ""
   );
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  // For tab names, if we're in Python mode the third tab is "Python" instead of "JavaScript"
   const [activeTab, setActiveTab] = useState("html");
   const [srcDoc, setSrcDoc] = useState("");
+  
+  // Handle routing on mount
+  useEffect(() => {
+    const correctPath = isPython 
+      ? `/new-project/py/${gameType}`
+      : `/new-project/js/${gameType}`;
+      
+    if (location.pathname !== correctPath) {
+      navigate(correctPath, { replace: true });
+    }
+  }, [location.pathname, gameType, isPython, navigate]);
 
   useEffect(() => {
     let timeout;
