@@ -5,6 +5,11 @@ import { Dialog } from "@headlessui/react";
 import ContextModal from "./ContextModal";
 import { useSearchParams, useLocation } from "react-router-dom";
 import wizard from "../../images/wizard.png";
+import step1 from "../../images/memory-step-1.png";
+import step2 from "../../images/memory-step-2.png";
+import step3 from "../../images/memory-step-3.png";
+import step4 from "../../images/memory-step-4.png";
+import step5 from "../../images/memory-step-5.png";
 import Confetti from "react-confetti";
 
 const baseQuestions = [
@@ -338,26 +343,26 @@ const emptyModalContent = [
       title: "Great start!",
       description:
         "You've set up the game variables and initialized the basics. Let's keep going!",
-      image: wizard,
+      image: step1,
     },
     {
       title: "Now it's getting interesting!",
       description:
         "The cards can now be flipped. Let's add a timer!",
-      image: wizard,
+      image: step2,
     },
     {
       title: "Looking good!",
       description:
         "Your memory game is coming together. Let's add match checking functionality.",
-      image: wizard,
+      image: step3,
     },
     {
       title: "Almost there!",
       description:
         "Let's add the ability to reset the game for endless fun!",
-      image: wizard,
-    }
+      image: step4,
+    },
   ];
 
 // Create new array with empty steps after every 2nd question
