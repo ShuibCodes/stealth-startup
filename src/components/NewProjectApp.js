@@ -20,13 +20,42 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
   // Get the appropriate game configuration
   const gameConfig = getGameConfig(gameType);
   
-  // Initialize all hooks first
-  const [html, setHtml] = useState(gameConfig.getInitialHtml());
-  const [css, setCss] = useState(gameConfig.getInitialCss());
-  const [js, setJs] = useState(gameConfig.getInitialJs());
-  const [python, setPython] = useState(
-    isPython && gameConfig.getInitialPy ? gameConfig.getInitialPy() : ""
-  );
+  // Initialize all hooks first with safeguards
+  const [html, setHtml] = useState(() => {
+    try {
+      return gameConfig.getInitialHtml ? gameConfig.getInitialHtml() : '';
+    } catch (err) {
+      console.error("Error getting initial HTML:", err);
+      return '';
+    }
+  });
+  
+  const [css, setCss] = useState(() => {
+    try {
+      return gameConfig.getInitialCss ? gameConfig.getInitialCss() : '';
+    } catch (err) {
+      console.error("Error getting initial CSS:", err);
+      return '';
+    }
+  });
+  
+  const [js, setJs] = useState(() => {
+    try {
+      return gameConfig.getInitialJs ? gameConfig.getInitialJs() : '';
+    } catch (err) {
+      console.error("Error getting initial JS:", err);
+      return '';
+    }
+  });
+  
+  const [python, setPython] = useState(() => {
+    try {
+      return isPython && gameConfig.getInitialPy ? gameConfig.getInitialPy() : '';
+    } catch (err) {
+      console.error("Error getting initial Python:", err);
+      return '';
+    }
+  });
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("html");
   const [srcDoc, setSrcDoc] = useState("");
@@ -43,46 +72,87 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
   }, [location.pathname, gameType, isPython, navigate]);
 
   useEffect(() => {
+    // Ensure the initial HTML and CSS are set
+    if (!html && gameConfig.getInitialHtml) {
+      setHtml(gameConfig.getInitialHtml());
+    }
+    
+    if (!css && gameConfig.getInitialCss) {
+      setCss(gameConfig.getInitialCss());
+    }
+
     let timeout;
+    
     if (!isPython) {
       // JS mode: execute the code in an iframe
       timeout = setTimeout(() => {
-        setSrcDoc(`
-          <!doctype html>
-          <html>
-            <head>
-              <style>${css}</style>
-            </head>
-            <body>
-              ${html}
-              <script>
-                try {
-                  ${js}
-                } catch (err) {
-                  console.log('JS Error:', err);
-                }
-              </script>
-            </body>
-          </html>
-        `);
+        try {
+          setSrcDoc(`
+            <!doctype html>
+            <html>
+              <head>
+                <style>${css || ''}</style>
+              </head>
+              <body>
+                ${html || ''}
+                <script>
+                  try {
+                    ${js || ''}
+                  } catch (err) {
+                    console.error('JS Error:', err);
+                    document.body.innerHTML += '<div style="color:red;padding:10px;background:#ffeeee;border:1px solid red;margin-top:10px;">JavaScript Error: ' + err.message + '</div>';
+                  }
+                </script>
+              </body>
+            </html>
+          `);
+        } catch (err) {
+          console.error("Error setting srcDoc:", err);
+        }
       }, 250);
     } else {
       timeout = setTimeout(() => {
-        setSrcDoc(`
-          <!doctype html>
-          <html>
-            <head>
-              <style>${css}</style>
-            </head>
-            <body>
-              ${html}
-            </body>
-          </html>
-        `);
+        try {
+          setSrcDoc(`
+            <!doctype html>
+            <html>
+              <head>
+                <style>${css || ''}</style>
+              </head>
+              <body>
+                ${html || ''}
+              </body>
+            </html>
+          `);
+        } catch (err) {
+          console.error("Error setting srcDoc:", err);
+        }
       }, 250);
     }
     return () => clearTimeout(timeout);
-  }, [html, css, js, python, isPython]);
+  }, [html, css, js, python, isPython, gameConfig]);
+
+  // Also add a useEffect to ensure the initial game state is loaded properly
+  useEffect(() => {
+    // Make sure the game is fully initialized when the gameType changes
+    if (gameConfig) {
+      if (gameConfig.getInitialHtml) {
+        setHtml(gameConfig.getInitialHtml());
+      }
+      
+      if (gameConfig.getInitialCss) {
+        setCss(gameConfig.getInitialCss());
+      }
+      
+      if (gameConfig.getInitialJs) {
+        setJs(gameConfig.getInitialJs());
+      }
+      
+      if (isPython && gameConfig.getInitialPy) {
+        setPython(gameConfig.getInitialPy());
+      }
+    }
+  }, [gameType, gameConfig, isPython]);
 
   const renderEditor = () => {
     if (activeTab === "html") {
@@ -144,16 +214,39 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
   const handleCodeSelect = (option) => {
     if (!option) return;
 
-    // Use the game-specific handler from the config
-    if (!isPython) {
-      setJs((prevJs) => gameConfig.handleCodeSelect(option, prevJs));
-    } else {
-      setPython((prevPy) => gameConfig.handleCodeSelect(option, prevPy));
+    try {
+      // Ensure gameConfig and handleCodeSelect function exist
+      if (gameConfig && typeof gameConfig.handleCodeSelect === 'function') {
+        // Use the game-specific handler from the config
+        if (!isPython) {
+          setJs((prevJs) => {
+            try {
+              return gameConfig.handleCodeSelect(option, prevJs);
+            } catch (err) {
+              console.error("Error in JS handleCodeSelect:", err);
+              return prevJs; // Return unchanged if there's an error
+            }
+          });
+        } else {
+          setPython((prevPy) => {
+            try {
+              return gameConfig.handleCodeSelect(option, prevPy);
+            } catch (err) {
+              console.error("Error in Python handleCodeSelect:", err);
+              return prevPy; // Return unchanged if there's an error
+            }
+          });
+        }
+        
+        // In either case, switch to the code tab for editing
+        setActiveTab(isPython ? "python" : "javascript");
+        scrollToEditor();
+      } else {
+        console.error("gameConfig or handleCodeSelect function is not available");
+      }
+    } catch (err) {
+      console.error("Error in handleCodeSelect:", err);
     }
-    
-    // In either case, switch to the code tab for editing
-    setActiveTab(isPython ? "python" : "javascript");
-    scrollToEditor();
   };
 
   return (
