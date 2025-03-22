@@ -130,6 +130,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/new-project/js/memory-game"
+              element={
+                <ProtectedRoute>
+                  <NewProjectApp gameType="memory-game" />
+                </ProtectedRoute>
+              }
+            />
             {/* Catch-all redirect for old URLs */}
             <Route
               path="/new-project/:game"

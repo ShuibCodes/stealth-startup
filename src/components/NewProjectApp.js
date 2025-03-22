@@ -5,6 +5,7 @@ import "../App.css";
 import Modal from "./Modals/Modal";
 import ModalTicTacToe from "./Modals/ModalTicTacToe";
 import ModalPokemon from "./Modals/ModalPokemon";
+import ModalMemoryGame from "./Modals/ModalMemoryGame";
 import { getGameConfig } from "../games";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -141,7 +142,6 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
   };
 
   const handleCodeSelect = (option) => {
-    console.log("Option received:", option);
     if (!option) return;
 
     // Use the game-specific handler from the config
@@ -170,6 +170,13 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
           case "tic-tac-toe":
             return (
               <ModalTicTacToe
+                onCodeSelect={handleCodeSelect}
+                currentStepIndex={currentStepIndex}
+              />
+            );
+          case "memory-game":
+            return (
+              <ModalMemoryGame
                 onCodeSelect={handleCodeSelect}
                 currentStepIndex={currentStepIndex}
               />
