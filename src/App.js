@@ -8,12 +8,12 @@ import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SignUp from "./pages/SignUp";
 import "./App.css";
-import { signOut } from "firebase/auth";
-import { auth } from "./firebaseConfig";
+import supabase from "./supabaseClient";
 import RootLayout from "./components/Layout";
 import Settings from "./pages/Settings";
 import Users from "./pages/Users";
 import AiChat from "./pages/AiChat";
+import SessionDurationTracker from "./components/SessionDurationTracker";
 
 const Navbar = () => {
   const { user, loading } = useAuth();
@@ -21,7 +21,7 @@ const Navbar = () => {
   if (loading) return <div>loading...</div>;
 
   const handleLogout = async () => {
-    await signOut(auth);
+    await supabase.auth.signOut();
   };
   return (
     <nav className="h-[50px] border flex items-center px-3 gap-2">
@@ -52,6 +52,8 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        {/* Mount SessionDurationTracker so it can track the user's session */}
+        <SessionDurationTracker />
         <div className="h-screen flex flex-col">
           {/* <Navbar /> */}
           <Routes>
@@ -106,7 +108,7 @@ function App() {
               }
             />
             <Route
-              path="/new-project/js/rock-paper-scissors"
+              path="/new-project/rock-paper-scissors"
               element={
                 <ProtectedRoute>
                   <NewProjectApp gameType="rock-paper-scissors" />
@@ -114,18 +116,10 @@ function App() {
               }
             />
             <Route
-              path="/new-project/js/tic-tac-toe"
+              path="/new-project/tic-tac-toe"
               element={
                 <ProtectedRoute>
                   <NewProjectApp gameType="tic-tac-toe" />
-                </ProtectedRoute>
-              }
-            />
-          <Route
-              path="/new-project/py/pokemon-battle"
-              element={
-                <ProtectedRoute>
-                  <NewProjectApp gameType="pokemon-battle" />
                 </ProtectedRoute>
               }
             />

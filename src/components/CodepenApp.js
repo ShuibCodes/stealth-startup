@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Editor from '../Editor';
-import AIChatSidebar from './AIChatSidebar';
+import AIChatSidebar from './AIChatSidebar2';
 import '../App.css';
 
 function CodepenApp() {

@@ -1,6 +1,6 @@
 import React from "react";
 import CodeEditor from "./CodeEditor";
-import AIChatSidebar from "./AIChatSidebar";
+import AIChatSidebar from "./AIChatSidebar2";
 
 const TodoApp = () => {
   // // console.log('TodoApp rendering');
