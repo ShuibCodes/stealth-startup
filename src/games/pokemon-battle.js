@@ -343,27 +343,27 @@ body {
   align-items: center;
   min-height: 100vh;
   color: #333;
+  padding: 10px;
 }
 
 .game {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
   background-color: rgba(255, 255, 255, 0.9);
-  padding: 25px;
+  padding: 15px;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  transform: translateY(-10px);
-  transition: transform 0.3s ease;
   max-width: 800px;
   width: 100%;
+  max-height: 95vh;
 }
 
 .title {
   color: #e63946;
-  font-size: 2rem;
-  margin-bottom: 10px;
+  font-size: 1.5rem;
+  margin-bottom: 5px;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   font-weight: bold;
 }
@@ -374,7 +374,7 @@ body {
   align-items: center;
   width: 100%;
   background-color: #f8f9fa;
-  padding: 20px;
+  padding: 15px;
   border-radius: 15px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -384,8 +384,8 @@ body {
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
+  padding: 5px;
+  margin-bottom: 10px;
 }
 
 .player-pokemon {
@@ -401,16 +401,21 @@ body {
 .pokemon-info {
   display: flex;
   flex-direction: column;
-  margin: 0 15px;
+  margin: 0 10px;
+}
+
+.pokemon-info h2 {
+  font-size: 1.1rem;
+  margin-bottom: 3px;
 }
 
 .hp-bar {
-  width: 150px;
-  height: 10px;
+  width: 120px;
+  height: 8px;
   background-color: #e5e5e5;
-  border-radius: 5px;
+  border-radius: 4px;
   overflow: hidden;
-  margin: 5px 0;
+  margin: 3px 0;
 }
 
 .hp-fill {
@@ -420,39 +425,39 @@ body {
 }
 
 .pokemon img {
-  width: 120px;
-  height: 120px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
 }
 
 .battle-message {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
   text-align: center;
-  padding: 10px 15px;
+  padding: 8px 12px;
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  margin: 15px 0;
+  margin: 10px 0;
   width: 80%;
-  min-height: 50px;
+  min-height: 40px;
 }
 
 .attack-menu {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 8px;
   width: 100%;
-  margin: 15px 0;
+  margin: 10px 0;
 }
 
 .attack-btn {
-  padding: 10px 15px;
+  padding: 8px 12px;
   background: linear-gradient(135deg, #6a11cb, #2575fc);
   color: white;
   border: none;
-  border-radius: 10px;
-  font-size: 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -469,64 +474,18 @@ body {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.python-code {
-  width: 100%;
-  background-color: #272822;
-  color: #f8f8f2;
-  padding: 15px;
-  border-radius: 10px;
-  margin: 15px 0;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-}
-
-.python-code h3 {
-  margin-bottom: 10px;
-  color: #a6e22e;
-}
-
-.python-code pre {
-  white-space: pre-wrap;
-  font-family: 'Courier New', Courier, monospace;
-  line-height: 1.4;
-}
-
-#reset {
-  padding: 10px 25px;
-  background: linear-gradient(135deg, #ff416c, #ff4b2b);
-  color: white;
-  border: none;
-  border-radius: 50px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-  margin-top: 15px;
-}
-
-#reset:hover {
-  background: linear-gradient(135deg, #f5371c, #f53f2a);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-}
-
-#reset:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
 .reset-container {
-  margin-top: 15px;
+  margin-top: 10px;
   text-align: center;
 }
 
 .reset-btn {
-  padding: 10px 25px;
+  padding: 8px 20px;
   background: linear-gradient(135deg, #ff416c, #ff4b2b);
   color: white;
   border: none;
-  border-radius: 50px;
-  font-size: 1rem;
+  border-radius: 25px;
+  font-size: 0.9rem;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -544,93 +503,13 @@ body {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  z-index: 1000;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-content {
-  background-color: #fff;
-  padding: 25px;
-  border-radius: 15px;
-  width: 80%;
-  max-width: 600px;
-  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
-}
-
-.modal h2 {
-  margin-bottom: 15px;
-  color: #333;
-}
-
-#code-input {
-  width: 100%;
-  padding: 10px;
-  font-family: 'Courier New', Courier, monospace;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  margin-bottom: 15px;
-  resize: vertical;
-}
-
-.button-group {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-.button-group button {
-  padding: 8px 20px;
-  border: none;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-#submit-code {
-  background-color: #4caf50;
-  color: white;
-}
-
-#submit-code:hover {
-  background-color: #45a049;
-}
-
-#cancel-code {
-  background-color: #f44336;
-  color: white;
-}
-
-#cancel-code:hover {
-  background-color: #d32f2f;
-}
-
 /* Animation for attacks */
 @keyframes attack {
-  0% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(20px);
-  }
-  50% {
-    transform: translateX(-10px);
-  }
-  75% {
-    transform: translateX(5px);
-  }
-  100% {
-    transform: translateX(0);
-  }
+  0% { transform: translateX(0); }
+  25% { transform: translateX(15px); }
+  50% { transform: translateX(-8px); }
+  75% { transform: translateX(4px); }
+  100% { transform: translateX(0); }
 }
 
 .attack-animation {
@@ -639,25 +518,157 @@ body {
 
 /* Damage animation */
 @keyframes damage {
-  0% {
-    opacity: 1;
-  }
-  25% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 1;
-  }
-  75% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 1;
-  }
+  0% { opacity: 1; }
+  25% { opacity: 0.5; }
+  50% { opacity: 1; }
+  75% { opacity: 0.5; }
+  100% { opacity: 1; }
 }
 
 .damage-animation {
   animation: damage 0.5s ease;
+}
+
+/* Enhanced Animation Styles */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px) rotate(-5deg); }
+  75% { transform: translateX(5px) rotate(5deg); }
+}
+
+@keyframes flash {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0.5; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+
+.pokemon img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  transition: all 0.3s ease;
+}
+
+.pokemon.attacking img {
+  animation: bounce 0.5s ease;
+}
+
+.pokemon.damaged img {
+  animation: shake 0.5s ease, flash 0.5s ease;
+}
+
+.hp-fill {
+  height: 100%;
+  background-color: #4caf50;
+  transition: all 0.8s ease;
+  position: relative;
+}
+
+.hp-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.3) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  animation: shine 2s infinite linear;
+}
+
+@keyframes shine {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+.battle-message {
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  padding: 8px 12px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin: 10px 0;
+  width: 80%;
+  min-height: 40px;
+  animation: slideIn 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.battle-message.new-message {
+  animation: slideIn 0.3s ease;
+}
+
+.attack-btn {
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.attack-btn::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.1) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  transform: rotate(45deg);
+  transition: all 0.3s ease;
+}
+
+.attack-btn:hover::after {
+  transform: rotate(45deg) translate(50%, 50%);
+}
+
+.attack-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Victory animation */
+@keyframes victory {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.pokemon.victory img {
+  animation: victory 1s ease infinite;
 }`,
 
 getInitialJs: () => `// Pokemon Battle Game in JS
@@ -693,7 +704,19 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('attack-3')
     ];
     const resetButton = document.getElementById('reset-game');
+    const playerPokemon = document.querySelector('.player-pokemon');
+    const opponentPokemon = document.querySelector('.opponent-pokemon');
     
+    // Function to update battle message with animation
+    function updateBattleMessage(message) {
+        battleMessage.style.animation = 'none';
+        battleMessage.offsetHeight; // Trigger reflow
+        battleMessage.style.animation = null;
+        battleMessage.textContent = message;
+        battleMessage.classList.add('new-message');
+        setTimeout(() => battleMessage.classList.remove('new-message'), 300);
+    }
+
     // Set up attack buttons
     attackButtons.forEach((button, index) => {
         button.textContent = pikachu.attacks[index];
@@ -703,7 +726,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set up reset button
     resetButton.addEventListener('click', resetGame);
     
-    // Update HP display
+    // Update HP display with smooth animation
     function updateHpDisplay() {
         playerHpBar.style.width = (pikachu.health / pikachu.maxHealth * 100) + '%';
         playerHp.textContent = 'HP: ' + pikachu.health + '/' + pikachu.maxHealth;
@@ -711,9 +734,12 @@ document.addEventListener('DOMContentLoaded', () => {
         opponentHpBar.style.width = (charmander.health / charmander.maxHealth * 100) + '%';
         opponentHp.textContent = 'HP: ' + charmander.health + '/' + charmander.maxHealth;
         
-        // Update HP bar colors based on health percentage
-        playerHpBar.style.backgroundColor = getHpColor(pikachu.health / pikachu.maxHealth);
-        opponentHpBar.style.backgroundColor = getHpColor(charmander.health / charmander.maxHealth);
+        // Update HP bar colors based on health percentage with transition
+        const playerHpColor = getHpColor(pikachu.health / pikachu.maxHealth);
+        const opponentHpColor = getHpColor(charmander.health / charmander.maxHealth);
+        
+        playerHpBar.style.backgroundColor = playerHpColor;
+        opponentHpBar.style.backgroundColor = opponentHpColor;
     }
     
     // Get HP bar color based on health percentage
@@ -723,7 +749,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return '#f05030'; // Red
     }
     
-    // Player attack function
+    // Player attack function with enhanced animations
     function playerAttack(attackIndex) {
         // Disable attack buttons during animation
         attackButtons.forEach(btn => btn.disabled = true);
@@ -731,25 +757,35 @@ document.addEventListener('DOMContentLoaded', () => {
         const attack = pikachu.attacks[attackIndex];
         const damage = pikachu.damage[attackIndex];
         
-        battleMessage.textContent = pikachu.name + ' uses ' + attack + '!';
+        // Start attack animation
+        playerPokemon.classList.add('attacking');
+        updateBattleMessage(pikachu.name + ' uses ' + attack + '!');
         
-        // Apply damage to opponent
         setTimeout(() => {
+            playerPokemon.classList.remove('attacking');
+            opponentPokemon.classList.add('damaged');
+            
+            // Apply damage to opponent
             charmander.health = Math.max(0, charmander.health - damage);
             updateHpDisplay();
             
-            // Check if opponent fainted
-            if (charmander.health <= 0) {
-                battleMessage.textContent = charmander.name + ' fainted! ' + pikachu.name + ' wins!';
-                attackButtons.forEach(btn => btn.disabled = true);
-            } else {
-                // If opponent still has health, it's their turn
-                opponentAttack();
-            }
-        }, 1000);
+            setTimeout(() => {
+                opponentPokemon.classList.remove('damaged');
+                
+                // Check if opponent fainted
+                if (charmander.health <= 0) {
+                    updateBattleMessage(charmander.name + ' fainted! ' + pikachu.name + ' wins!');
+                    attackButtons.forEach(btn => btn.disabled = true);
+                    playerPokemon.classList.add('victory');
+                } else {
+                    // If opponent still has health, it's their turn
+                    opponentAttack();
+                }
+            }, 500);
+        }, 500);
     }
     
-    // Opponent attack function
+    // Opponent attack function with enhanced animations
     function opponentAttack() {
         setTimeout(() => {
             // Randomly select an attack
@@ -757,34 +793,48 @@ document.addEventListener('DOMContentLoaded', () => {
             const attack = charmander.attacks[attackIndex];
             const damage = charmander.damage[attackIndex];
             
-            battleMessage.textContent = charmander.name + ' uses ' + attack + '!';
+            // Start attack animation
+            opponentPokemon.classList.add('attacking');
+            updateBattleMessage(charmander.name + ' uses ' + attack + '!');
             
-            // Apply damage to player
             setTimeout(() => {
+                opponentPokemon.classList.remove('attacking');
+                playerPokemon.classList.add('damaged');
+                
+                // Apply damage to player
                 pikachu.health = Math.max(0, pikachu.health - damage);
                 updateHpDisplay();
                 
-                // Check if player fainted
-                if (pikachu.health <= 0) {
-                    battleMessage.textContent = pikachu.name + ' fainted! ' + charmander.name + ' wins!';
-                    attackButtons.forEach(btn => btn.disabled = true);
-                } else {
-                    // If player still has health, allow attacks again
-                    battleMessage.textContent = 'Choose your attack!';
-                    attackButtons.forEach(btn => btn.disabled = false);
-                }
-            }, 1000);
-        }, 1000);
+                setTimeout(() => {
+                    playerPokemon.classList.remove('damaged');
+                    
+                    // Check if player fainted
+                    if (pikachu.health <= 0) {
+                        updateBattleMessage(pikachu.name + ' fainted! ' + charmander.name + ' wins!');
+                        attackButtons.forEach(btn => btn.disabled = true);
+                        opponentPokemon.classList.add('victory');
+                    } else {
+                        // If player still has health, allow attacks again
+                        updateBattleMessage('Choose your attack!');
+                        attackButtons.forEach(btn => btn.disabled = false);
+                    }
+                }, 500);
+            }, 500);
+        }, 500);
     }
     
-    // Reset game function
+    // Reset game function with animations
     function resetGame() {
         // Reset Pokemon health
         pikachu.health = pikachu.maxHealth;
         charmander.health = charmander.maxHealth;
         
-        // Reset UI
-        battleMessage.textContent = 'Choose your attack!';
+        // Remove any animation classes
+        playerPokemon.classList.remove('victory', 'attacking', 'damaged');
+        opponentPokemon.classList.remove('victory', 'attacking', 'damaged');
+        
+        // Reset UI with animation
+        updateBattleMessage('Choose your attack!');
         updateHpDisplay();
         
         // Re-enable attack buttons
