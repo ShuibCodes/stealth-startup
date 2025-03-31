@@ -4,7 +4,7 @@ import ReactPlayer from "react-player";
 const VideoPopup = ({ onClose }) => {
   const videos = [
     {
-      title: "JavaScript Basics",
+      title: "JavaScript Basics TTT",
       url: "https://youtu.be/Ell_i-IanCA?si=zF_CULfpQ2KzEsZi",
     },
     {

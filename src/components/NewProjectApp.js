@@ -6,6 +6,7 @@ import Modal from "./Modal";
 import ModalTicTacToe from "./ModalTicTacToe";
 import { getGameConfig } from "../games";
 import VideoPopup from "./VideoPopup";
+import VideoPopupTTT from "./VideoPopupTTT";
 
 const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
   // Get the appropriate game configuration based on the gameType
@@ -103,8 +104,15 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
   };
   return (
     <div className="App">
-      {videoOpen && (
+      {videoOpen && gameType === "rock-paper-scissors" && (
         <VideoPopup
+          onClose={() => {
+            setVideoOpen(false);
+          }}
+        />
+      )}
+      {videoOpen && gameType === "tic-tac-toe" && (
+        <VideoPopupTTT
           onClose={() => {
             setVideoOpen(false);
           }}
