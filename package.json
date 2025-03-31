@@ -57,5 +57,8 @@
     "Code"
   ],
   "author": "Suhail Kakar",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "supabase": "^2.20.5"
+  }
 }

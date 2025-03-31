@@ -117,7 +117,7 @@ function App() {
               }
             />
             <Route
-              path="/new-project/rock-paper-scissors"
+              path="/new-project/js/rock-paper-scissors"
               element={
                 <ProtectedRoute>
                   <NewProjectApp gameType="rock-paper-scissors" />
