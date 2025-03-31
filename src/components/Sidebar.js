@@ -6,6 +6,7 @@ const navItems = [
   { name: "Users", href: "/dashboard/users", icon: Users },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
   { name: "AI Chat", href: "/dashboard/ai-chat", icon: BotMessageSquare },
+
 ];
 
 export function Sidebar() {

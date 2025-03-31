@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import newProjectRequirements from "../utils/newProjectRequirements";
-import { getAuth } from "firebase/auth";
-import { db2 } from "../firebaseConfig";
-import { doc, updateDoc, increment, getDoc, setDoc, collection, addDoc, arrayUnion } from "firebase/firestore";
+import supabase from "../supabaseClient";
+import { useAuth } from "../context/AuthContext";
+
+
 
 const API_KEY =
   "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";
@@ -14,7 +15,7 @@ const AIChatSidebar2 = ({
   currentStepIndex,
   setCurrentStepIndex,
 }) => {
-  //  // console.log('API Key:', API_KEY);
+  const { user, sessionId } = useAuth();
   const [messages, setMessages] = useState([
     {
       type: "ai",
@@ -88,11 +89,6 @@ const AIChatSidebar2 = ({
   const validateCurrentStep = () => {
     const currentStep = newProjectRequirements.steps[currentStepIndex];
 
-    //  // console.log('Validation started');
-    //  // console.log('HTML type:', typeof html);
-    //  // console.log('HTML content:', html);
-    //  // console.log('Current step:', currentStep);
-
     if (!currentStep) {
       setMessages((prev) => [
         ...prev,
@@ -117,22 +113,17 @@ const AIChatSidebar2 = ({
       return;
     }
 
-    let validationPassed = false;
-
     // For HTML validation
     if (currentStep.requiredElements) {
       try {
         const parser = new DOMParser();
         const htmlString = html.toString();
-        //  // console.log('Attempting to parse HTML:', htmlString);
-
         const doc = parser.parseFromString(htmlString, "text/html");
 
         const missingElements = currentStep.requiredElements.filter(
           (selector) => {
             try {
               const element = doc.querySelector(selector);
-              //  // console.log(`Checking for "${selector}":`, element ? 'found' : 'not found');
               return !element;
             } catch (error) {
               console.error("Error checking for element:", error);
@@ -155,7 +146,6 @@ const AIChatSidebar2 = ({
           ]);
         }
       } catch (error) {
-        // console.error('Error parsing HTML:', error);
         setMessages((prev) => [
           ...prev,
           {
@@ -168,25 +158,17 @@ const AIChatSidebar2 = ({
     }
 
     // For JavaScript validation
-    // For JavaScript validation
     if (currentStep.requiredFeatures) {
       const jsLower = js.toLowerCase();
-
-      // First check if all required features exist
       const missingFeatures = currentStep.requiredFeatures.filter((feature) => {
         const featureLower = feature.toLowerCase();
 
-        // Add special check for getElementById with variable assignment
         if (featureLower.includes("getelementbyid")) {
           return !(
-            // Check for direct getElementById call
-            (
-              jsLower.includes(featureLower) ||
-              // Check for variable assignment pattern
-              (jsLower.includes("const todoinput") &&
-                jsLower.includes("getelementbyid") &&
-                jsLower.includes("todo-input"))
-            )
+            jsLower.includes(featureLower) ||
+            (jsLower.includes("const todoinput") &&
+              jsLower.includes("getelementbyid") &&
+              jsLower.includes("todo-input"))
           );
         }
 
@@ -209,7 +191,6 @@ const AIChatSidebar2 = ({
     }
   };
 
-  // Add this helper function
   const handleStepCompletion = () => {
     const congratsMessage = `🎉 Great job! You've completed step ${
       currentStepIndex + 1
@@ -245,7 +226,6 @@ const AIChatSidebar2 = ({
 
     if (!inputMessage.trim() || isLoading) return;
 
-    // Add user message
     const newMessages = [...messages, { type: "user", content: inputMessage }];
     setMessages(newMessages);
     setInputMessage("");
@@ -285,7 +265,6 @@ const AIChatSidebar2 = ({
    - Load todos from localStorage
 
 I can help you write the code and check if it meets these requirements.`,
-
     examples: {
       html: `
 <div class="todo-container">
@@ -297,10 +276,9 @@ I can help you write the code and check if it meets these requirements.`,
     <!-- Todo items will go here -->
   </ul>
 </div>`,
-
       javascript: `
 function addTodo(e) {
-  e.preventDefault();if (currentStep.requiredFeatures) 
+  e.preventDefault();
   // Create new todo
 }
 
@@ -313,7 +291,6 @@ function deleteTodo(e) {
     },
   };
 
-  // Define the existing context
   const existingContext = {
     currentCode: {
       html,
@@ -357,52 +334,35 @@ function deleteTodo(e) {
     const step = newProjectRequirements.steps[currentStepIndex];
     if (!step) return;
 
+    if (!user) {
+      console.log("No authenticated user - skipping stats update");
+      return;
+    }
+  
     try {
-      // Update hint count in Firestore
-      const auth = getAuth();
-      if (auth.currentUser) {
-        // Create a reference to the user's hints document
-        const hintsDocRef = doc(db2, 'hintButtonUsage', auth.currentUser.uid);
-        
-        try {
-          // Get the current hints document
-          const hintsDoc = await getDoc(hintsDocRef);
-          
-          if (!hintsDoc.exists()) {
-            // If document doesn't exist, create it with initial data
-            await setDoc(hintsDocRef, {
-              totalHintRequests: 1,
-              
-              hints: [{
-                stepIndex: currentStepIndex,
-                stepName: step.name,
-                timestamp: new Date()
-              }],
-              createdAt: new Date(),
-              lastHintRequestAt: new Date()
-            });
-          } else {
-            
-            // If document exists, update it with new hint and increment total
-            await updateDoc(hintsDocRef, {
-              totalHintRequests: increment(1),
-              hints: arrayUnion({
-                stepIndex: currentStepIndex,
-                stepName: step.name,
-                timestamp: new Date()
-              }),
-              lastHintRequestAt: new Date()
-            });
-          }
-          
-          console.log("Hint recorded successfully");
-        } catch (firestoreError) {
-          console.error("Firestore operation failed:", firestoreError);
-        }
+      // Insert a NEW row each time
+      const { error: insertError } = await supabase
+        .from("hintbuttonusage")
+        .insert({
+          user_id: user.id,
+          session_id: sessionId, 
+          hints: [
+            {
+              stepIndex: currentStepIndex,
+              stepName: step.name,
+              timestamp: new Date(),
+            },
+          ],
+          created_at: new Date(),
+        });
+  
+      if (insertError) {
+        console.error("Supabase insert error:", insertError);
       } else {
-        console.log("No authenticated user - skipping stats update");
+        console.log("Hint recorded successfully in Supabase");
       }
-
+  
+      // Show the hint in the chat
       setMessages((prev) => [
         ...prev,
         { type: "user", content: "Can I get a hint for this step?" },
@@ -415,7 +375,7 @@ function deleteTodo(e) {
       ]);
     } catch (error) {
       console.error("Error in handleHint:", error);
-      // Still show the hint even if there was an error
+      // Even if DB insert fails, still display the hint
       setMessages((prev) => [
         ...prev,
         { type: "user", content: "Can I get a hint for this step?" },
@@ -429,14 +389,12 @@ function deleteTodo(e) {
     }
   };
 
-
   const moveToNextStep = () => {
     if (currentStepIndex < newProjectRequirements.steps.length - 1) {
       setCurrentStepIndex(currentStepIndex + 1);
     }
   };
 
-  // Update initial AI message to include first step
   useEffect(() => {
     setMessages([
       {
@@ -471,14 +429,17 @@ function deleteTodo(e) {
           <div
             key={index}
             style={{
-              backgroundColor: message.type === "ai" ? "#2d2d2d" : "#3d3d3d",
+              backgroundColor:
+                message.type === "ai" ? "#2d2d2d" : "#3d3d3d",
               padding: "10px",
               borderRadius: "5px",
               maxWidth: "85%",
               alignSelf: message.type === "ai" ? "flex-start" : "flex-end",
             }}
           >
-            <strong>{message.type === "ai" ? "AI Assistant:" : "You:"}</strong>
+            <strong>
+              {message.type === "ai" ? "AI Assistant:" : "You:"}
+            </strong>
             {message.isCode ? (
               <>
                 <p style={{ margin: "5px 0" }}>{message.content}</p>
