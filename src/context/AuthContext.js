@@ -98,7 +98,6 @@ export const AuthProvider = ({ children }) => {
       const now = Date.now();
       const diff = now - lastActivityRef.current;
       const thirtyMinutes = 30 * 60 * 1000; 
-
       if (diff >= thirtyMinutes) {
         endSession();
       }
