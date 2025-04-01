@@ -62,12 +62,10 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
   
   // Handle routing on mount
   useEffect(() => {
-    const correctPath = isPython 
-      ? `/new-project/py/${gameType}`
-      : `/new-project/js/${gameType}`;
-      
-    if (location.pathname !== correctPath) {
-      navigate(correctPath, { replace: true });
+    // Only redirect if we're on a path that doesn't match the expected format
+    const isCorrectPath = location.pathname === `/new-project/${isPython ? 'py' : 'js'}/${gameType}`;
+    if (!isCorrectPath) {
+      navigate(`/new-project/${isPython ? 'py' : 'js'}/${gameType}`, { replace: true });
     }
   }, [location.pathname, gameType, isPython, navigate]);
 
