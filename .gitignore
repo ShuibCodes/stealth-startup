@@ -25,3 +25,7 @@ yarn-error.log*
 # database
 /supabase
 my_dump.sql
+.qodo
+
+# Next.js
+.next/
