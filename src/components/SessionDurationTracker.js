@@ -33,19 +33,19 @@ function SessionDurationTracker() {
         if (existingRows.length > 1) {
           console.log(`Found ${existingRows.length} duplicate sessions, using the first one`);
           // Get all IDs except the first one (which we're keeping)
-          const duplicateIds = existingRows.slice(1).map(row => row.id);
+          // const duplicateIds = existingRows.slice(1).map(row => row.id);
           
           // Delete all duplicate rows
-          const { error: deleteError } = await supabase
-            .from("session_duration")
-            .delete()
-            .in("id", duplicateIds);
+          // const { error: deleteError } = await supabase
+          //   .from("session_duration")
+          //   .delete()
+          //   .in("id", duplicateIds);
             
-          if (deleteError) {
-            console.error("Error deleting duplicate sessions:", deleteError);
-          } else {
-            console.log(`Successfully deleted ${duplicateIds.length} duplicate session entries`);
-          }
+          // if (deleteError) {
+          //   console.error("Error deleting duplicate sessions:", deleteError);
+          // } else {
+          //   console.log(`Successfully deleted ${duplicateIds.length} duplicate session entries`);
+          // }
         }
         
         // Update the existing row

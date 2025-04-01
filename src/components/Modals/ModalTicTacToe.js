@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
 import ContextModal from "./ContextModal";
 import { useSearchParams, useLocation } from "react-router-dom";
+import ProgressTracker from "../ProgressTracker";
 import step1 from "../../images/step-1-tic-tac-toe.png";
 import step2 from "../../images/step-2-tic-tac-toe.png";
 import step3 from "../../images/step-3-tic-tac-toe.png";
@@ -549,6 +550,11 @@ const Modal = ({ onCodeSelect }) => {
 
   return (
     <>
+      <ProgressTracker
+        projectName="tic-tac-toe"
+        currentStepIndex={currentQuestion}
+        totalSteps={questions.length}
+      />
       {/* Show confetti when on the congratulation step - positioned behind modal but above backdrop */}
       {isCongratulationStep && (
         <div className="fixed inset-0" style={{ zIndex: 45, pointerEvents: 'none' }}>
