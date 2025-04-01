@@ -14,6 +14,7 @@ import step7 from "../../images/pokemon-step-7.png";
 import step8 from "../../images/pokemon-step-8.png";
 import wizard from "../../images/wizard.png";
 import Confetti from "react-confetti";
+import ProgressTracker from "../ProgressTracker";
 
 const baseQuestions = [
   {
@@ -604,6 +605,11 @@ const ModalPokemon = ({ onCodeSelect }) => {
 
   return (
     <>
+      <ProgressTracker
+        projectName="pokemon-battle"
+        currentStepIndex={currentQuestion}
+        totalSteps={questions.length}
+      />
       {/* Show confetti when on the congratulation step - positioned behind modal but above backdrop */}
       {isCongratulationStep && (
         <div className="fixed inset-0" style={{ zIndex: 45, pointerEvents: 'none' }}>
