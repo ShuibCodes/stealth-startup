@@ -14,6 +14,7 @@ import Settings from "./pages/Settings";
 import Users from "./pages/Users";
 import AiChat from "./pages/AiChat";
 import SessionDurationTracker from "./components/SessionDurationTracker";
+import Calendar from "./pages/Calendar";
 
 const Navbar = () => {
   const { user, loading } = useAuth();
@@ -103,6 +104,16 @@ function App() {
                 <ProtectedRoute>
                   <RootLayout>
                     <AiChat />
+                  </RootLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/calendar"
+              element={
+                <ProtectedRoute>
+                  <RootLayout>
+                    <Calendar />
                   </RootLayout>
                 </ProtectedRoute>
               }

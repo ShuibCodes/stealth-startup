@@ -216,3 +216,27 @@
 .CodeMirror-linenumber {
   padding-right: 8px;
 }
+
+/* Calendar Styles */
+.calendar-container .fc {
+  /* fc is FullCalendar's root class */
+  height: 100%;
+  background-color: white;
+}
+
+.fc-header-toolbar {
+  padding: 1rem;
+}
+
+.fc-view {
+  background-color: white;
+}
+
+.fc td, .fc th {
+  border: 1px solid #ddd;
+}
+
+.fc-event {
+  cursor: pointer;
+  padding: 2px;
+}
