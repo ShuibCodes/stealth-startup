@@ -3,7 +3,12 @@ import supabase from "../supabaseClient";
 
 export function Header() {
   const handleLogout = async () => {
-    await supabase.auth.signOut(); // Logs out the user
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("Error signing out:", error.message);
+    } else {
+      console.log("Successfully signed out from Supabase.");
+    }
   };
 
   return (

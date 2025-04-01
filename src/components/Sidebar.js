@@ -1,42 +1,15 @@
-import {
-  Home,
-  Users,
-  Settings,
-  BotMessageSquare,
-  LibraryBig,
-  LayoutGrid,
-} from "lucide-react";
+import { Home, Users, Settings, BotMessageSquare, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import supabase from "../supabaseClient";
 
 const navItems = [
-  { name: "Dashboard", href: "/dashboard", icon: Home, onylAdmin: true },
-  { name: "Users", href: "/dashboard/users", icon: Users, onylAdmin: true },
-  {
-    name: "Settings",
-    href: "/dashboard/settings",
-    icon: Settings,
-    onylAdmin: true,
-  },
-  {
-    name: "AI Chat",
-    href: "/dashboard/ai-chat",
-    icon: BotMessageSquare,
-    onylAdmin: true,
-  },
-  {
-    name: "Courses",
-    href: "/dashboard/courses",
-    icon: LibraryBig,
-    onylAdmin: false,
-  },
-  {
-    name: "Projects",
-    href: "/dashboard/projects",
-    icon: LayoutGrid,
-    onylAdmin: false,
-  },
+  { name: "Dashboard", href: "/dashboard", icon: Home },
+  { name: "Users", href: "/dashboard/users", icon: Users },
+  { name: "Settings", href: "/dashboard/settings", icon: Settings },
+  { name: "AI Chat", href: "/dashboard/ai-chat", icon: BotMessageSquare },
+  { name: "Calendar", href: "/dashboard/calendar", icon: Calendar },
+
 ];
 
 export function Sidebar() {

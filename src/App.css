@@ -218,26 +218,28 @@
 
 .CodeMirror-linenumber {
   padding-right: 8px;
+      }
+
+/* Calendar Styles */
+.calendar-container .fc {
+  /* fc is FullCalendar's root class */
+  height: 100%;
+  background-color: white;
 }
 
-.courses-scroll {
-  &::-webkit-scrollbar {
-    opacity: 0;
-  }
-  &:hover::-webkit-scrollbar-thumb {
-    background: oklch(0.872 0.01 258.338);
-  }
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  &::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    background: transparent;
-  }
+.fc-header-toolbar {
+  padding: 1rem;
 }
 
-button.selected {
-  /* border-bottom: 2px solid black; */
-  border-color: black;
-  transition: all 0.5s;
+.fc-view {
+  background-color: white;
+}
+
+.fc td, .fc th {
+  border: 1px solid #ddd;
+}
+
+.fc-event {
+  cursor: pointer;
+  padding: 2px;
 }
