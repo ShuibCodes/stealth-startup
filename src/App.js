@@ -10,6 +10,10 @@ import Users from "./pages/Users";
 import Settings from "./pages/Settings";
 import SignUp from "./pages/SignUp";
 import Calendar from "./pages/Calendar";
+import Courses from "./pages/Courses";
+import CoursePage from "./pages/CoursePage";
+import { CourseProvider } from "./components/Courses/CourseContext";
+
 
 import CodepenApp from "./components/Games/CodepenApp";
 import NewProjectApp from "./components/Games/NewProjectApp";
@@ -22,6 +26,7 @@ import ProtectedRoute from "./auth/ProtectedRoute";
 const Navbar = () => {
   const { user, loading } = useAuth();
 
+  if (loading) return <div>loading...</div>;
   if (loading) return <div>loading...</div>;
 
   const handleLogout = async () => {
@@ -55,117 +60,139 @@ const Navbar = () => {
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        {/* Mount SessionDurationTracker so it can track the user's session */}
-        <SessionDurationTracker />
-        <div className="h-screen flex flex-col">
-          {/* <Navbar /> */}
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <CodepenApp />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <RootLayout>
-                    <Dashboard />
-                  </RootLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard/settings"
-              element={
-                <ProtectedRoute>
-                  <RootLayout>
-                    <Settings />
-                  </RootLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard/users"
-              element={
-                <ProtectedRoute>
-                  <RootLayout>
-                    <Users />
-                  </RootLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard/ai-chat"
-              element={
-                <ProtectedRoute>
-                  <RootLayout>
-                    <AiChat />
-                  </RootLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard/calendar"
-              element={
-                <ProtectedRoute>
-                  <RootLayout>
-                    <Calendar />
-                  </RootLayout>
-                </ProtectedRoute>
-              }
-            />
-            {/* Game routes */}
-            <Route
-              path="/new-project/js/tic-tac-toe"
-              element={
-                <ProtectedRoute>
-                  <NewProjectApp gameType="tic-tac-toe" />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/new-project/js/rock-paper-scissors"
-              element={
-                <ProtectedRoute>
-                  <NewProjectApp gameType="rock-paper-scissors" />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/new-project/py/pokemon-battle"
-              element={
-                <ProtectedRoute>
-                  <NewProjectApp gameType="pokemon-battle" />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/new-project/js/memory-game"
-              element={
-                <ProtectedRoute>
-                  <NewProjectApp gameType="memory-game" />
-                </ProtectedRoute>
-              }
-            />
-            {/* Catch-all redirect for old URLs */}
-            <Route
-              path="/new-project/:game"
-              element={
-                <ProtectedRoute>
-                  <Navigate to="/new-project/js/:game" replace />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </div>
-      </BrowserRouter>
+      <CourseProvider>
+        <BrowserRouter>
+          {/* Mount SessionDurationTracker so it can track the user's session */}
+          <SessionDurationTracker />
+          <div className="h-screen flex flex-col">
+            {/* <Navbar /> */}
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <CodepenApp />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <RootLayout>
+                      <Dashboard />
+                    </RootLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/settings"
+                element={
+                  <ProtectedRoute>
+                    <RootLayout>
+                      <Settings />
+                    </RootLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/users"
+                element={
+                  <ProtectedRoute>
+                    <RootLayout>
+                      <Users />
+                    </RootLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/ai-chat"
+                element={
+                  <ProtectedRoute>
+                    <RootLayout>
+                      <AiChat />
+                    </RootLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/courses"
+                element={
+                  <ProtectedRoute>
+                    <RootLayout>
+                      <Courses />
+                    </RootLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dashboard/courses/:courseId/:moduleId"
+                element={
+                  <ProtectedRoute>
+                    <RootLayout>
+                      <CoursePage />
+                    </RootLayout>
+                  </ProtectedRoute>
+                }
+              />            
+              <Route
+                path="/dashboard/calendar"
+                element={
+                  <ProtectedRoute>
+                    <RootLayout>
+                      <Calendar />
+                    </RootLayout>
+                  </ProtectedRoute>
+                }
+              />
+              {/* Game routes */}
+              <Route
+                path="/new-project/js/tic-tac-toe"
+                element={
+                  <ProtectedRoute>
+                    <NewProjectApp gameType="tic-tac-toe" />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/new-project/js/rock-paper-scissors"
+                element={
+                  <ProtectedRoute>
+                    <NewProjectApp gameType="rock-paper-scissors" />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/new-project/py/pokemon-battle"
+                element={
+                  <ProtectedRoute>
+                    <NewProjectApp gameType="pokemon-battle" />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/new-project/js/memory-game"
+                element={
+                  <ProtectedRoute>
+                    <NewProjectApp gameType="memory-game" />
+                  </ProtectedRoute>
+                }
+              />
+              {/* Catch-all redirect for old URLs */}
+              <Route
+                path="/new-project/:game"
+                element={
+                  <ProtectedRoute>
+                    <Navigate to="/new-project/js/:game" replace />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </CourseProvider>
     </AuthProvider>
   );
 }

@@ -1,4 +1,4 @@
-import { Home, Users, Settings, BotMessageSquare, Calendar } from "lucide-react";
+import { Home, Users, Settings, BotMessageSquare, Calendar, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const navItems = [
@@ -7,6 +7,7 @@ const navItems = [
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
   { name: "AI Chat", href: "/dashboard/ai-chat", icon: BotMessageSquare },
   { name: "Calendar", href: "/dashboard/calendar", icon: Calendar },
+  { name: "Courses", href: "/dashboard/courses", icon: BookOpen },
 
 ];
 
