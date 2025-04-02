@@ -10,7 +10,7 @@ import Settings from "../pages/Settings";
 import Users from "../pages/Users";
 import AiChat from "../pages/AiChat";
 import Courses from "../pages/Courses";
-import CoursePage from "../pages/CoursePage";
+
 import SignUp from "../pages/SignUp";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";

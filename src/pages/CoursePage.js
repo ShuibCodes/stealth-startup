@@ -21,7 +21,7 @@ export default function CoursePage() {
       // Fetch the user data
       const { data: userData, error: userError } = await supabase
         .from("users")
-        .select("startedCourses")
+        .select("startedcourses")
         .eq("id", userId)
         .single();
 
@@ -77,7 +77,7 @@ export default function CoursePage() {
       // Fetch user data
       const { data: userData, error: userError } = await supabase
         .from("users")
-        .select("startedCourses")
+        .select("startedcourses")
         .eq("id", userId)
         .single();
 

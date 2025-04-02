@@ -22,7 +22,7 @@ export default function CoursesSidebar() {
 
     const { data, error } = await supabase
       .from("users")
-      .select("startedCourses")
+      .select("startedcourses")
       .eq("id", userId)
       .single();
 

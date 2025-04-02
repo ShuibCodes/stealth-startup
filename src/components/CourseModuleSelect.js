@@ -29,7 +29,7 @@ export default function CourseModuleSelect() {
     // Fetch the user's startedCourses from Supabase
     const { data, error } = await supabase
       .from("users")
-      .select("startedCourses")
+      .select("startedcourses")
       .eq("id", userId)
       .single();
 
