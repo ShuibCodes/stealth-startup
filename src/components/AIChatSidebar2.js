@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import newProjectRequirements from "../utils/newProjectRequirements";
 import supabase from "../supabaseClient";
 import { useAuth } from "../context/AuthContext";
+import { GAME_STEPS } from '../config/gameSteps';
+import { useLocation } from 'react-router-dom';
+import { sendMessageToDeepseek } from '../services/deepseekService';
 
 
 
@@ -26,6 +29,7 @@ const AIChatSidebar2 = ({
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
+  const location = useLocation();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -404,6 +408,41 @@ function deleteTodo(e) {
     ]);
   }, []);
 
+  const getCurrentGame = () => {
+    const path = location.pathname;
+    const gameMatch = path.match(/\/new-project\/(js|py)\/([^/]+)/);
+    return gameMatch ? gameMatch[2] : null;
+  };
+
+  const handleGameHelp = async () => {
+    const currentGame = getCurrentGame();
+    if (!currentGame || !GAME_STEPS[currentGame]) return;
+
+    const prompt = `You are a teacher with the steps of the game ${currentGame.replace(/-/g, ' ')}: 
+    ${GAME_STEPS[currentGame].join(', ')}. 
+    The student is stuck at step ${currentStepIndex + 1}: "${GAME_STEPS[currentGame][currentStepIndex]}". 
+    Give a helpful hint to help them progress.`;
+
+    setMessages((prev) => [...prev, { type: "user", content: "Can I get help with this step?" }]);
+    setIsLoading(true);
+
+    try {
+      const aiResponse = await sendMessageToDeepseek(prompt);
+      setMessages((prev) => [...prev, { type: "ai", content: aiResponse }]);
+    } catch (error) {
+      console.error("Error getting AI response:", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          type: "ai",
+          content: "Sorry, I encountered an error. Please try again.",
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div
       style={{
@@ -519,6 +558,21 @@ function deleteTodo(e) {
             }}
           >
             Give Me a Hint
+          </button>
+
+          <button
+            onClick={handleGameHelp}
+            style={{
+              padding: "10px",
+              backgroundColor: "#9C27B0",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+              flex: 1,
+            }}
+          >
+            Get Game Help
           </button>
         </div>
 

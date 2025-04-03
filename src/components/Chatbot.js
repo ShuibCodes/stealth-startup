@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader } from "./Card";
-import { GAME_STEPS } from '../config/gameSteps';
-import { useLocation } from 'react-router-dom';
-import { sendMessageToDeepseek } from '../services/deepseekService';
+
 
 const CHATGPT_RESPONSES = [
   "That's an interesting point. Can you elaborate on that?",
@@ -26,7 +24,7 @@ export function Chatbot() {
   const [error, setError] = useState(null);
   const messagesEndRef = useRef(null);
   const [currentStep, setCurrentStep] = useState(1);
-  const location = useLocation();
+
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -76,60 +74,7 @@ export function Chatbot() {
     }
   };
 
-  // Get current game from URL
-  const getCurrentGame = () => {
-    const path = location.pathname;
-    const gameMatch = path.match(/\/new-project\/(js|py)\/([^/]+)/);
-    return gameMatch ? gameMatch[2] : null;
-  };
 
-  // Add this button in your CardContent, before the messages section
-  const GameHelpButton = () => {
-    const currentGame = getCurrentGame();
-    
-    if (!currentGame || !GAME_STEPS[currentGame]) return null;
-
-    const handleGameHelp = async () => {
-      const prompt = `You are a teacher with the steps of the game ${currentGame.replace(/-/g, ' ')}: 
-      ${GAME_STEPS[currentGame].join(', ')}. 
-      The student is stuck at step ${currentStep}: "${GAME_STEPS[currentGame][currentStep - 1]}". 
-      Give a helpful hint to help them progress.`;
-
-      setMessages([...messages, { text: prompt, sender: "user" }]);
-      setIsTyping(true);
-      
-      try {
-        const response = await sendMessageToDeepseek(prompt);
-        setMessages(prev => [...prev, { text: response, sender: "bot" }]);
-      } catch (error) {
-        setError("Failed to get help from AI. Please try again.");
-      } finally {
-        setIsTyping(false);
-      }
-    };
-
-    return (
-      <div className="mb-4 flex items-center gap-2">
-        <button
-          onClick={handleGameHelp}
-          className="flex items-center gap-2 px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-        >
-          Get Help with Current Step
-        </button>
-        <select
-          value={currentStep}
-          onChange={(e) => setCurrentStep(Number(e.target.value))}
-          className="border rounded p-1"
-        >
-          {GAME_STEPS[currentGame].map((_, index) => (
-            <option key={index + 1} value={index + 1}>
-              Step {index + 1}
-            </option>
-          ))}
-        </select>
-      </div>
-    );
-  };
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
@@ -154,7 +99,6 @@ export function Chatbot() {
             </button>
           </CardHeader>
           <CardContent className="flex-grow p-4">
-            <GameHelpButton />
             <div className="h-full">
               {messages.map((message, index) => (
                 <div

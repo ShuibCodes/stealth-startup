@@ -12,7 +12,7 @@ import supabase from "./supabaseClient";
 import RootLayout from "./components/Layout";
 import Settings from "./pages/Settings";
 import Users from "./pages/Users";
-import AiChat from "./pages/AiChat";
+import AiChat from "./components/AIChatSidebar2";
 import SessionDurationTracker from "./components/SessionDurationTracker";
 import Calendar from "./pages/Calendar";
 
