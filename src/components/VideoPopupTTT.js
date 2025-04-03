@@ -1,19 +1,53 @@
 import React, { useState } from "react";
 import ReactPlayer from "react-player";
 
-const VideoPopup = ({ onClose }) => {
-  const videos = [
-    {
-      title: "JavaScript Basics TTT",
-      url: "https://youtu.be/Ell_i-IanCA?si=zF_CULfpQ2KzEsZi",
-    },
-    {
-      title: "JavaScript Basics: Data Types ",
-      url: "https://youtu.be/HE3WFVHsZdk?si=xqUofsGPNe4GIG5o",
-    },
-    
+const VideoPopup = ({ onClose, gameType = "tic-tac-toe" }) => {
+  // Define videos for different game types
+  const videosByGame = {
+    "tic-tac-toe": [
+      {
+        title: "JavaScript Basics TTT",
+        url: "https://youtu.be/Ell_i-IanCA?si=zF_CULfpQ2KzEsZi",
+      },
+      {
+        title: "JavaScript Basics: Data Types ",
+        url: "https://youtu.be/HE3WFVHsZdk?si=xqUofsGPNe4GIG5o",
+      },
+    ],
+    "rock-paper-scissors": [
+      {
+        title: "Rock Paper Scissors Introduction",
+        url: "https://youtu.be/example1",
+      },
+      {
+        title: "Rock Paper Scissors Logic",
+        url: "https://youtu.be/example2",
+      },
+    ],
+    "pokemon-battle": [
+      {
+        title: "Pokemon Battle Introduction",
+        url: "https://youtu.be/example3",
+      },
+      {
+        title: "Pokemon Battle Logic",
+        url: "https://youtu.be/example4",
+      },
+    ],
+    "memory-game": [
+      {
+        title: "Memory Game Introduction",
+        url: "https://youtu.be/example5",
+      },
+      {
+        title: "Memory Game Logic",
+        url: "https://youtu.be/example6",
+      },
+    ],
+  };
 
-  ];
+  // Get videos for current game type or fallback to tic-tac-toe
+  const videos = videosByGame[gameType] || videosByGame["tic-tac-toe"];
 
   const [currentIndex, setCurrentIndex] = useState(0);
 

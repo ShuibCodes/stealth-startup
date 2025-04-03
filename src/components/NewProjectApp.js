@@ -6,6 +6,8 @@ import Modal from "./Modals/Modal";
 import ModalTicTacToe from "./Modals/ModalTicTacToe";
 import ModalPokemon from "./Modals/ModalPokemon";
 import ModalMemoryGame from "./Modals/ModalMemoryGame";
+import VideoPopupTTT from "./VideoPopupTTT";
+import VideoPopup from "./VideoPopup";
 import { getGameConfig } from "../games";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -56,9 +58,11 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
       return '';
     }
   });
+  
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("html");
   const [srcDoc, setSrcDoc] = useState("");
+  const [videoOpen, setVideoOpen] = useState(true);
   
   // Handle routing on mount
   useEffect(() => {
@@ -152,6 +156,9 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
         setPython(gameConfig.getInitialPy());
       }
     }
+    
+    // Reset video state when game type changes
+    setVideoOpen(true);
   }, [gameType, gameConfig, isPython]);
 
   const renderEditor = () => {
@@ -248,6 +255,7 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
       console.error("Error in handleCodeSelect:", err);
     }
   };
+
   return (
     <div className="App">
       {(() => {
@@ -257,6 +265,9 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
               <ModalPokemon
                 onCodeSelect={handleCodeSelect}
                 currentStepIndex={currentStepIndex}
+                gameType={gameType}
+                videoOpen={videoOpen}
+                setVideoOpen={setVideoOpen}
               />
             );
           case "tic-tac-toe":
@@ -264,6 +275,9 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
               <ModalTicTacToe
                 onCodeSelect={handleCodeSelect}
                 currentStepIndex={currentStepIndex}
+                gameType={gameType}
+                videoOpen={videoOpen}
+                setVideoOpen={setVideoOpen}
               />
             );
           case "memory-game":
@@ -271,6 +285,9 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
               <ModalMemoryGame
                 onCodeSelect={handleCodeSelect}
                 currentStepIndex={currentStepIndex}
+                gameType={gameType}
+                videoOpen={videoOpen}
+                setVideoOpen={setVideoOpen}
               />
             );
           default:
@@ -278,10 +295,14 @@ const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {
               <Modal
                 onCodeSelect={handleCodeSelect}
                 currentStepIndex={currentStepIndex}
+                gameType={gameType}
+                videoOpen={videoOpen}
+                setVideoOpen={setVideoOpen}
               />
             );
         }
       })()}
+      
       <div className="chat-pane">
         <AIChatSidebar2
           html={html}
