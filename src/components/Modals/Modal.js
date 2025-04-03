@@ -12,6 +12,7 @@ import step5 from "../../images/step-5.png";
 import step6 from "../../images/step-6.png";
 import wizard from "../../images/wizard.png";
 import Confetti from "react-confetti";
+import ProgressTracker from "../ProgressTracker";
 
 const baseQuestions = [
   {
@@ -558,6 +559,11 @@ const Modal = ({ onCodeSelect }) => {
 
   return (
     <>
+      <ProgressTracker
+        projectName="rock-paper-scissors"
+        currentStepIndex={currentQuestion}
+        totalSteps={questions.length}
+      />
       {/* Show confetti when on the congratulation step - positioned behind modal but above backdrop */}
       {isCongratulationStep && (
         <div className="fixed inset-0" style={{ zIndex: 45, pointerEvents: 'none' }}>

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader } from "./Card";
 
+
 const CHATGPT_RESPONSES = [
   "That's an interesting point. Can you elaborate on that?",
   "I understand. Have you considered looking at it from a different perspective?",
@@ -22,6 +23,8 @@ export function Chatbot() {
   const [isTyping, setIsTyping] = useState(false);
   const [error, setError] = useState(null);
   const messagesEndRef = useRef(null);
+  const [currentStep, setCurrentStep] = useState(1);
+
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -70,6 +73,8 @@ export function Chatbot() {
       handleSend(e);
     }
   };
+
+
 
   return (
     <div className="fixed bottom-4 right-4 z-50">

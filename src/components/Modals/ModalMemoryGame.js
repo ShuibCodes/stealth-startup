@@ -11,7 +11,7 @@ import step3 from "../../images/memory-step-3.png";
 import step4 from "../../images/memory-step-4.png";
 import step5 from "../../images/memory-step-5.png";
 import Confetti from "react-confetti";
-
+import ProgressTracker from "../ProgressTracker";
 const baseQuestions = [
   // Step 1 explanation
   {
@@ -636,6 +636,11 @@ const Modal = ({ onCodeSelect }) => {
 
   return (
     <>
+      <ProgressTracker
+        projectName="memory-game"
+        currentStepIndex={currentQuestion}
+        totalSteps={questions.length}
+      />
       {isCongratulationStep && (
         <div className="fixed inset-0" style={{ zIndex: 45, pointerEvents: 'none' }}>
           <Confetti
