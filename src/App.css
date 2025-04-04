@@ -8,6 +8,9 @@
   height: 100%;
   /* overflow: hidden; */
 }
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
 
 .chat-pane {
   grid-area: chat;
@@ -215,7 +218,7 @@
 
 .CodeMirror-linenumber {
   padding-right: 8px;
-}
+      }
 
 /* Calendar Styles */
 .calendar-container .fc {

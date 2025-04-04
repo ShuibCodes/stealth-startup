@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+  import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import supabase from '../supabaseClient';
 import { v4 as uuidv4 } from "uuid";
@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
       if (session?.user) {
         // User just logged in
         startOrResumeSession();
-      } else {
+      } else {          
         // User logged out
         endSession();
       }

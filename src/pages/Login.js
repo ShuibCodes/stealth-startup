@@ -16,7 +16,7 @@ const Login = () => {
       const { error } = await supabase.auth.resend({
         type: 'signup',
         email: email.trim()
-      });
+      });   
       if (error) throw error;
       setError('Confirmation email resent. Please check your inbox.');
     } catch (err) {

@@ -37,7 +37,7 @@ const SignUp = () => {
             id: user.id,
             email: user.email,
             created_at: new Date().toISOString(),
-            startedcourses: [],
+            startedCourses: [],
             role: "user",
           },
         ]);
