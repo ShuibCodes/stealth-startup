@@ -2,7 +2,7 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import supabase from "./supabaseClient";
+import supabase from "./database/supabaseClient";
 
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -11,12 +11,12 @@ import Settings from "./pages/Settings";
 import SignUp from "./pages/SignUp";
 import Calendar from "./pages/Calendar";
 
-import CodepenApp from "./components/CodepenApp";
-import NewProjectApp from "./components/NewProjectApp";
-import RootLayout from "./components/Layout";
-import AiChat from "./components/AIChatSidebar2";
-import SessionDurationTracker from "./components/SessionDurationTracker";
-import ProtectedRoute from "./components/ProtectedRoute";
+import CodepenApp from "./components/Games/CodepenApp";
+import NewProjectApp from "./components/Games/NewProjectApp";
+import RootLayout from "./components/Layout/Layout";
+import AiChat from "./components/AiChatbot/AIChatSidebar2";
+import SessionDurationTracker from "./components/Trackers/SessionDurationTracker";
+import ProtectedRoute from "./auth/ProtectedRoute";
 
 
 const Navbar = () => {

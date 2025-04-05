@@ -1,5 +1,5 @@
 import { LogOut } from "lucide-react";
-import supabase from "../supabaseClient";
+import supabase from "../../database/supabaseClient";
 
 export function Header() {
   const handleLogout = async () => {

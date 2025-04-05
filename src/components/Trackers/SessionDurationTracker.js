@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext";
-import supabase from "../supabaseClient";
+import { useAuth } from "../../context/AuthContext";
+import supabase from "../../database/supabaseClient";
 
 /**
  * SessionDurationTracker:

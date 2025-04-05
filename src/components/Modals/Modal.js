@@ -12,7 +12,7 @@ import step5 from "../../images/step-5.png";
 import step6 from "../../images/step-6.png";
 import wizard from "../../images/wizard.png";
 import Confetti from "react-confetti";
-import ProgressTracker from "../ProgressTracker";
+import ProgressTracker from "../Trackers/ProgressTracker";
 
 const baseQuestions = [
   {

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import supabase from '../supabaseClient';
+import supabase from '../database/supabaseClient';
 import { v4 as uuidv4 } from "uuid";
 
 const AuthContext = createContext({});

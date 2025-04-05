@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import newProjectRequirements from "../utils/newProjectRequirements";
-import supabase from "../supabaseClient";
-import { useAuth } from "../context/AuthContext";
-import { GAME_STEPS } from '../config/gameSteps';
-import { sendMessageToDeepseek } from '../api/deepseekService';
+import newProjectRequirements from "../../utils/newProjectRequirements";
+import supabase from "../../database/supabaseClient";
+import { useAuth } from "../../context/AuthContext";
+import { GAME_STEPS } from '../../config/gameSteps';
+import { sendMessageToDeepseek } from '../../api/deepseekService';
 
 const API_KEY = process.env.REACT_APP_OPENAI_API_KEY;
 

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import EditorProjectTwo from "../EditorProjectTwo";
-import AIChatSidebar2 from "./AIChatSidebar2";
-import "../App.css";
-import Modal from "./Modals/Modal";
-import ModalTicTacToe from "./Modals/ModalTicTacToe";
-import ModalPokemon from "./Modals/ModalPokemon";
-import ModalMemoryGame from "./Modals/ModalMemoryGame";
-import { getGameConfig } from "../games";
+import EditorProjectTwo from "./EditorProjectTwo";
+import AIChatSidebar2 from "../AiChatbot/AIChatSidebar2";
+import "../../App.css";
+import Modal from "../Modals/Modal";
+import ModalTicTacToe from "../Modals/ModalTicTacToe";
+import ModalPokemon from "../Modals/ModalPokemon";
+import ModalMemoryGame from "../Modals/ModalMemoryGame";
+import { getGameConfig } from "../../games";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const NewProjectApp = ({ gameType = "rock-paper-scissors" }) => {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Editor from '../Editor';
-import AIChatSidebar from './AIChatSidebar2';
-import '../App.css';
+import Editor from './Editor';
+import AIChatSidebar from '../AiChatbot/AIChatSidebar2';
+import '../../App.css';
 
 function CodepenApp() {
   const [html, setHtml] = useState('');

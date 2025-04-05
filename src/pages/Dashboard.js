@@ -1,7 +1,7 @@
-import { VisitorsChart } from "../components/VisitorsChart";
-import { TrafficSourcesChart } from "../components/TrafficSourcesChart";
-import { EngagementChart } from "../components/EngagementChart";
-import { Leaderboard } from "../components/Leaderboard";
+import { VisitorsChart } from "../components/Dashboard/VisitorsChart";
+import { TrafficSourcesChart } from "../components/Dashboard/TrafficSourcesChart";
+import { EngagementChart } from "../components/Dashboard/EngagementChart";
+import { Leaderboard } from "../components/Dashboard/Leaderboard";
 
 
 const visitorsData = [
