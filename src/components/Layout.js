@@ -1,6 +1,6 @@
 import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
-import { Chatbot } from "./Chatbot";
+import Chatbot from "./Chatbot";
 import { useLocation } from "react-router-dom";
 
 export const metadata = {
@@ -11,6 +11,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   const location = useLocation();
+  const showChat = !location.pathname.includes('/dashboard/ai-chat');
 
   return (
     <>
@@ -23,7 +24,7 @@ export default function RootLayout({ children }) {
           </main>
         </div>
       </div>
-      {location.pathname !== "/dashboard/ai-chat" && <Chatbot />}
+      {showChat && <Chatbot />}
     </>
   );
 }

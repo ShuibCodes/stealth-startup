@@ -1,20 +1,23 @@
 import React from "react";
+import "./App.css";
 import { BrowserRouter, Routes, Route, Link, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import CodepenApp from "./components/CodepenApp";
-import NewProjectApp from "./components/NewProjectApp";
+import supabase from "./supabaseClient";
+
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import ProtectedRoute from "./components/ProtectedRoute";
-import SignUp from "./pages/SignUp";
-import "./App.css";
-import supabase from "./supabaseClient";
-import RootLayout from "./components/Layout";
-import Settings from "./pages/Settings";
 import Users from "./pages/Users";
+import Settings from "./pages/Settings";
+import SignUp from "./pages/SignUp";
+import Calendar from "./pages/Calendar";
+
+import CodepenApp from "./components/CodepenApp";
+import NewProjectApp from "./components/NewProjectApp";
+import RootLayout from "./components/Layout";
 import AiChat from "./components/AIChatSidebar2";
 import SessionDurationTracker from "./components/SessionDurationTracker";
-import Calendar from "./pages/Calendar";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 
 const Navbar = () => {
   const { user, loading } = useAuth();

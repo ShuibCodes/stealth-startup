@@ -3,13 +3,9 @@ import newProjectRequirements from "../utils/newProjectRequirements";
 import supabase from "../supabaseClient";
 import { useAuth } from "../context/AuthContext";
 import { GAME_STEPS } from '../config/gameSteps';
-import { useLocation } from 'react-router-dom';
-import { sendMessageToDeepseek } from '../services/deepseekService';
+import { sendMessageToDeepseek } from '../api/deepseekService';
 
-
-
-const API_KEY =
-  "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";
+const API_KEY = process.env.REACT_APP_OPENAI_API_KEY;
 
 const AIChatSidebar2 = ({
   html,
@@ -29,7 +25,6 @@ const AIChatSidebar2 = ({
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
-  const location = useLocation();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -409,7 +404,7 @@ function deleteTodo(e) {
   }, []);
 
   const getCurrentGame = () => {
-    const path = location.pathname;
+    const path = window.location.pathname;
     const gameMatch = path.match(/\/new-project\/(js|py)\/([^/]+)/);
     return gameMatch ? gameMatch[2] : null;
   };
