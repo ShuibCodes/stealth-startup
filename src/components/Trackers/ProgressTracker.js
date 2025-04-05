@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import supabase from "../../database/supabaseClient";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../auth/AuthContext";
 
 function ProgressTracker({ projectName, currentStepIndex, totalSteps }) {
   const { user } = useAuth();
