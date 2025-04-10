@@ -15,6 +15,7 @@ import Users from "./pages/Users";
 import AiChat from "./components/AIChatSidebar2";
 import SessionDurationTracker from "./components/SessionDurationTracker";
 import Calendar from "./pages/Calendar";
+import PromptPal from "./pages/PromptPal";
 
 const Navbar = () => {
   const { user, loading } = useAuth();
@@ -114,6 +115,16 @@ function App() {
                 <ProtectedRoute>
                   <RootLayout>
                     <Calendar />
+                  </RootLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard/prompt-pal"
+              element={
+                <ProtectedRoute>
+                  <RootLayout>
+                    <PromptPal />
                   </RootLayout>
                 </ProtectedRoute>
               }

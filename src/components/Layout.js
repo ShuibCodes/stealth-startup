@@ -2,6 +2,7 @@ import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 import { Chatbot } from "./Chatbot";
 import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const metadata = {
   title: "Analytics Dashboard with ChatGPT",

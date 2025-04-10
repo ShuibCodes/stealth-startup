@@ -4,7 +4,7 @@ import supabase from "../supabaseClient";
 import { useAuth } from "../context/AuthContext";
 import { GAME_STEPS } from '../config/gameSteps';
 import { useLocation } from 'react-router-dom';
-import { sendMessageToDeepseek } from '../services/deepseekService';
+import { sendMessageToDeepseek } from '../api/deepseekService';
 
 
 
