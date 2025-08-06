@@ -11,7 +11,7 @@ import step3 from "../../images/memory-step-3.png";
 import step4 from "../../images/memory-step-4.png";
 import step5 from "../../images/memory-step-5.png";
 import Confetti from "react-confetti";
-import ProgressTracker from "../ProgressTracker";
+import ProgressTracker from "../Trackers/ProgressTracker";
 const baseQuestions = [
   // Step 1 explanation
   {

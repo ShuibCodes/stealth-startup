@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import supabase from "../supabaseClient";
+import supabase from "../database/supabaseClient";
 import { useNavigate, Link } from "react-router-dom";
 import image from "../images/pexels-cottonbro-4709291.jpg";
 import logo from "../images/CodingKids - logo.png";

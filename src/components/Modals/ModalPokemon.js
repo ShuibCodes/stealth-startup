@@ -14,7 +14,7 @@ import step7 from "../../images/pokemon-step-7.png";
 import step8 from "../../images/pokemon-step-8.png";
 import wizard from "../../images/wizard.png";
 import Confetti from "react-confetti";
-import ProgressTracker from "../ProgressTracker";
+import ProgressTracker from "../Trackers/ProgressTracker";
 
 const baseQuestions = [
   {

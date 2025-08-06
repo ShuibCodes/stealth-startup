@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
 import ContextModal from "./ContextModal";
 import { useSearchParams, useLocation } from "react-router-dom";
-import ProgressTracker from "../ProgressTracker";
+import ProgressTracker from "../Trackers/ProgressTracker";
 import step1 from "../../images/step-1-tic-tac-toe.png";
 import step2 from "../../images/step-2-tic-tac-toe.png";
 import step3 from "../../images/step-3-tic-tac-toe.png";

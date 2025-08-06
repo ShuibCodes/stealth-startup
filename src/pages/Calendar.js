@@ -3,7 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import EventModal from '../components/EventModal';
+import EventModal from '../components/Dashboard/CalenderEventModal';
 
 const Calendar = () => {
   const [events, setEvents] = useState([
